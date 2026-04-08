@@ -1,0 +1,16 @@
+# Backend e análise
+pandas
+numpy
+matplotlib
+seaborn
+requests
+sqlalchemy
+selenium
+scipy
+psycopg2-binary
+openpyxl
+python-dotenv==1.0.1
+
+# Telegram Bots
+aiogram==3.4.1
+asyncpg==0.29.0

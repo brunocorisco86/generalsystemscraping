@@ -1,0 +1,767 @@
+[
+    {
+        "id": "0c7bc941a7c85671",
+        "type": "tab",
+        "label": "Comandos Telegram - Bot Açudes",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "04e453c69f69584e",
+        "type": "telegram bot",
+        "botname": "PeixePatelBot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "addressfamily": "0",
+        "pollinterval": 300,
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": 6667,
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbothost": "0.0.0.0",
+        "localbotport": 8443,
+        "publicbotport": 8443,
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "76fd0a48ce9dd393",
+        "type": "telegram receiver",
+        "z": "0c7bc941a7c85671",
+        "name": "Receber /oxigenio",
+        "bot": "04e453c69f69584e",
+        "saveDataDir": "",
+        "filterCommands": true,
+        "hasinput": false,
+        "inputs": 0,
+        "handleallupdates": false,
+        "x": 130,
+        "y": 40,
+        "wires": [
+            [
+                "6831a144ee985583"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "6831a144ee985583",
+        "type": "switch",
+        "z": "0c7bc941a7c85671",
+        "name": "Filtro Comando",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "^\\/oxigenio(@PeixePatelBot)?$",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 340,
+        "y": 40,
+        "wires": [
+            [
+                "fcf42587736ba84c"
+            ]
+        ]
+    },
+    {
+        "id": "fcf42587736ba84c",
+        "type": "function",
+        "z": "0c7bc941a7c85671",
+        "name": "Preparar Payload",
+        "func": "msg.payload = msg.payload.chatId;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 40,
+        "wires": [
+            [
+                "84236e0b60e347c0"
+            ]
+        ]
+    },
+    {
+        "id": "84236e0b60e347c0",
+        "type": "exec",
+        "z": "0c7bc941a7c85671",
+        "command": "python3 /home/dietpi/piscicultura_monitor/bot_query_oxygen.py",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Chamar Python",
+        "x": 760,
+        "y": 40,
+        "wires": [
+            [
+                "083ce286853c205f"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "083ce286853c205f",
+        "type": "debug",
+        "z": "0c7bc941a7c85671",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "e177232537fdcd4e",
+        "type": "telegram receiver",
+        "z": "0c7bc941a7c85671",
+        "name": "Receber /temperatura",
+        "bot": "04e453c69f69584e",
+        "saveDataDir": "",
+        "filterCommands": true,
+        "hasinput": false,
+        "inputs": 0,
+        "handleallupdates": false,
+        "x": 140,
+        "y": 120,
+        "wires": [
+            [
+                "673d322494af3d6f"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "673d322494af3d6f",
+        "type": "switch",
+        "z": "0c7bc941a7c85671",
+        "name": "Filtro Comando",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "^\\/temperatura(@PeixePatelBot)?$",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 360,
+        "y": 120,
+        "wires": [
+            [
+                "48158f795e949ee9"
+            ]
+        ]
+    },
+    {
+        "id": "48158f795e949ee9",
+        "type": "function",
+        "z": "0c7bc941a7c85671",
+        "name": "Preparar Payload",
+        "func": "msg.payload = msg.payload.chatId;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 120,
+        "wires": [
+            [
+                "c8c10a635279b99f"
+            ]
+        ]
+    },
+    {
+        "id": "c8c10a635279b99f",
+        "type": "exec",
+        "z": "0c7bc941a7c85671",
+        "command": "python3 /home/dietpi/piscicultura_monitor/bot_query_temp.py",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Chamar Python",
+        "x": 760,
+        "y": 120,
+        "wires": [
+            [
+                "18fe1f420b3cb461"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "18fe1f420b3cb461",
+        "type": "debug",
+        "z": "0c7bc941a7c85671",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "de6058fac7934e8e",
+        "type": "debug",
+        "z": "0c7bc941a7c85671",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "d0c172e4b029ece9",
+        "type": "exec",
+        "z": "0c7bc941a7c85671",
+        "command": "python3 /home/dietpi/piscicultura_monitor/bot_query_ox_7d.py",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Chamar Python",
+        "x": 760,
+        "y": 200,
+        "wires": [
+            [
+                "de6058fac7934e8e"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "08d5018aa01987a8",
+        "type": "function",
+        "z": "0c7bc941a7c85671",
+        "name": "Preparar Payload",
+        "func": "msg.payload = msg.payload.chatId;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 200,
+        "wires": [
+            [
+                "d0c172e4b029ece9"
+            ]
+        ]
+    },
+    {
+        "id": "558b379943315fbe",
+        "type": "switch",
+        "z": "0c7bc941a7c85671",
+        "name": "Filtro Comando",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "^\\/ox7d(@PeixePatelBot)?$",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 340,
+        "y": 200,
+        "wires": [
+            [
+                "08d5018aa01987a8"
+            ]
+        ]
+    },
+    {
+        "id": "7fde545bfcff1e9c",
+        "type": "telegram receiver",
+        "z": "0c7bc941a7c85671",
+        "name": "Receber /ox7d",
+        "bot": "04e453c69f69584e",
+        "saveDataDir": "",
+        "filterCommands": true,
+        "hasinput": false,
+        "inputs": 0,
+        "handleallupdates": false,
+        "x": 120,
+        "y": 200,
+        "wires": [
+            [
+                "558b379943315fbe"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "f00de86724618691",
+        "type": "debug",
+        "z": "0c7bc941a7c85671",
+        "name": "debug 4",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "012ada4d61fc3cd4",
+        "type": "exec",
+        "z": "0c7bc941a7c85671",
+        "command": "python3 /home/dietpi/piscicultura_monitor/bot_query_ox_15d.py",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Chamar Python",
+        "x": 760,
+        "y": 280,
+        "wires": [
+            [
+                "f00de86724618691"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "9575623125864dfb",
+        "type": "function",
+        "z": "0c7bc941a7c85671",
+        "name": "Preparar Payload",
+        "func": "msg.payload = msg.payload.chatId;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 280,
+        "wires": [
+            [
+                "012ada4d61fc3cd4"
+            ]
+        ]
+    },
+    {
+        "id": "b2b3e48d5c87ebf1",
+        "type": "switch",
+        "z": "0c7bc941a7c85671",
+        "name": "Filtro Comando",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "^\\/ox15d(@PeixePatelBot)?$",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 340,
+        "y": 280,
+        "wires": [
+            [
+                "9575623125864dfb"
+            ]
+        ]
+    },
+    {
+        "id": "21174571bfc51d88",
+        "type": "telegram receiver",
+        "z": "0c7bc941a7c85671",
+        "name": "Receber /ox15d",
+        "bot": "04e453c69f69584e",
+        "saveDataDir": "",
+        "filterCommands": true,
+        "hasinput": false,
+        "inputs": 0,
+        "handleallupdates": false,
+        "x": 120,
+        "y": 280,
+        "wires": [
+            [
+                "b2b3e48d5c87ebf1"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "82d180b6e87a0ada",
+        "type": "debug",
+        "z": "0c7bc941a7c85671",
+        "name": "debug 5",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "88cda934b0cf89e8",
+        "type": "exec",
+        "z": "0c7bc941a7c85671",
+        "command": "python3 /home/dietpi/piscicultura_monitor/bot_query_temp_7d.py",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Chamar Python",
+        "x": 760,
+        "y": 360,
+        "wires": [
+            [
+                "82d180b6e87a0ada"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "3b926300e62cf7c2",
+        "type": "function",
+        "z": "0c7bc941a7c85671",
+        "name": "Preparar Payload",
+        "func": "msg.payload = msg.payload.chatId;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 360,
+        "wires": [
+            [
+                "88cda934b0cf89e8"
+            ]
+        ]
+    },
+    {
+        "id": "58ba1bb5930b8648",
+        "type": "switch",
+        "z": "0c7bc941a7c85671",
+        "name": "Filtro Comando",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "^\\/temp7d(@PeixePatelBot)?$",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 340,
+        "y": 360,
+        "wires": [
+            [
+                "3b926300e62cf7c2"
+            ]
+        ]
+    },
+    {
+        "id": "19603e2320e2ccd0",
+        "type": "telegram receiver",
+        "z": "0c7bc941a7c85671",
+        "name": "Receber /temp7d",
+        "bot": "04e453c69f69584e",
+        "saveDataDir": "",
+        "filterCommands": true,
+        "hasinput": false,
+        "inputs": 0,
+        "handleallupdates": false,
+        "x": 120,
+        "y": 360,
+        "wires": [
+            [
+                "58ba1bb5930b8648"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "ba761d7190110115",
+        "type": "debug",
+        "z": "0c7bc941a7c85671",
+        "name": "debug 6",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "18d9dd1d84cb1f77",
+        "type": "exec",
+        "z": "0c7bc941a7c85671",
+        "command": "python3 /home/dietpi/piscicultura_monitor/migrar.py",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Chamar Python",
+        "x": 760,
+        "y": 440,
+        "wires": [
+            [
+                "ba761d7190110115"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "43a350e85dd43d9e",
+        "type": "function",
+        "z": "0c7bc941a7c85671",
+        "name": "Preparar Payload",
+        "func": "msg.payload = msg.payload.chatId;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 440,
+        "wires": [
+            [
+                "18d9dd1d84cb1f77"
+            ]
+        ]
+    },
+    {
+        "id": "a17ab418c5eda224",
+        "type": "switch",
+        "z": "0c7bc941a7c85671",
+        "name": "Filtro Comando",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "^\\/backup(@PeixePatelBot)?$",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 340,
+        "y": 440,
+        "wires": [
+            [
+                "43a350e85dd43d9e"
+            ]
+        ]
+    },
+    {
+        "id": "0210333f68deb8e6",
+        "type": "telegram receiver",
+        "z": "0c7bc941a7c85671",
+        "name": "Receber /backup",
+        "bot": "04e453c69f69584e",
+        "saveDataDir": "",
+        "filterCommands": true,
+        "hasinput": false,
+        "inputs": 0,
+        "handleallupdates": false,
+        "x": 120,
+        "y": 440,
+        "wires": [
+            [
+                "a17ab418c5eda224"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "c13e9c28f5b85ada",
+        "type": "debug",
+        "z": "0c7bc941a7c85671",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "26cd508b0d478c82",
+        "type": "exec",
+        "z": "0c7bc941a7c85671",
+        "command": "python3 /home/dietpi/piscicultura_monitor/plot_curva.py",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "name": "Chamar Python",
+        "x": 760,
+        "y": 520,
+        "wires": [
+            [
+                "c13e9c28f5b85ada"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "2d24ffcff25da8e7",
+        "type": "function",
+        "z": "0c7bc941a7c85671",
+        "name": "Preparar Payload",
+        "func": "msg.payload = msg.payload.chatId;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 520,
+        "wires": [
+            [
+                "26cd508b0d478c82"
+            ]
+        ]
+    },
+    {
+        "id": "fa8909e7b86eb78e",
+        "type": "switch",
+        "z": "0c7bc941a7c85671",
+        "name": "Filtro Comando",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "^\\/previsao(@PeixePatelBot)?$",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 340,
+        "y": 520,
+        "wires": [
+            [
+                "2d24ffcff25da8e7"
+            ]
+        ]
+    },
+    {
+        "id": "cd391a0fb50a676c",
+        "type": "telegram receiver",
+        "z": "0c7bc941a7c85671",
+        "name": "Receber /previsao",
+        "bot": "04e453c69f69584e",
+        "saveDataDir": "",
+        "filterCommands": true,
+        "hasinput": false,
+        "inputs": 0,
+        "handleallupdates": false,
+        "x": 130,
+        "y": 520,
+        "wires": [
+            [
+                "fa8909e7b86eb78e"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "4c7fe4ce5540bc82",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-telegrambot": "17.0.5"
+        }
+    }
+]

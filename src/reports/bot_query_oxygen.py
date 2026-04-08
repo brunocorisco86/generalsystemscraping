@@ -1,0 +1,130 @@
+import sqlite3
+import pandas as pd
+import matplotlib.pyplot as plt
+import requests
+import os
+import statistics
+import sys
+import logging
+from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+# Adicionar o caminho do projeto ao sys.path para permitir importações do src
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.append(project_root)
+
+from src.services.database import get_sqlite_connection
+from src.services.notification import send_telegram_photo, send_telegram_message
+
+# Carregar variáveis de ambiente do arquivo .env
+load_dotenv()
+
+# --- CONFIGURAÇÕES DE LOGGING ---
+LOG_FILE = os.path.join(os.environ.get("LOGS_DIR", "logs"), "bot_query_oxygen.log")
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(LOG_FILE),
+        logging.StreamHandler() # Para também mostrar no console/stdout
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# --- CONFIGURAÇÕES DO SCRIPT ---
+REPORT_DIR = os.environ.get("REPORTS_DIR", "reports")
+# ChatID vindo do Node-RED ou padrão (usar o padrão do .env se não for fornecido)
+CHAT_ID_FROM_ARGS = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("TELEGRAM_CHAT_ID")
+LIMITE_O2 = 2.0
+
+def get_bot_report():
+    logger.info("Iniciando geração de relatório de oxigênio.")
+    now = datetime.now()
+    twelve_hours_ago = now - timedelta(hours=12)
+    
+    conn = None
+    try:
+        # 1. CONECTAR AO BANCO
+        conn = get_sqlite_connection()
+        if conn is None:
+            logger.error("Erro: Não foi possível conectar ao banco de dados SQLite.")
+            send_telegram_message(f"❌ Erro ao gerar relatório de oxigênio: falha na conexão com o BD.")
+            return
+
+        query = f"""
+            SELECT tanque, oxigenio, timestamp_site 
+            FROM leituras 
+            WHERE timestamp_site >= '{twelve_hours_ago.strftime('%Y-%m-%d %H:%M:%S')}' 
+            ORDER BY timestamp_site ASC
+        """
+        df = pd.read_sql_query(query, conn)
+
+        if df.empty:
+            logger.info(f"Nenhum dado encontrado desde {twelve_hours_ago} para o relatório de oxigênio.")
+            send_telegram_message("ℹ️ Nenhum dado de oxigênio encontrado nas últimas 12h.")
+            return
+
+        df['timestamp_site'] = pd.to_datetime(df['timestamp_site'])
+
+        # 2. GERAR GRÁFICO DE TENDÊNCIA
+        plt.style.use('seaborn-v0_8-darkgrid')
+        plt.figure(figsize=(10, 5))
+        for tank in sorted(df['tanque'].unique()):
+            tank_df = df[df['tanque'] == tank]
+            if not tank_df.empty:
+                plt.plot(tank_df['timestamp_site'], tank_df['oxigenio'], label=tank, linewidth=2)
+        
+        plt.axhline(y=LIMITE_O2, color='red', linestyle='--', alpha=0.5, label="Limite Crítico")
+        plt.title('Tendencia de O2 (Ultimas 12h)')
+        plt.xlabel('Hora')
+        plt.ylabel('Mg/L')
+        plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+        plt.legend()
+        plt.tight_layout()
+        
+        plot_path = os.path.join(REPORT_DIR, 'bot_oxygen_trend.png')
+        if not os.path.exists(REPORT_DIR):
+            os.makedirs(REPORT_DIR)
+        plt.savefig(plot_path, dpi=100)
+        plt.close()
+        logger.info(f"Gráfico de tendência de oxigênio salvo em {plot_path}")
+
+        # 3. CONSTRUIR MENSAGEM (FOCO SMARTWATCH)
+        msg = f"📊 *Relatório {now.strftime('%H:%M')}h*\n"
+        
+        for tank in sorted(df['tanque'].unique()):
+            tank_data = df[df['tanque'] == tank].tail(4)
+            if tank_data.empty: continue
+            
+            o2_atual = tank_data['oxigenio'].iloc[-1]
+            avg_4 = tank_data['oxigenio'].mean()
+            ts_site = tank_data['timestamp_site'].iloc[-1]
+            
+            # Cálculo de Confiança (CV < 0.15)
+            # Evita ZeroDivisionError
+            std_dev = statistics.stdev(tank_data['oxigenio']) if len(tank_data) > 1 else 0
+            cv = (std_dev / avg_4) if avg_4 > 0 else 0
+
+            conf_emoji = "🛡️" if cv < 0.15 else "⚠️"
+            trend = "📈" if o2_atual >= avg_4 else "📉"
+            status = "🟢" if o2_atual >= LIMITE_O2 else "🔴"
+            hora_f = ts_site.strftime('%H:%M')
+
+            msg += f"\n📍 *{tank}*\n"
+            msg += f"Oxigênio: `{o2_atual:.2f}` {trend} {status}\n"
+            msg += f"Md4: `{avg_4:.2f}` | ⌚{hora_f} {conf_emoji}\n"
+
+        # 4. ENVIAR PARA O TELEGRAM
+        send_telegram_photo(msg, plot_path, chat_id=CHAT_ID_FROM_ARGS)
+        logger.info("Relatório de oxigênio enviado para o Telegram.")
+
+    except Exception as e:
+        logger.error(f"ERRO CRITICO ao gerar relatório de oxigênio: {e}", exc_info=True)
+        send_telegram_message(f"❌ Erro crítico ao gerar relatório de oxigênio: {e}", chat_id=CHAT_ID_FROM_ARGS)
+    finally:
+        if conn:
+            conn.close()
+
+if __name__ == "__main__":
+    get_bot_report()
+
