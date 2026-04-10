@@ -23,25 +23,40 @@ PASSWORD = os.getenv("LOGIN_PASSWORD")
 CHROMEDRIVER_PATH = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
 
 def get_driver():
-    """Configura o driver do Chrome em modo headless com flags de estabilidade."""
+    """Configura o driver do Chrome em modo headless com fallback de localização."""
     chrome_options = Options()
-    chrome_options.add_argument("--headless=new") # Nova versão do headless mais estável
+    chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--remote-debugging-port=9222")
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
 
-    # Verifica se o chromedriver existe no caminho especificado
-    if not os.path.exists(CHROMEDRIVER_PATH):
-        # Tentar encontrar no PATH se não estiver no caminho fixo
+    # Lista de caminhos prováveis do ChromeDriver para diferentes distros
+    possiveis_caminhos = [
+        CHROMEDRIVER_PATH,
+        "/usr/bin/chromedriver",
+        "/usr/lib/chromium-browser/chromedriver",
+        "/usr/local/bin/chromedriver"
+    ]
+
+    service = None
+    for caminho in possiveis_caminhos:
+        if caminho and os.path.exists(caminho):
+            print(f"--- Usando ChromeDriver encontrado em: {caminho} ---")
+            service = Service(executable_path=caminho)
+            break
+    
+    if not service:
+        print("--- Aviso: ChromeDriver não encontrado nos caminhos padrão. Tentando via PATH do sistema ---")
         service = Service()
-    else:
-        service = Service(executable_path=CHROMEDRIVER_PATH)
         
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    return driver
+    try:
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+        return driver
+    except Exception as e:
+        print(f"❌ Erro ao iniciar WebDriver: {e}")
+        raise
 
 def scrape_and_save():
     max_tentativas = 3
