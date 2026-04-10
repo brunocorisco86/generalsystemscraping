@@ -1,38 +1,50 @@
-import sqlite3
-import pandas as pd
-import matplotlib.pyplot as plt
-import requests
 import os
 import glob
 from datetime import datetime, timedelta
+import pandas as pd
+import matplotlib.pyplot as plt
+from dotenv import load_dotenv
 
-# --- CONFIGURAÇÕES ---
-DB_PATH = '/home/dietpi/piscicultura_monitor/piscicultura_dados.db'
-REPORT_DIR = '/home/dietpi/piscicultura_monitor/reports'
-TELEGRAM_TOKEN = "8355153356:AAG55aFGL153Uzwo4w48uj1_vDV8BC2sim4"
-TELEGRAM_CHAT_ID = "-1003744398479"
-LIMITE_CRITICO = 2.0  # mg/L
+# Importar serviços centralizados do projeto
+from src.services.database import get_sqlite_connection
+from src.services.notification import send_telegram_photo
 
-def generate_report():
-    # 0 - Limpeza da pasta de relatórios
+# Carregar variáveis de ambiente
+load_dotenv()
+
+# --- CONFIGURAÇÕES VIA .ENV ---
+REPORT_DIR = os.environ.get("REPORTS_DIR", "reports")
+LIMITE_CRITICO = float(os.environ.get("LIMITE_OXIGENIO_CRITICO", 2.0))
+
+def generate_nightly_report():
+    """
+    Gera um relatório do período noturno (18h às 08h) com um gráfico 
+    do nível de oxigênio e envia para o Telegram.
+    """
+    # Garante a existência da pasta de relatórios
     if not os.path.exists(REPORT_DIR):
-        os.makedirs(REPORT_DIR)
+        os.makedirs(REPORT_DIR, exist_ok=True)
     
-    files = glob.glob(f'{REPORT_DIR}/*')
-    for f in files:
+    # Limpa relatórios noturnos antigos
+    for f in glob.glob(os.path.join(REPORT_DIR, 'nightly_*')):
         try:
             os.remove(f)
-        except:
-            pass
+        except OSError as e:
+            print(f"Erro ao remover arquivo antigo {f}: {e}")
 
     # Definição do intervalo: Ontem 18:00 até Hoje 08:00
     now = datetime.now()
     end_time = now.replace(hour=8, minute=0, second=0, microsecond=0)
-    start_time = (end_time - timedelta(days=1)).replace(hour=18, minute=0)
+    start_time = (end_time - timedelta(days=1)).replace(hour=18, minute=0, second=0, microsecond=0)
 
+    conn = None
     try:
-        # Conexão e Leitura dos Dados
-        conn = sqlite3.connect(DB_PATH)
+        # Conexão via serviço centralizado
+        conn = get_sqlite_connection()
+        if conn is None:
+            print("Erro: Não foi possível conectar ao banco de dados SQLite.")
+            return
+
         query = f"""
             SELECT tanque, oxigenio, temperatura, timestamp_site 
             FROM leituras 
@@ -41,9 +53,7 @@ def generate_report():
             ORDER BY timestamp_site ASC
         """
         
-        # Correção do erro anterior: pd.read_sql_query
         df = pd.read_sql_query(query, conn)
-        conn.close()
 
         if df.empty:
             print(f"Sem dados encontrados entre {start_time} e {end_time}")
@@ -52,20 +62,21 @@ def generate_report():
         # Converter para datetime e garantir ordenação
         df['timestamp_site'] = pd.to_datetime(df['timestamp_site'])
 
-        # 1 & 2 - Geração do Plot (Gráfico)
+        # --- GERAÇÃO DO GRÁFICO ---
+        plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(12, 6))
         
-        # Linha Crítica de 2.0 mg/L
+        # Linha de Limite Crítico
         plt.axhline(y=LIMITE_CRITICO, color='red', linestyle='--', linewidth=2, label=f'Limite Crítico ({LIMITE_CRITICO} mg/L)')
         
         analysis_text = f"📊 *Relatório Noturno: {start_time.strftime('%d/%m')} ➔ {end_time.strftime('%d/%m')}*\n\n"
         
         # Plotar uma curva para cada tanque
-        for tank in df['tanque'].unique():
+        for tank in sorted(df['tanque'].unique()):
             tank_data = df[df['tanque'] == tank]
-            plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=f'{tank} - O2', marker='.', markersize=4)
+            plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=f'{tank}', marker='.', markersize=4)
             
-            # Análise breve por tanque
+            # Análise estatística por tanque
             o2_min = tank_data['oxigenio'].min()
             temp_avg = tank_data['temperatura'].mean()
             
@@ -82,31 +93,19 @@ def generate_report():
         
         # Salvar imagem
         plot_path = os.path.join(REPORT_DIR, 'nightly_plot.png')
-        plt.savefig(plot_path)
+        plt.savefig(plot_path, dpi=100)
         plt.close()
 
-        # 3 - Envio para o Telegram
-        send_to_telegram(analysis_text, plot_path)
-        print("Relatório enviado com sucesso!")
+        # Enviar para o Telegram via serviço centralizado
+        send_telegram_photo(analysis_text, plot_path)
+        print(f"Relatório noturno gerado e enviado com sucesso para {plot_path}.")
 
     except Exception as e:
-        print(f"Ocorreu um erro no processamento: {e}")
-
-def send_to_telegram(text, photo_path):
-    url_photo = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
-    
-    try:
-        with open(photo_path, 'rb') as photo:
-            payload = {
-                'chat_id': TELEGRAM_CHAT_ID,
-                'caption': text,
-                'parse_mode': 'Markdown'
-            }
-            files = {'photo': photo}
-            response = requests.post(url_photo, data=payload, files=files, timeout=20)
-            response.raise_for_status()
-    except Exception as e:
-        print(f"Falha ao enviar Telegram: {e}")
+        print(f"Ocorreu um erro no processamento do relatório noturno: {e}")
+    finally:
+        if conn:
+            conn.close()
 
 if __name__ == "__main__":
-    generate_report()
+    # Para executar do root: python3 -m src.jobs.nightly_report
+    generate_nightly_report()
