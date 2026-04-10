@@ -47,4 +47,3 @@ def send_telegram_photo(caption: str, photo_path: str):
         print(f"Erro: Arquivo de imagem não encontrado em {photo_path}")
     except requests.RequestException as e:
         print(f"Erro ao enviar imagem para o Telegram: {e}")
-
