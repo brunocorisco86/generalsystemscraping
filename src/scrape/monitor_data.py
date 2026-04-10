@@ -23,11 +23,14 @@ PASSWORD = os.getenv("LOGIN_PASSWORD")
 CHROMEDRIVER_PATH = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
 
 def get_driver():
-    """Configura o driver do Chrome em modo headless."""
+    """Configura o driver do Chrome em modo headless com flags de estabilidade."""
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless=new") # Nova versão do headless mais estável
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--remote-debugging-port=9222")
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
 
     # Verifica se o chromedriver existe no caminho especificado
