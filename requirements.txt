@@ -1,7 +1,6 @@
 # Backend e análise
 pandas
 numpy
-matplotlib
 seaborn
 requests
 sqlalchemy

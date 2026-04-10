@@ -16,7 +16,7 @@ install_alpine_deps() {
         python3-dev build-base postgresql-dev sqlite-dev libffi-dev \
         zlib-dev util-linux openblas openblas-dev freetype freetype-dev \
         libpng libpng-dev jpeg jpeg-dev tiff tiff-dev chromium \
-        chromium-chromedriver ncurses-dev
+        chromium-chromedriver ncurses-dev py3-matplotlib
 
     # Garante que o Docker sobe junto com o sistema
     sudo rc-update add docker boot 2>/dev/null || true
