@@ -12,8 +12,8 @@ echo "--- [02/04] Preparando ambiente virtual Python ---"
 echo "Destino: $VENV_DIR"
 
 if [ ! -d "$VENV_DIR" ]; then
-    echo "--- Criando novo ambiente virtual... ---"
-    python3 -m venv "$VENV_DIR"
+    echo "--- Criando novo ambiente virtual com acesso aos pacotes de sistema... ---"
+    python3 -m venv --system-site-packages "$VENV_DIR"
     echo "✅ Ambiente virtual criado com sucesso."
 else
     echo "--- Ambiente virtual já existente. Pulando criação. ---"

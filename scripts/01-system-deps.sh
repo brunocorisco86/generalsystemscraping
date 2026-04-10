@@ -43,7 +43,7 @@ install_sequentially() {
 }
 
 # Definição das listas de dependências como strings (POSIX compatible)
-ALPINE_DEPS="git docker docker-cli-compose python3 py3-pip py3-virtualenv python3-dev build-base postgresql-dev sqlite-dev libffi-dev zlib-dev util-linux openblas openblas-dev freetype freetype-dev libpng libpng-dev jpeg jpeg-dev tiff tiff-dev chromium chromium-chromedriver ncurses-dev py3-matplotlib"
+ALPINE_DEPS="git docker docker-cli-compose python3 py3-pip py3-virtualenv python3-dev build-base postgresql-dev sqlite-dev libffi-dev zlib-dev util-linux openblas openblas-dev freetype freetype-dev libpng libpng-dev jpeg jpeg-dev tiff tiff-dev chromium chromium-chromedriver ncurses-dev py3-matplotlib py3-numpy py3-pandas"
 
 DEBIAN_DEPS="git docker.io docker-compose python3 python3-pip python3-venv python3-dev build-essential libpq-dev libsqlite3-dev libffi-dev zlib1g-dev libopenblas-dev libfreetype6-dev libpng-dev libjpeg-dev libtiff-dev chromium-browser chromium-chromedriver libncurses5-dev"
 
