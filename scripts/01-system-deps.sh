@@ -1,5 +1,5 @@
-#!/bin/bash
-# 01-system-deps.sh: Instala dependências do sistema de forma cadenciada para evitar superaquecimento.
+#!/bin/sh
+# 01-system-deps.sh: Instala dependências do sistema de forma cadenciada e compatível com POSIX (sh/ash)
 
 set -e
 
@@ -16,45 +16,36 @@ if [ "$(id -u)" -ne 0 ]; then
     fi
 fi
 
-# Função para instalar pacotes um a um com pausa para arrefecimento
+# Função para instalar pacotes um a um com pausa para arrefecimento (Compatível com POSIX sh)
 install_sequentially() {
-    local manager=$1
+    manager=$1
     shift
-    local packages=("$@")
-    local total=${#packages[@]}
-    local count=1
-
-    for pkg in "${packages[@]}"; do
+    packages=$@
+    
+    # Conta total de pacotes
+    total=0
+    for pkg in $packages; do total=$((total + 1)); done
+    
+    count=1
+    for pkg in $packages; do
         echo "[$count/$total] Instalando: $pkg..."
         
-        if [ "$manager" == "apk" ]; then
+        if [ "$manager" = "apk" ]; then
             $SUDO apk add --no-cache "$pkg"
         else
             $SUDO apt-get install -y "$pkg"
         fi
 
-        echo "✅ $pkg instalado. Pausando 5 segundos para arrefecimento do hardware..."
+        echo "✅ $pkg instalado. Pausando 5 segundos para arrefecimento..."
         sleep 5
         count=$((count + 1))
     done
 }
 
-# Definição das listas de dependências
-ALPINE_DEPS=(
-    "git" "docker" "docker-cli-compose" "python3" "py3-pip" "py3-virtualenv"
-    "python3-dev" "build-base" "postgresql-dev" "sqlite-dev" "libffi-dev"
-    "zlib-dev" "util-linux" "openblas" "openblas-dev" "freetype" "freetype-dev"
-    "libpng" "libpng-dev" "jpeg" "jpeg-dev" "tiff" "tiff-dev" "chromium"
-    "chromium-chromedriver" "ncurses-dev" "py3-matplotlib"
-)
+# Definição das listas de dependências como strings (POSIX compatible)
+ALPINE_DEPS="git docker docker-cli-compose python3 py3-pip py3-virtualenv python3-dev build-base postgresql-dev sqlite-dev libffi-dev zlib-dev util-linux openblas openblas-dev freetype freetype-dev libpng libpng-dev jpeg jpeg-dev tiff tiff-dev chromium chromium-chromedriver ncurses-dev py3-matplotlib"
 
-DEBIAN_DEPS=(
-    "git" "docker.io" "docker-compose" "python3" "python3-pip" "python3-venv"
-    "python3-dev" "build-essential" "libpq-dev" "libsqlite3-dev" "libffi-dev"
-    "zlib1g-dev" "libopenblas-dev" "libfreetype6-dev" "libpng-dev"
-    "libjpeg-dev" "libtiff-dev" "chromium-browser" "chromium-chromedriver"
-    "libncurses5-dev"
-)
+DEBIAN_DEPS="git docker.io docker-compose python3 python3-pip python3-venv python3-dev build-essential libpq-dev libsqlite3-dev libffi-dev zlib1g-dev libopenblas-dev libfreetype6-dev libpng-dev libjpeg-dev libtiff-dev chromium-browser chromium-chromedriver libncurses5-dev"
 
 if [ -f "/etc/os-release" ]; then
     . /etc/os-release
@@ -62,7 +53,7 @@ if [ -f "/etc/os-release" ]; then
         alpine)
             echo "--- Detectado Alpine Linux. Iniciando instalação sequencial via APK ---"
             $SUDO apk update
-            install_sequentially "apk" "${ALPINE_DEPS[@]}"
+            install_sequentially "apk" $ALPINE_DEPS
             
             echo "--- Configurando serviços de fundo ---"
             $SUDO rc-update add docker boot 2>/dev/null || true
@@ -71,7 +62,7 @@ if [ -f "/etc/os-release" ]; then
         pop|ubuntu|debian)
             echo "--- Detectado sistema Debian-based. Iniciando instalação sequencial via APT ---"
             $SUDO apt-get update
-            install_sequentially "apt" "${DEBIAN_DEPS[@]}"
+            install_sequentially "apt" $DEBIAN_DEPS
             
             echo "--- Configurando serviços de fundo ---"
             $SUDO systemctl enable docker 2>/dev/null || true
