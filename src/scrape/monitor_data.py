@@ -69,6 +69,20 @@ def scrape_and_save():
             
             cursor = conn.cursor()
 
+            # Garantir que a tabela exista antes de prosseguir
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS leituras (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    tanque TEXT,
+                    oxigenio REAL,
+                    temperatura REAL,
+                    timestamp_site TIMESTAMP,
+                    data_coleta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    aeradores_ativos INTEGER DEFAULT 0
+                )
+            ''')
+            conn.commit()
+
             # 1. Login
             driver.get(URL_LOGIN)
             wait = WebDriverWait(driver, 30)
