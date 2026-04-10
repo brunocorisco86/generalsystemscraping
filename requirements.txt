@@ -7,6 +7,7 @@ requests
 sqlalchemy
 selenium
 scipy
+psycopg2
 psycopg2-binary
 openpyxl
 python-dotenv==1.0.1
