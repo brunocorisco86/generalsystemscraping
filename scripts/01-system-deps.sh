@@ -1,9 +1,9 @@
 #!/bin/bash
-# 01-system-deps.sh: Instala dependências do sistema detectando o OS e permissões
+# 01-system-deps.sh: Instala dependências do sistema de forma cadenciada para evitar superaquecimento.
 
 set -e
 
-echo "--- [01/04] Verificando dependências do sistema ---"
+echo "--- [01/04] Iniciando verificação cautelosa de dependências ---"
 
 # Detecta se precisa de sudo ou se já é root
 SUDO=""
@@ -11,58 +11,80 @@ if [ "$(id -u)" -ne 0 ]; then
     if command -v sudo >/dev/null 2>&1; then
         SUDO="sudo"
     else
-        echo "ERRO: Você não é root e o comando 'sudo' não foi encontrado."
-        echo "Por favor, execute este script como root ou instale o sudo/doas."
+        echo "ERRO: Usuário não é root e 'sudo' não foi encontrado."
         exit 1
     fi
 fi
 
-# Função para Alpine Linux
-install_alpine() {
-    echo "--- Detectado Alpine Linux. Instalando via apk ---"
-    $SUDO apk update
-    $SUDO apk add --no-cache \
-        git docker docker-cli-compose python3 py3-pip py3-virtualenv \
-        python3-dev build-base postgresql-dev sqlite-dev libffi-dev \
-        zlib-dev util-linux openblas openblas-dev freetype freetype-dev \
-        libpng libpng-dev jpeg jpeg-dev tiff tiff-dev chromium \
-        chromium-chromedriver ncurses-dev py3-matplotlib
-    
-    $SUDO rc-update add docker boot 2>/dev/null || true
-    $SUDO rc-service docker start 2>/dev/null || true
+# Função para instalar pacotes um a um com pausa para arrefecimento
+install_sequentially() {
+    local manager=$1
+    shift
+    local packages=("$@")
+    local total=${#packages[@]}
+    local count=1
+
+    for pkg in "${packages[@]}"; do
+        echo "[$count/$total] Instalando: $pkg..."
+        
+        if [ "$manager" == "apk" ]; then
+            $SUDO apk add --no-cache "$pkg"
+        else
+            $SUDO apt-get install -y "$pkg"
+        fi
+
+        echo "✅ $pkg instalado. Pausando 5 segundos para arrefecimento do hardware..."
+        sleep 5
+        count=$((count + 1))
+    done
 }
 
-# Função para Debian/Ubuntu/Pop!_OS
-install_debian() {
-    echo "--- Detectado sistema baseado em Debian/Ubuntu. Instalando via apt ---"
-    $SUDO apt-get update
-    $SUDO apt-get install -y \
-        git docker.io docker-compose python3 python3-pip python3-venv \
-        python3-dev build-essential libpq-dev libsqlite3-dev libffi-dev \
-        zlib1g-dev libopenblas-dev libfreetype6-dev libpng-dev \
-        libjpeg-dev libtiff-dev chromium-browser chromium-chromedriver \
-        libncurses5-dev
-    
-    $SUDO systemctl enable docker 2>/dev/null || true
-    $SUDO systemctl start docker 2>/dev/null || true
-}
+# Definição das listas de dependências
+ALPINE_DEPS=(
+    "git" "docker" "docker-cli-compose" "python3" "py3-pip" "py3-virtualenv"
+    "python3-dev" "build-base" "postgresql-dev" "sqlite-dev" "libffi-dev"
+    "zlib-dev" "util-linux" "openblas" "openblas-dev" "freetype" "freetype-dev"
+    "libpng" "libpng-dev" "jpeg" "jpeg-dev" "tiff" "tiff-dev" "chromium"
+    "chromium-chromedriver" "ncurses-dev" "py3-matplotlib"
+)
+
+DEBIAN_DEPS=(
+    "git" "docker.io" "docker-compose" "python3" "python3-pip" "python3-venv"
+    "python3-dev" "build-essential" "libpq-dev" "libsqlite3-dev" "libffi-dev"
+    "zlib1g-dev" "libopenblas-dev" "libfreetype6-dev" "libpng-dev"
+    "libjpeg-dev" "libtiff-dev" "chromium-browser" "chromium-chromedriver"
+    "libncurses5-dev"
+)
 
 if [ -f "/etc/os-release" ]; then
     . /etc/os-release
     case "$ID" in
         alpine)
-            install_alpine
+            echo "--- Detectado Alpine Linux. Iniciando instalação sequencial via APK ---"
+            $SUDO apk update
+            install_sequentially "apk" "${ALPINE_DEPS[@]}"
+            
+            echo "--- Configurando serviços de fundo ---"
+            $SUDO rc-update add docker boot 2>/dev/null || true
+            $SUDO rc-service docker start 2>/dev/null || true
             ;;
         pop|ubuntu|debian)
-            install_debian
+            echo "--- Detectado sistema Debian-based. Iniciando instalação sequencial via APT ---"
+            $SUDO apt-get update
+            install_sequentially "apt" "${DEBIAN_DEPS[@]}"
+            
+            echo "--- Configurando serviços de fundo ---"
+            $SUDO systemctl enable docker 2>/dev/null || true
+            $SUDO systemctl start docker 2>/dev/null || true
             ;;
         *)
-            echo "AVISO: Sistema '$ID' não suportado automaticamente. Tente instalar dependências manuais."
+            echo "AVISO: Sistema '$ID' não suportado automaticamente."
+            exit 1
             ;;
     esac
 else
-    echo "ERRO: Não foi possível detectar o sistema operacional via /etc/os-release."
+    echo "ERRO: Não foi possível detectar o sistema operacional."
     exit 1
 fi
 
-echo "--- Etapa 01 concluída com sucesso! ---"
+echo "--- Etapa 01 concluída com sucesso! Hardware preservado. ---"
