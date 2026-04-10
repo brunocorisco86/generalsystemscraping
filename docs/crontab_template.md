@@ -47,6 +47,9 @@ VENV_PYTHON=/home/bruno/generalsystemscraping/.venv/bin/python3
 # 22:06 - Fechamento do Dia (Gráfico Tarde/Noite e ajuste de Threshold)
 6 22 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.evening_report >> $PROJECT_ROOT/logs/cron.log 2>&1
 
+# Vigília Noturna (Resumo ultra-sucinto a cada hora: 22h às 06h)
+7 22,23,0,1,2,3,4,5,6 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.vigi_report >> $PROJECT_ROOT/logs/cron.log 2>&1
+
 # ==============================================================================
 # 4. MANUTENÇÃO E BACKUP
 # ==============================================================================
