@@ -19,9 +19,12 @@ services:
       context: .
       dockerfile: src/bots/biometria/Dockerfile
     container_name: bot_biometria
-    # Passa o arquivo .env para o container para que o bot possa usar as variáveis
+    # Passa o arquivo .env para o container
     env_file:
       - .env
+    # Sobrescreve o host para apontar para o container do postgres
+    environment:
+      - PG_HOST=postgres
     depends_on:
       - postgres
     restart: unless-stopped
@@ -33,6 +36,8 @@ services:
     container_name: bot_qualidade_agua
     env_file:
       - .env
+    environment:
+      - PG_HOST=postgres
     depends_on:
       - postgres
     restart: unless-stopped
