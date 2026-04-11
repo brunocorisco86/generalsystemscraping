@@ -3,15 +3,20 @@ import sqlite3
 import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 # Adiciona a raiz do projeto ao sys.path para permitir importações de src
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
+
+# Carrega .env da raiz do projeto explicitamente
+load_dotenv(project_root / ".env")
 
 from src.services.database import SQLITE_DB_PATH
 
 def init_db():
     """Inicializa o banco de dados SQLite e cria as tabelas necessárias."""
-    print(f"--- [05/05] Inicializando banco de dados SQLite em '{SQLITE_DB_PATH}' ---")
+    print(f"--- [05/06] Inicializando banco de dados SQLite em '{SQLITE_DB_PATH}' ---")
     
     # Garante que o diretório pai exista
     os.makedirs(os.path.dirname(SQLITE_DB_PATH), exist_ok=True)

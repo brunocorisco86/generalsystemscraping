@@ -23,7 +23,6 @@ sh "$SCRIPT_DIR/03-install-python-deps.sh"
 sh "$SCRIPT_DIR/04-setup-env-file.sh"
 
 # Etapa 05: Inicialização do Banco de Dados via Python
-echo "--- [05/06] Inicializando Banco de Dados SQLite ---"
 VENV_PYTHON="$SCRIPT_DIR/../.venv/bin/python3"
 if [ -f "$VENV_PYTHON" ]; then
     "$VENV_PYTHON" "$SCRIPT_DIR/05-init-sqlite-db.py"
@@ -33,7 +32,6 @@ else
 fi
 
 # Etapa 06: Instalação das Tarefas Cron
-echo "--- [06/06] Instalando Tarefas no Cron ---"
 sh "$SCRIPT_DIR/06-install-cron.sh"
 
 echo ""

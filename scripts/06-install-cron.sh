@@ -5,6 +5,8 @@
 
 set -e
 
+echo "--- [06/06] Instalando Tarefas Automáticas no Cron ---"
+
 # Detecta a pasta do script e a raiz do projeto
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"

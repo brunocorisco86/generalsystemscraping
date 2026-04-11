@@ -9,7 +9,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 VENV_DIR="$REPO_ROOT/.venv"
 REQUIREMENTS_FILE="$REPO_ROOT/requirements.txt"
 
-echo "--- [03/04] Iniciando instalação de bibliotecas Python ---"
+echo "--- [03/06] Iniciando instalação de bibliotecas Python ---"
 
 if [ ! -f "$VENV_DIR/bin/pip" ]; then
     echo "ERRO: O ambiente virtual em '$VENV_DIR' não foi encontrado. Execute a etapa 02 primeiro."

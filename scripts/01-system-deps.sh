@@ -3,7 +3,7 @@
 
 set -e
 
-echo "--- [01/04] Iniciando verificação cautelosa de dependências ---"
+echo "--- [01/06] Iniciando verificação cautelosa de dependências ---"
 
 # Detecta se precisa de sudo ou se já é root
 SUDO=""
