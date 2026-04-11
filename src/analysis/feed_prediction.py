@@ -1,45 +1,33 @@
-import sqlite3
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import requests
-import os
 from datetime import datetime, timedelta
-
 from dotenv import load_dotenv
+
+# Importar serviços do projeto
+from src.services.database import get_sqlite_connection
+from src.services.notification import send_telegram_photo, send_telegram_message
 
 # Carregar variáveis de ambiente
 load_dotenv()
 
 # --- CONFIGURAÇÕES ---
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-DB_PATH = os.environ.get("SQLITE_DB_PATH", os.path.join(PROJECT_ROOT, "data/piscicultura_dados.db"))
-REPORT_DIR = os.environ.get("REPORT_DIR", os.path.join(PROJECT_ROOT, "reports"))
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+REPORTS_DIR = os.environ.get("REPORTS_DIR", "reports")
 LIMITE_TRATO = float(os.environ.get("FEED_LIMITE_TRATO", 3.0))
-
-def send_telegram(text, photo_path=None):
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/"
-    if photo_path:
-        with open(photo_path, 'rb') as photo:
-            requests.post(url + "sendPhoto", data={'chat_id': TELEGRAM_CHAT_ID, 'caption': text, 'parse_mode': 'Markdown'}, files={'photo': photo})
-    else:
-        requests.post(url + "sendMessage", data={'chat_id': TELEGRAM_CHAT_ID, 'text': text, 'parse_mode': 'Markdown'})
 
 def run_production_logic():
     agora = datetime.now()
-    # Se o caminho for relativo, garante que seja absoluto a partir da raiz do projeto
-    db_path_abs = DB_PATH if os.path.isabs(DB_PATH) else os.path.join(PROJECT_ROOT, DB_PATH)
-    conn = sqlite3.connect(db_path_abs)
-
     # CONSTRAINT: Só envia mensagem entre 07h e 09h
     if not (7 <= agora.hour < 9):
         print(f"Fora do horário de envio (07h-09h): {agora.strftime('%H:%M')}")
         return
 
+    conn = None
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_sqlite_connection()
+        if not conn: return
+        
         inicio_view = agora - timedelta(hours=15)
         query = f"SELECT tanque, oxigenio, timestamp_site FROM leituras WHERE timestamp_site BETWEEN '{inicio_view}' AND '{agora}' ORDER BY timestamp_site ASC"
         df = pd.read_sql_query(query, conn)
@@ -52,28 +40,24 @@ def run_production_logic():
         status_check = {}
         tank_results = []
         
-        # 1. Verificação Rápida de Status
         for tank, tdf in tank_groups:
             tdf['o2_smooth'] = tdf['oxigenio'].rolling(window=5, center=True).mean().fillna(tdf['oxigenio'])
             last_o2 = tdf['o2_smooth'].iloc[-1]
             status_check[tank] = last_o2
             tank_results.append({'tank': tank, 'df': tdf, 'last_o2': last_o2})
 
-        # SE TODOS ESTIVEREM ACIMA DE 3.0 -> SÓ TEXTO
         if all(val >= LIMITE_TRATO for val in status_check.values()):
             msg = "🐟 *Aviso de Arraçoamento*\n\n"
             for t, val in status_check.items():
                 msg += f"✅ *{t}:* `{val:.2f}` mg/L. Liberado para tratar!\n"
-            send_telegram(msg)
+            send_telegram_message(msg)
             return
 
-        # 2. LOGICA DE PROJEÇÃO (Se algum estiver abaixo de 3.0)
         inicio_calc = agora - timedelta(minutes=90)
         meio_dia = agora.replace(hour=12, minute=0, second=0, microsecond=0)
         best_accel_coeffs = None
         max_gain = -999
 
-        # Encontrar Tanque Líder
         for item in tank_results:
             calc_df = item['df'][item['df']['timestamp_site'] >= inicio_calc].copy()
             if len(calc_df) < 3: continue
@@ -84,7 +68,7 @@ def run_production_logic():
                 max_gain = current_gain
                 best_accel_coeffs = coeffs
 
-        # Plotagem Equalizada
+        plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(12, 7))
         colors = {'Tanque 1': '#1f77b4', 'Tanque 2': '#ff7f0e'}
         analysis_text = f"📈 *Previsão do Horário de Arraçoamento*\n📅 {agora.strftime('%H:%M')}\n\n"
@@ -116,12 +100,12 @@ def run_production_logic():
         plt.legend(loc='lower right')
         plt.tight_layout()
 
-        if not os.path.exists(REPORT_DIR): os.makedirs(REPORT_DIR)
-        plot_path = os.path.join(REPORT_DIR, 'trato_hoje.png')
+        if not os.path.exists(REPORTS_DIR): os.makedirs(REPORTS_DIR)
+        plot_path = os.path.join(REPORTS_DIR, 'trato_hoje.png')
         plt.savefig(plot_path)
         plt.close()
         
-        send_telegram(analysis_text, plot_path)
+        send_telegram_photo(analysis_text, plot_path)
 
     except Exception as e: print(f"Erro: {e}")
 

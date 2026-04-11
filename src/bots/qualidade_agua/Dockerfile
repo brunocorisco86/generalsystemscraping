@@ -13,4 +13,5 @@ COPY . .
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["python", "bot_agua.py"]
+# O comando para iniciar o bot quando o container for executado
+CMD ["python3", "-u", "main.py"]
