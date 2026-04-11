@@ -65,10 +65,12 @@ async def init_postgres():
             );
         ''')
 
-        # Migração: Garante que todas as colunas novas existam (Postgres 15+ suporta ADD COLUMN IF NOT EXISTS)
-        print("Sincronizando colunas da tabela 'lotes'...")
+        # Migração: Garante que todas as colunas novas existam e tipos estejam corretos
+        print("Sincronizando colunas e tipos da tabela 'lotes'...")
         migracoes = [
             "ALTER TABLE lotes RENAME COLUMN data_inicio TO data_alojamento;",
+            "ALTER TABLE lotes ALTER COLUMN lote TYPE VARCHAR(255);",
+            "ALTER TABLE biometria ALTER COLUMN lote TYPE VARCHAR(255);",
             "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS peixes_alojados INTEGER;",
             "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS peso_medio NUMERIC(10,2);",
             "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS area_acude NUMERIC(10,2);",
