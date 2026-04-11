@@ -6,10 +6,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+# Copia apenas o arquivo de dependências específico do bot
+COPY src/bots/qualidade_agua/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Copia o código-fonte do bot
+COPY src/bots/qualidade_agua/ /app/
 
 ENV PYTHONUNBUFFERED=1
 
