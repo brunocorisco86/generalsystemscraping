@@ -65,12 +65,25 @@ async def init_postgres():
             );
         ''')
 
-        # Migração: Tenta renomear caso o usuário tenha a versão antiga
-        try:
-            await conn.execute("ALTER TABLE lotes RENAME COLUMN data_inicio TO data_alojamento;")
-            print("  -> Coluna 'data_inicio' renomeada para 'data_alojamento'.")
-        except:
-            pass # Coluna já está certa ou não existe
+        # Migração: Garante que todas as colunas novas existam (Postgres 15+ suporta ADD COLUMN IF NOT EXISTS)
+        print("Sincronizando colunas da tabela 'lotes'...")
+        migracoes = [
+            "ALTER TABLE lotes RENAME COLUMN data_inicio TO data_alojamento;",
+            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS peixes_alojados INTEGER;",
+            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS peso_medio NUMERIC(10,2);",
+            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS area_acude NUMERIC(10,2);",
+            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS densidade NUMERIC(10,2);",
+            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS qtd_peixes_entregues INTEGER;",
+            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS peso_entregue NUMERIC(10,2);",
+            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS pct_rend_file NUMERIC(5,2);",
+            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS reais_por_peixe NUMERIC(10,2);"
+        ]
+
+        for sql in migracoes:
+            try:
+                await conn.execute(sql)
+            except Exception:
+                pass # Ignora se a coluna já existir ou se o rename falhar (já renomeado)
 
         # 2. Tabela de Leituras
         await conn.execute('''
