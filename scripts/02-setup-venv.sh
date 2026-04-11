@@ -12,7 +12,9 @@ echo "--- [02/06] Preparando ambiente virtual Python ---"
 echo "Destino: $VENV_DIR"
 
 if [ ! -d "$VENV_DIR" ]; then
-    echo "--- Criando novo ambiente virtual com acesso aos pacotes de sistema... ---"
+    echo "--- Criando novo ambiente virtual herdando pacotes do sistema (--system-site-packages)... ---"
+    # O uso de --system-site-packages é CRUCIAL no Alpine/Raspberry Pi
+    # para usar Matplotlib/Numpy/Scipy pré-compilados e evitar falta de memória.
     python3 -m venv --system-site-packages "$VENV_DIR"
     echo "✅ Ambiente virtual criado com sucesso."
 else
