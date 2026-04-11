@@ -5,9 +5,13 @@
 
 set -e
 
-ENV_FILE=".env"
+# Detecta a pasta do script e a raiz do projeto
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+ENV_FILE="$PROJECT_ROOT_DIR/.env"
+
 if [ ! -f "$ENV_FILE" ]; then
-    echo "ERRO: Arquivo .env não encontrado. Execute o script 'setup.sh' primeiro."
+    echo "ERRO: Arquivo .env não encontrado em $ENV_FILE. Execute o script 'setup.sh' na raiz do projeto primeiro."
     exit 1
 fi
 
