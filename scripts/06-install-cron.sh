@@ -17,7 +17,7 @@ if [ ! -f "$ENV_FILE" ]; then
     exit 1
 fi
 
-# Carrega a variável PROJECT_ROOT do arquivo .env
+# Carrega a variavel PROJECT_ROOT do arquivo .env
 PROJECT_ROOT=$(grep -v '^#' "$ENV_FILE" | grep 'PROJECT_ROOT' | cut -d '=' -f2- | sed 's/^[ 	]*//;s/[ 	]*$//')
 
 if [ -z "$PROJECT_ROOT" ]; then
