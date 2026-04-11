@@ -8,8 +8,12 @@
 *   [x] Adaptação dos scripts de setup para Alpine Linux e Raspberry Pi.
 *   [x] Implementação de Coleta de Dados via Selenium (Scraping).
 *   [x] Sistema de Alertas Críticos via Telegram (O2 e Offline).
-*   [x] Restauração e integração dos fluxos Node-RED e scripts Python relacionados.
-*   [ ] Testes de implantação e funcionalidade completa no Raspberry Pi com Alpine.
+* [x] Restauração e integração dos fluxos Node-RED e scripts Python relacionados.
+* [x] Automatização completa do Setup (01-06) e Crontab.
+* [x] Portabilidade total do projeto (Caminhos relativos e detecção automática de PROJECT_ROOT).
+* [x] Centralização dos volumes do PostgreSQL no repositório (`data/postgres`).
+* [ ] Testes finais de resiliência e tratamento de erros no scraping.
+
 
 ## Médio Prazo (Q3 2026)
 

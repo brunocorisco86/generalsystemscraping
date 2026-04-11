@@ -44,26 +44,33 @@ Este repositório contém o código para um sistema completo de monitoramento e 
 
 ## Como Começar
 
-1.  **Instalação Inicial:**
+1.  **Instalação Automatizada:**
+    O projeto conta com um script mestre que configura todo o ambiente (sistema, venv, dependências, .env, banco de dados e cron):
     ```bash
     bash scripts/setup.sh
     ```
-    *Este script configura dependências do Alpine Linux (Chromium, Docker, etc) e o ambiente Python.*
+    *Este script detecta automaticamente o diretório de instalação e configura o `PROJECT_ROOT` no seu arquivo `.env`.*
 
 2.  **Configuração de Credenciais:**
-    *   Copie `.env.example` para `.env`.
+    *   Após rodar o setup, edite o arquivo `.env` gerado na raiz.
     *   Preencha os tokens do Telegram e as credenciais de acesso ao sistema de monitoramento externo (Noctua).
 
-3.  **Inicie os Serviços:**
+3.  **Inicie os Serviços Docker:**
     ```bash
     docker-compose up --build -d
     ```
+    *Isso iniciará o banco de dados PostgreSQL e os bots de Biometria e Qualidade da Água.*
 
-4.  **Agende as Tarefas (CRITICAL):**
+4.  **Verifique os Agendamentos:**
+    As tarefas de monitoramento e alertas já estarão no seu crontab. Verifique com:
     ```bash
-    bash scripts/setup_cron.sh
+    crontab -l
     ```
-    *Siga as instruções para adicionar as linhas ao seu `crontab -e`. Isso ativa o scraping a cada 15min e os alertas automáticos.*
+
+## Estrutura de Dados e Portabilidade
+
+*   **PostgreSQL Local:** Os dados do banco de histórico são persistidos em `data/postgres/` dentro do repositório, facilitando backups e migrações.
+*   **Caminhos Dinâmicos:** Todos os scripts Python e automações do Node-RED utilizam caminhos relativos ou variáveis de ambiente, permitindo que o projeto funcione em qualquer diretório sem alterações manuais.
 
 ## Manutenção
 
