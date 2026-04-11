@@ -24,6 +24,14 @@ if [ -z "$PROJECT_ROOT" ]; then
 fi
 
 VENV_PYTHON="$PROJECT_ROOT/.venv/bin/python3"
+
+# Verifica se o ambiente virtual existe antes de prosseguir
+if [ ! -f "$VENV_PYTHON" ]; then
+    echo "ERRO: Ambiente virtual não encontrado em $VENV_PYTHON"
+    echo "Por favor, execute o setup.sh primeiro para criar o venv."
+    exit 1
+fi
+
 MARKER_START="# == PISCICULTURA START =="
 MARKER_END="# == PISCICULTURA END =="
 
