@@ -56,11 +56,12 @@ VENV_PYTHON=/home/bruno/generalsystemscraping/.venv/bin/python3
 # Migração de dados SQLite para Postgres (Backup Incremental)
 00 07,18 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.database.postgres.migrate_data >> $PROJECT_ROOT/logs/migrate.log 2>&1
 
-# Limpeza automática de logs (Mantém apenas os últimos 7 dias)
-0 1 * * * sh $PROJECT_ROOT/scripts/cleanup_logs.sh >> $PROJECT_ROOT/logs/cron.log 2>&1
+# Limpeza automática de logs (Diária: mantém 7 dias | Mensal: limpeza profunda)
+0 1 * * * sh $PROJECT_ROOT/scripts/09-cleanup-logs.sh 7 >> $PROJECT_ROOT/logs/cron.log 2>&1
+0 4 1 * * sh $PROJECT_ROOT/scripts/09-cleanup-logs.sh 30 >> $PROJECT_ROOT/logs/cron.log 2>&1
 
 # Correção de permissões no boot
-@reboot sleep 30 && sh $PROJECT_ROOT/scripts/fix_permissions.sh
+@reboot sleep 30 && sh $PROJECT_ROOT/scripts/08-fix-permissions.sh
 ```
 
 ### Notas sobre as mudanças:

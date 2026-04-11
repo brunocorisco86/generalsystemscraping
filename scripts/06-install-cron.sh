@@ -45,8 +45,12 @@ echo "6 17 * * * cd \$PROJECT_ROOT && \$VENV_PYTHON -m src.analysis.predict_oxyg
 echo "6 22 * * * cd \$PROJECT_ROOT && \$VENV_PYTHON -m src.jobs.evening_report >> \$PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_CRON"
 echo "7 22,23,0,1,2,3,4,5,6 * * * cd \$PROJECT_ROOT && \$VENV_PYTHON -m src.jobs.vigi_report >> \$PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_CRON"
 echo "00 07,18 * * * cd \$PROJECT_ROOT && \$VENV_PYTHON -m src.database.postgres.migrate_data >> \$PROJECT_ROOT/logs/migrate.log 2>&1" >> "$TMP_CRON"
-echo "0 1 * * * sh \$PROJECT_ROOT/scripts/cleanup_logs.sh >> \$PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_CRON"
-echo "@reboot sleep 30 && sh \$PROJECT_ROOT/scripts/fix_permissions.sh" >> "$TMP_CRON"
+echo "" >> "$TMP_CRON"
+echo "# Limpeza automática de logs (Diária: mantém 7 dias | Mensal: limpeza profunda)" >> "$TMP_CRON"
+echo "0 1 * * * sh \$PROJECT_ROOT/scripts/09-cleanup-logs.sh 7 >> \$PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_CRON"
+echo "0 4 1 * * sh \$PROJECT_ROOT/scripts/09-cleanup-logs.sh 30 >> \$PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_CRON"
+echo "" >> "$TMP_CRON"
+echo "@reboot sleep 30 && sh \$PROJECT_ROOT/scripts/08-fix-permissions.sh" >> "$TMP_CRON"
 echo "$MARKER_END" >> "$TMP_CRON"
 
 # Lê o crontab atual, removendo blocos antigos do projeto
