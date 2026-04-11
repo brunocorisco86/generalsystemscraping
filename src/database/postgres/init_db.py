@@ -50,7 +50,7 @@ async def init_postgres():
                 id SERIAL PRIMARY KEY,
                 tanque VARCHAR(255) NOT NULL,
                 lote VARCHAR(255) NOT NULL,
-                data_alojamento DATE NOT NULL,
+                data_alojamento DATE NOT NULL DEFAULT CURRENT_DATE,
                 data_abate DATE,
                 peixes_alojados INTEGER,
                 peso_medio NUMERIC(10,2),
@@ -64,6 +64,13 @@ async def init_postgres():
                 CONSTRAINT uq_tanque_lote UNIQUE (tanque, lote)
             );
         ''')
+
+        # Migração: Tenta renomear caso o usuário tenha a versão antiga
+        try:
+            await conn.execute("ALTER TABLE lotes RENAME COLUMN data_inicio TO data_alojamento;")
+            print("  -> Coluna 'data_inicio' renomeada para 'data_alojamento'.")
+        except:
+            pass # Coluna já está certa ou não existe
 
         # 2. Tabela de Leituras
         await conn.execute('''
