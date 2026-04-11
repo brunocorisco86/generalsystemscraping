@@ -20,7 +20,7 @@ PG_PORT = os.environ.get("PG_PORT", 5432)
 PG_DSN = f"postgresql://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:{PG_PORT}/{PG_DBNAME}"
 
 async def init_postgres():
-    """Cria as tabelas iniciais no PostgreSQL."""
+    """Cria as tabelas iniciais no PostgreSQL de forma resiliente."""
     print(f"--- Iniciando configuração do PostgreSQL em '{PG_HOST}' ---")
     
     if not all([PG_HOST, PG_DBNAME, PG_USER, PG_PASSWORD]):
@@ -30,7 +30,20 @@ async def init_postgres():
     try:
         conn = await asyncpg.connect(dsn=PG_DSN)
         
-        # 1. Tabela de Leituras (Histórico de monitoramento)
+        # 1. Tabela de Lotes (Base para as outras)
+        print("Criando tabela 'lotes'...")
+        await conn.execute('''
+            CREATE TABLE IF NOT EXISTS lotes (
+                lote SERIAL PRIMARY KEY,
+                tanque TEXT NOT NULL,
+                data_inicio DATE NOT NULL,
+                data_abate DATE,
+                descricao TEXT
+            );
+        ''')
+
+        # 2. Tabela de Leituras (Histórico de monitoramento)
+        print("Criando tabela 'leituras'...")
         await conn.execute('''
             CREATE TABLE IF NOT EXISTS leituras (
                 id INTEGER PRIMARY KEY,
@@ -43,18 +56,8 @@ async def init_postgres():
             );
         ''')
 
-        # 2. Tabela de Lotes
-        await conn.execute('''
-            CREATE TABLE IF NOT EXISTS lotes (
-                lote SERIAL PRIMARY KEY,
-                tanque TEXT NOT NULL,
-                data_inicio DATE NOT NULL,
-                data_abate DATE,
-                descricao TEXT
-            );
-        ''')
-
         # 3. Tabela de Biometria
+        print("Criando tabela 'biometria'...")
         await conn.execute('''
             CREATE TABLE IF NOT EXISTS biometria (
                 id SERIAL PRIMARY KEY,
@@ -67,7 +70,8 @@ async def init_postgres():
             );
         ''')
 
-        # 4. Tabela de Qualidade da Água (Lançamentos manuais)
+        # 4. Tabela de Qualidade da Água
+        print("Criando tabela 'qualidade_agua'...")
         await conn.execute('''
             CREATE TABLE IF NOT EXISTS qualidade_agua (
                 id SERIAL PRIMARY KEY,
@@ -83,8 +87,12 @@ async def init_postgres():
             );
         ''')
 
+        # 5. Índices para performance
+        await conn.execute('CREATE INDEX IF NOT EXISTS idx_leituras_tanque ON leituras(tanque);')
+        await conn.execute('CREATE INDEX IF NOT EXISTS idx_biometria_lote ON biometria(lote);')
+
         await conn.close()
-        print("✅ Tabelas do PostgreSQL criadas com sucesso!")
+        print("✅ Schema do PostgreSQL validado/criado com sucesso!")
 
     except Exception as e:
         print(f"❌ Erro ao inicializar o PostgreSQL: {e}")

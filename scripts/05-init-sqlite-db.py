@@ -13,19 +13,19 @@ sys.path.append(str(project_root))
 load_dotenv(project_root / ".env")
 
 from src.services.database import SQLITE_DB_PATH
+from src.database.postgres.init_db import init_postgres
+import asyncio
 
-def init_db():
+def init_sqlite():
     """Inicializa o banco de dados SQLite e cria as tabelas necessárias."""
     print(f"--- [05/06] Inicializando banco de dados SQLite em '{SQLITE_DB_PATH}' ---")
     
-    # Garante que o diretório pai exista
     os.makedirs(os.path.dirname(SQLITE_DB_PATH), exist_ok=True)
     
     try:
         conn = sqlite3.connect(SQLITE_DB_PATH)
         cursor = conn.cursor()
         
-        # Criação da tabela de leituras (Schema principal do projeto)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS leituras (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,11 +40,19 @@ def init_db():
         
         conn.commit()
         conn.close()
-        print("✅ Banco de dados e tabela 'leituras' inicializados com sucesso!")
+        print("✅ SQLite inicializado com sucesso!")
         
     except sqlite3.Error as e:
         print(f"❌ Erro ao inicializar o SQLite: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
-    init_db()
+    # Inicializa SQLite
+    init_sqlite()
+    
+    # Inicializa PostgreSQL
+    try:
+        asyncio.run(init_postgres())
+    except Exception as e:
+        print(f"⚠️ Aviso: Não foi possível inicializar o PostgreSQL automaticamente: {e}")
+        print("   Certifique-se de que o container Docker do Postgres esteja rodando.")
