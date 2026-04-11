@@ -18,7 +18,7 @@ from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-# Importação local (db.py na mesma pasta)
+# Importação local
 from db import (
     get_tanques_ativos,
     get_lote_por_tanque,
@@ -33,144 +33,93 @@ BOT_TOKEN = os.environ.get("BOT_AGUA_TOKEN")
 if not BOT_TOKEN:
     raise ValueError("Token do bot de qualidade da água não encontrado no .env")
 
-# Estado simples em memória por chat
 estado_chat: dict[int, dict] = {}
-
 
 # ==========================
 # FUNÇÕES AUXILIARES
 # ==========================
 
 def teclado_sim_nao(prefix: str) -> InlineKeyboardMarkup:
-    """
-    Cria teclado inline com botões Sim/Não.
-    """
     kb = InlineKeyboardBuilder()
     kb.button(text="Sim", callback_data=f"{prefix}:sim")
     kb.button(text="Não", callback_data=f"{prefix}:nao")
     kb.adjust(2)
     return kb.as_markup()
 
-def parse_data_ddmma(texto: str) -> date:
-    """
-    Converte 'DD/MM/AA' ou 'DD/MM/AAAA' para date.
-    """
+def parse_data_br(texto: str) -> date:
     texto = texto.strip()
+    if not texto: return date.today()
     for fmt in ("%d/%m/%Y", "%d/%m/%y"):
         try:
             return datetime.strptime(texto, fmt).date()
         except ValueError:
             continue
-    raise ValueError("Formato de data inválido")
+    raise ValueError("Formato de data inválido (use DD/MM/AA)")
 
+def parse_float(texto: str) -> float:
+    return float(texto.replace(",", "."))
 
 # ==========================
-# HANDLERS DE COMANDO
+# HANDLERS
 # ==========================
 
 async def cmd_start(message: Message):
     await message.answer(
-        "👋 Olá! Use /lancar para registrar qualidade de água de um tanque."
+        "💧 *Monitoramento de Qualidade da Água*\n\n"
+        "Use /lancar para registrar parâmetros (pH, Amônia, Nitrito) de um tanque com lote ativo.\n\n"
+        "🛠️ *Geral*\n"
+        "/cancel - Cancelar operação atual",
+        parse_mode="Markdown"
     )
 
 async def cmd_lancar(message: Message):
     chat_id = message.chat.id
     try:
         tanques = await get_tanques_ativos()
+        if not tanques:
+            await message.answer("⚠️ Nenhum tanque com lote ativo encontrado. Abra um lote no bot de Biometria primeiro.")
+            return
+        
+        kb = InlineKeyboardBuilder()
+        for t in tanques:
+            kb.button(text=t, callback_data=f"agua_t:{t}")
+        kb.adjust(2)
+        
+        estado_chat[chat_id] = {"step": "selecionando_tanque"}
+        await message.answer("--- Registro de Qualidade de Água ---\nEscolha o tanque:", reply_markup=kb.as_markup())
     except Exception as e:
-        await message.answer(f"❌ Erro ao buscar tanques ativos: {e}")
-        return
-
-    if not tanques:
-        await message.answer("⚠️ Nenhum tanque com lote ativo encontrado.")
-        return
-
-    kb = InlineKeyboardBuilder()
-    for t in tanques:
-        kb.button(text=t, callback_data=f"tanque:{t}")
-    kb.adjust(2)
-
-    estado_chat[chat_id] = {"step": "selecionando_tanque"}
-
-    await message.answer(
-        "--- Seleção de Tanque para Qualidade de Água ---\n"
-        "Escolha o tanque:",
-        reply_markup=kb.as_markup(),
-    )
-
-async def cmd_cancel(message: Message):
-    chat_id = message.chat.id
-    if chat_id in estado_chat:
-        estado_chat.pop(chat_id, None)
-        await message.answer(
-            "❌ Lançamento cancelado.\n"
-            "Quando quiser começar de novo, use /lancar."
-        )
-    else:
-        await message.answer("Nenhum lançamento em andamento no momento.")
-
-
-# ==========================
-# CALLBACK: ESCOLHA DO TANQUE
-# ==========================
+        await message.answer(f"❌ Erro: {e}")
 
 async def callback_tanque(call: CallbackQuery):
     chat_id = call.message.chat.id
-    data = call.data or ""
-
-    if not data.startswith("tanque:"):
-        await call.answer()
-        return
-
-    tanque = data.split(":", 1)[1]
-    try:
-        lote = await get_lote_por_tanque(tanque)
-    except Exception as e:
-        await call.message.answer(f"❌ Erro ao buscar lote para o tanque {tanque}: {e}")
-        await call.answer()
-        return
-
-    if not lote:
-        await call.message.answer(
-            f"[!] Nenhum lote ativo encontrado para o tanque {tanque}."
-        )
-        await call.answer()
-        return
-
-    estado_chat[chat_id] = {
-        "step": "data",
-        "tanque": tanque,
-        "lote": int(lote),
-    }
-
-    await call.message.answer(
-        f">> Lançamento: {tanque} (Lote: {lote})\n\n"
-        "Data da coleta (DD/MM/AA) [vazio = Hoje]:"
-    )
+    tanque = call.data.split(":")[1]
+    lote = await get_lote_por_tanque(tanque)
+    
+    estado_chat[chat_id] = {"step": "data", "tanque": tanque, "lote": lote}
+    await call.message.answer(f"🐟 {tanque} (Lote {lote})\nData da coleta (DD/MM/AA) [vazio = Hoje]:")
     await call.answer()
 
+async def cmd_cancel(message: Message):
+    estado_chat.pop(message.chat.id, None)
+    await message.answer("❌ Operação cancelada.")
 
 # ==========================
-# FLUXO PRINCIPAL (mensagens de texto)
+# MÁQUINA DE ESTADOS (TEXTO)
 # ==========================
 
-async def fluxo_agua(message: Message):
+async def handle_messages(message: Message):
     chat_id = message.chat.id
     estado = estado_chat.get(chat_id)
-    if not estado or "step" not in estado:
-        return
+    if not estado or not message.text: return
 
     step = estado["step"]
-    texto = (message.text or "").strip()
+    texto = message.text.strip()
 
     try:
         if step == "data":
-            if texto == "":
-                estado["data_coleta"] = date.today()
-            else:
-                estado["data_coleta"] = parse_data_ddmma(texto)
+            estado["data_coleta"] = parse_data_br(texto)
             estado["step"] = "hora"
-            await message.answer("Hora da coleta (HH:MM) [vazio = horário atual]:")
+            await message.answer("Hora da coleta (HH:MM) [vazio = agora]:")
 
         elif step == "hora":
             if texto == "":
@@ -181,138 +130,60 @@ async def fluxo_agua(message: Message):
             await message.answer("Informe o pH (ex: 7.2):")
 
         elif step == "ph":
-            estado["ph"] = float(texto.replace(",", "."))
+            estado["ph"] = parse_float(texto)
             estado["step"] = "amonia"
             await message.answer("Informe Amônia (mg/L, ex: 0.25):")
 
         elif step == "amonia":
-            estado["amonia"] = float(texto.replace(",", "."))
+            estado["amonia"] = parse_float(texto)
             estado["step"] = "nitrito"
             await message.answer("Informe Nitrito (mg/L, ex: 0.10):")
 
         elif step == "nitrito":
-            estado["nitrito"] = float(texto.replace(",", "."))
-            estado["step"] = "aguardando_pergunta_anotacao"
-            await message.answer(
-                "Quer lançar anotação de manejo (Probiótico, CAL, SAL, etc.)?",
-                reply_markup=teclado_sim_nao("anotacao"),
-            )
+            estado["nitrito"] = parse_float(texto)
+            estado["step"] = "anotacao_pergunta"
+            await message.answer("Deseja adicionar anotação de manejo?", reply_markup=teclado_sim_nao("anot"))
 
-        elif step == "anotacao_valor":
-            estado["anotacao_manejo"] = texto if texto != "" else None
-            await salvar_e_resumir(message, estado)
+        elif step == "anotacao_texto":
+            estado["anotacao"] = texto
+            await finalizar_registro(message, estado)
 
     except ValueError:
-        await message.answer("Valor inválido. Por favor, tente novamente com o formato correto.")
+        await message.answer("⚠️ Valor inválido. Tente novamente com o formato correto.")
     except Exception as e:
         await message.answer(f"❌ Erro inesperado: {e}")
         estado_chat.pop(chat_id, None)
 
-
-# ==========================
-# CALLBACK: SIM/NÃO ANOTAÇÃO
-# ==========================
-
 async def callback_anotacao(call: CallbackQuery):
     chat_id = call.message.chat.id
     estado = estado_chat.get(chat_id)
-    if not estado:
-        await call.answer()
-        return
+    if not estado: return
 
-    if call.data == "anotacao:sim":
-        estado["step"] = "anotacao_valor"
-        await call.message.answer("Digite a anotação de manejo (ex: Probiótico, CAL 10 sacos):")
-    elif call.data == "anotacao:nao":
-        estado["anotacao_manejo"] = None
-        await salvar_e_resumir(call.message, estado)
-
+    if call.data == "anot:sim":
+        estado["step"] = "anotacao_texto"
+        await call.message.answer("Digite a anotação (ex: Probiótico, CAL 10 sacos):")
+    else:
+        estado["anotacao"] = None
+        await finalizar_registro(call.message, estado)
     await call.answer()
 
-
-# ==========================
-# SALVAR E RESUMIR
-# ==========================
-
-async def salvar_e_resumir(message: Message, estado: dict):
-    chat_id = message.chat.id
-
+async def finalizar_registro(message: Message, estado: dict):
     try:
-        await inserir_qualidade_agua(
-            id_tanque=estado["tanque"],
-            id_lote=estado["lote"],
-            data_coleta=estado["data_coleta"],
-            hora_coleta=estado["hora_coleta"],
-            ph=estado.get("ph"),
-            amonia=estado.get("amonia"),
-            nitrito=estado.get("nitrito"),
-            anotacao_manejo=estado.get("anotacao_manejo"),
-        )
-
+        await inserir_qualidade_agua(estado)
         resumo = (
-            f"✅ Registro salvo para o {estado['tanque']}!\n\n"
-            f"Data: {estado['data_coleta'].isoformat()} {estado['hora_coleta'].strftime('%H:%M')}\n"
-            f"pH: {estado.get('ph', '-')}\n"
-            f"Amônia: {estado.get('amonia', '-')} mg/L\n"
-            f"Nitrito: {estado.get('nitrito', '-')} mg/L\n"
-            f"Manejo: {estado.get('anotacao_manejo') or '-'}"
+            f"✅ *Qualidade da Água Salva!*\n\n"
+            f"📍 {estado['tanque']} (Lote {estado['lote']})\n"
+            f"📅 {estado['data_coleta'].strftime('%d/%m/%Y')} {estado['hora_coleta'].strftime('%H:%M')}\n"
+            f"🧪 pH: `{estado['ph']}`\n"
+            f"🧪 Amônia: `{estado['amonia']} mg/L`\n"
+            f"🧪 Nitrito: `{estado['nitrito']} mg/L`\n"
+            f"📝 Manejo: {estado['anotacao'] or '-'}"
         )
-        await message.answer(resumo)
+        await message.answer(resumo, parse_mode="Markdown")
     except Exception as e:
-        await message.answer(f"❌ Erro ao salvar no banco: {e}")
-        estado_chat.pop(chat_id, None)
-        return
-
-    # Pergunta se quer repetir no mesmo tanque
-    estado["step"] = "repetir_mesmo_tanque"
-    await message.answer(
-        f"Deseja realizar outro lançamento para o {estado['tanque']}?",
-        reply_markup=teclado_sim_nao("repete"),
-    )
-
-
-# ==========================
-# CALLBACKS REPETIR / CONTINUAR
-# ==========================
-
-async def callback_repete(call: CallbackQuery):
-    chat_id = call.message.chat.id
-    estado = estado_chat.get(chat_id)
-    if not estado:
-        await call.answer()
-        return
-
-    if call.data == "repete:sim":
-        # Reinicia o fluxo para o mesmo tanque
-        estado["step"] = "data"
-        await call.message.answer(
-            f">> Novo lançamento: {estado['tanque']} (Lote: {estado['lote']})\n\n"
-            "Data da coleta (DD/MM/AA) [vazio = Hoje]:"
-        )
-    elif call.data == "repete:nao":
-        # Pergunta se quer continuar em outro tanque
-        estado["step"] = "outro_tanque"
-        await call.message.answer(
-            "Deseja continuar lançando em outro tanque?",
-            reply_markup=teclado_sim_nao("continua"),
-        )
-    await call.answer()
-
-
-async def callback_continua(call: CallbackQuery):
-    chat_id = call.message.chat.id
-    if call.data == "continua:sim":
-        estado_chat.pop(chat_id, None)
-        await call.message.answer("Ok, vamos selecionar outro tanque.")
-        await cmd_lancar(call.message)
-    elif call.data == "continua:nao":
-        estado_chat.pop(chat_id, None)
-        await call.message.answer(
-            "✅ Lançamentos concluídos. Obrigado!\n"
-            "Quando quiser registrar novamente, use /lancar."
-        )
-    await call.answer()
-
+        await message.answer(f"❌ Erro ao salvar: {e}")
+    finally:
+        estado_chat.pop(message.chat.id, None)
 
 # ==========================
 # MAIN
@@ -322,22 +193,17 @@ async def main():
     bot = Bot(BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
     dp = Dispatcher()
 
-    # Registra todos os handlers
     dp.message.register(cmd_start, Command("start"))
     dp.message.register(cmd_lancar, Command("lancar"))
     dp.message.register(cmd_cancel, Command("cancel"))
-    dp.callback_query.register(callback_tanque, F.data.startswith("tanque:"))
-    dp.callback_query.register(callback_anotacao, F.data.startswith("anotacao:"))
-    dp.callback_query.register(callback_repete, F.data.startswith("repete:"))
-    dp.callback_query.register(callback_continua, F.data.startswith("continua:"))
-    dp.message.register(fluxo_agua, F.text)
+    
+    dp.callback_query.register(callback_tanque, F.data.startswith("agua_t:"))
+    dp.callback_query.register(callback_anotacao, F.data.startswith("anot:"))
+    
+    dp.message.register(handle_messages, F.text)
 
-    try:
-        print("Iniciando o bot de Qualidade da Água...")
-        await dp.start_polling(bot)
-    except Exception as e:
-        print(f"Erro fatal no bot: {e}")
+    print("Iniciando o bot de Qualidade da Água...")
+    await dp.start_polling(bot)
 
 if __name__ == "__main__":
     asyncio.run(main())
-
