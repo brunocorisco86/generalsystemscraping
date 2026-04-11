@@ -18,6 +18,12 @@ if [ ! -f "$ENV_FILE" ]; then
     fi
     echo "--- Criando arquivo '.env' a partir do template... ---"
     cp "$ENV_EXAMPLE_FILE" "$ENV_FILE"
+    
+    # Injeta o PROJECT_ROOT real no arquivo .env
+    # Usando o sed para substituir o placeholder pelo caminho absoluto real
+    sed -i "s|PROJECT_ROOT=.*|PROJECT_ROOT=\"$REPO_ROOT\"|" "$ENV_FILE"
+    
+    echo "✅ PROJECT_ROOT configurado automaticamente como: $REPO_ROOT"
     echo ""
     echo "------------------------------------------------------------"
     echo "⚠️  IMPORTANTE: O arquivo '$ENV_FILE' foi gerado."
