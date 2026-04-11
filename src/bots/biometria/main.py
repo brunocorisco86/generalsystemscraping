@@ -189,7 +189,7 @@ async def handle_messages(message: Message):
             if await fechar_lote(estado["tanque"], dt):
                 await message.answer(f"✅ Lote {estado['lote']} encerrado com sucesso!")
             else:
-                await message.answer("❌ Falha ao encerrar lote.")
+                await message.answer(f"⚠️ Não foi possível encerrar: o lote para o {estado['tanque']} já pode estar fechado ou não foi encontrado.")
             estado_chat.pop(chat_id, None)
 
         # --- BIOMETRIA ---

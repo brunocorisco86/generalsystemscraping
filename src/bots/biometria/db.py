@@ -57,9 +57,17 @@ async def get_todos_tanques() -> list[str]:
 
 
 async def criar_lote(tanque: str, data_inicio: date, descricao: str = None) -> int:
-    """Cria um novo lote para um tanque."""
+    """Cria um novo lote para um tanque, garantindo que não haja outro ativo."""
     pool = await get_pool()
     async with pool.acquire() as conn:
+        # Verifica se já existe um lote ativo (Double Check)
+        lote_ativo = await conn.fetchval(
+            "SELECT lote FROM lotes WHERE tanque = $1 AND data_abate IS NULL", 
+            tanque
+        )
+        if lote_ativo:
+            raise Exception(f"Já existe o Lote {lote_ativo} aberto para este tanque.")
+
         lote_id = await conn.fetchval(
             """
             INSERT INTO lotes (tanque, data_inicio, descricao)
