@@ -5,17 +5,24 @@ import matplotlib.pyplot as plt
 import requests
 import os
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+# Carregar variáveis de ambiente
+load_dotenv()
 
 # --- CONFIGURAÇÕES ---
-DB_PATH = '/home/dietpi/piscicultura_monitor/piscicultura_dados.db'
-REPORT_DIR = '/home/dietpi/piscicultura_monitor/reports'
-TELEGRAM_TOKEN = "8355153356:AAG55aFGL153Uzwo4w48uj1_vDV8BC2sim4"
-TELEGRAM_CHAT_ID = "-1003744398479"
-LIMITE_SEGURANCA = 2.0
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+DB_PATH = os.environ.get("SQLITE_DB_PATH", os.path.join(PROJECT_ROOT, "data/piscicultura_dados.db"))
+REPORT_DIR = os.environ.get("REPORT_DIR", os.path.join(PROJECT_ROOT, "reports"))
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+LIMITE_SEGURANCA = float(os.environ.get("OX_LIMITE_SEGURANCA", 2.0))
 
 def get_historical_value(tanque, target_datetime):
     try:
-        conn = sqlite3.connect(DB_PATH)
+        # Se o caminho for relativo, garante que seja absoluto a partir da raiz do projeto
+        db_path_abs = DB_PATH if os.path.isabs(DB_PATH) else os.path.join(PROJECT_ROOT, DB_PATH)
+        conn = sqlite3.connect(db_path_abs)
         start_search = target_datetime - timedelta(minutes=15)
         end_search = target_datetime + timedelta(minutes=15)
         query = f"SELECT oxigenio FROM leituras WHERE tanque = '{tanque}' AND timestamp_site BETWEEN '{start_search}' AND '{end_search}' ORDER BY ABS(strftime('%s', timestamp_site) - strftime('%s', '{target_datetime}')) LIMIT 1"

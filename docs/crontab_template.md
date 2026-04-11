@@ -54,7 +54,7 @@ VENV_PYTHON=/home/bruno/generalsystemscraping/.venv/bin/python3
 # 4. MANUTENÇÃO E BACKUP
 # ==============================================================================
 # Migração de dados SQLite para Postgres (Backup Incremental)
-00 07,18 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.migrate_data >> $PROJECT_ROOT/logs/migrate.log 2>&1
+00 07,18 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.database.postgres.migrate_data >> $PROJECT_ROOT/logs/migrate.log 2>&1
 
 # Limpeza automática de logs (Mantém apenas os últimos 7 dias)
 0 1 * * * sh $PROJECT_ROOT/scripts/cleanup_logs.sh >> $PROJECT_ROOT/logs/cron.log 2>&1

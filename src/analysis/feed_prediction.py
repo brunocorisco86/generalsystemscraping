@@ -6,12 +6,18 @@ import requests
 import os
 from datetime import datetime, timedelta
 
+from dotenv import load_dotenv
+
+# Carregar variáveis de ambiente
+load_dotenv()
+
 # --- CONFIGURAÇÕES ---
-DB_PATH = '/home/dietpi/piscicultura_monitor/piscicultura_dados.db'
-REPORT_DIR = '/home/dietpi/piscicultura_monitor/reports'
-TELEGRAM_TOKEN = "8355153356:AAG55aFGL153Uzwo4w48uj1_vDV8BC2sim4"
-TELEGRAM_CHAT_ID = "-1003744398479"
-LIMITE_TRATO = 3.0
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+DB_PATH = os.environ.get("SQLITE_DB_PATH", os.path.join(PROJECT_ROOT, "data/piscicultura_dados.db"))
+REPORT_DIR = os.environ.get("REPORT_DIR", os.path.join(PROJECT_ROOT, "reports"))
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+LIMITE_TRATO = float(os.environ.get("FEED_LIMITE_TRATO", 3.0))
 
 def send_telegram(text, photo_path=None):
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/"
@@ -23,7 +29,10 @@ def send_telegram(text, photo_path=None):
 
 def run_production_logic():
     agora = datetime.now()
-    
+    # Se o caminho for relativo, garante que seja absoluto a partir da raiz do projeto
+    db_path_abs = DB_PATH if os.path.isabs(DB_PATH) else os.path.join(PROJECT_ROOT, DB_PATH)
+    conn = sqlite3.connect(db_path_abs)
+
     # CONSTRAINT: Só envia mensagem entre 07h e 09h
     if not (7 <= agora.hour < 9):
         print(f"Fora do horário de envio (07h-09h): {agora.strftime('%H:%M')}")

@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DBNAME}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./data/postgres:/var/lib/postgresql/data
     ports:
       - "${PG_PORT}:5432"
     restart: unless-stopped
@@ -37,6 +37,7 @@ services:
       - postgres
     restart: unless-stopped
 
-volumes:
-  postgres_data:
-    driver: local
+# Volumes persistentes configurados via diretório local
+# volumes:
+#   postgres_data:
+#     driver: local

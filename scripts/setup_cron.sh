@@ -55,7 +55,7 @@ echo "*/30 * * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.alerts.offline_check 
 echo ""
 echo "# Job de migração de dados do SQLite para o PostgreSQL (executa todo dia às 02:00)"
 
-echo "0 2 * * * $VENV_PYTHON $PROJECT_ROOT/src/jobs/migrate_data.py >> $PROJECT_ROOT/logs/cron.log 2>&1"
+echo "0 2 * * * $VENV_PYTHON $PROJECT_ROOT/src/database/postgres/migrate_data.py >> $PROJECT_ROOT/logs/cron.log 2>&1"
 echo ""
 echo "# Relatório de final de tarde (executa todo dia às 23:30)"
 echo "30 23 * * * $VENV_PYTHON $PROJECT_ROOT/src/jobs/evening_report.py >> $PROJECT_ROOT/logs/cron.log 2>&1"

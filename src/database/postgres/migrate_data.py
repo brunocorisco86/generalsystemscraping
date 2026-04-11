@@ -1,12 +1,12 @@
 import os
 from datetime import datetime
-
-# Adicionar o caminho do projeto ao sys.path para permitir importações do src
 import sys
-# Adicionar o caminho do projeto ao sys.path para permitir importações do src
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-sys.path.append(project_root)
 
+# Adicionar o caminho do projeto ao sys.path para permitir importações do src
+# Agora que o script está em src/database/postgres/, subimos 3 níveis.
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+if project_root not in sys.path:
+    sys.path.append(project_root)
 
 from src.services.database import get_sqlite_connection, get_postgres_connection
 from src.services.notification import send_telegram_message
@@ -65,7 +65,6 @@ def migrate_data():
 
     except Exception as e:
         status_msg = f"⚠️ Erro na migração de dados: {str(e)}"
-        # Em caso de erro, faz rollback se houver transação pendente
         if pg_conn:
             pg_conn.rollback()
     
@@ -76,12 +75,10 @@ def migrate_data():
             sq_conn.close()
         
         print(status_msg)
-        # Envia notificação para o Telegram usando o serviço
         send_telegram_message(status_msg)
 
 if __name__ == "__main__":
-    # Garante que as variáveis de ambiente sejam carregadas
     from dotenv import load_dotenv
-    load_dotenv()
+    # Carrega .env do root
+    load_dotenv(os.path.join(project_root, '.env'))
     migrate_data()
-

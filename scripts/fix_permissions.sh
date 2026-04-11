@@ -1,27 +1,32 @@
 #!/bin/bash
 # Script para garantir permissões corretas do sistema de monitoramento
 
-MONITOR_DIR="/home/dietpi/piscicultura_monitor"
-LOG_FILE="${MONITOR_DIR}/scripts_log.log"
+# Detecta a raiz do projeto (um nível acima de scripts/)
+MONITOR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+LOG_FILE="${MONITOR_DIR}/logs/scripts_log.log"
 
-# Ajustar propriedade dos scripts Python
-chown nodered:nodered ${MONITOR_DIR}/*.py
+# Cria pasta de logs se não existir
+mkdir -p "${MONITOR_DIR}/logs"
+
+# Ajustar propriedade dos scripts Python (opcional, dependendo do usuário que roda)
+# chown $(whoami):$(whoami) ${MONITOR_DIR}/src/**/*.py
 
 # Permissões de execução nos scripts
-chmod 755 ${MONITOR_DIR}/*.py
+chmod +x ${MONITOR_DIR}/scripts/*.sh
+chmod +x ${MONITOR_DIR}/src/**/*.py
 
-# Permissão no banco de dados
-chmod 666 ${MONITOR_DIR}/piscicultura_dados.db
+# Permissão no banco de dados SQLite (se estiver no local padrão)
+[ -f "${MONITOR_DIR}/data/piscicultura_dados.db" ] && chmod 666 "${MONITOR_DIR}/data/piscicultura_dados.db"
 
-# Permissão total na pasta de relatórios
-chmod 777 ${MONITOR_DIR}/reports/
+# Permissão na pasta de relatórios
+mkdir -p "${MONITOR_DIR}/reports"
+chmod 777 "${MONITOR_DIR}/reports/"
 
 # Permissões dos diretórios
-chmod 755 ${MONITOR_DIR}
-chmod 755 /home/dietpi
+chmod 755 "${MONITOR_DIR}"
 
 # Garantir que o log seja acessível
-touch ${LOG_FILE}
-chmod 666 ${LOG_FILE}
+touch "${LOG_FILE}"
+chmod 666 "${LOG_FILE}"
 
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Permissões ajustadas com sucesso" >> ${LOG_FILE}
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Permissões ajustadas em $MONITOR_DIR" >> "${LOG_FILE}"

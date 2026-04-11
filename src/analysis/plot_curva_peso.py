@@ -9,19 +9,27 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import requests
 
+from dotenv import load_dotenv
+
+# Carregar variáveis de ambiente
+load_dotenv()
+
 # --- CONFIGURAÇÕES GERAIS ---
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
 PG_CONFIG = {
-    "host": "localhost",
-    "dbname": "piscicultura_history",
-    "user": "brunoconter",
-    "password": "blurbang",
+    "host": os.environ.get("PG_HOST", "localhost"),
+    "dbname": os.environ.get("PG_DBNAME", "piscicultura_history"),
+    "user": os.environ.get("PG_USER", "brunoconter"),
+    "password": os.environ.get("PG_PASSWORD", ""),
+    "port": os.environ.get("PG_PORT", 5432)
 }
 
-REPORT_DIR = "/home/dietpi/piscicultura_monitor/reports"
-TELEGRAM_TOKEN = "8355153356:AAG55aFGL153Uzwo4w48uj1_vDV8BC2sim4"
-TELEGRAM_CHAT_ID = "-1003744398479"
-PESO_ALVO = 950  # g
-DIAS_PROJECAO_MAX = 350  # limite de projeção (dias)
+REPORT_DIR = os.environ.get("REPORT_DIR", os.path.join(PROJECT_ROOT, "reports"))
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+PESO_ALVO = int(os.environ.get("PESO_ALVO", 950))  # g
+DIAS_PROJECAO_MAX = int(os.environ.get("DIAS_PROJECAO_MAX", 350))  # limite de projeção (dias)
 
 if not os.path.exists(REPORT_DIR):
     os.makedirs(REPORT_DIR)
