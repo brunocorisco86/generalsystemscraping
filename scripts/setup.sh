@@ -12,7 +12,7 @@ echo "------------------------------------------------------------"
 echo ""
 
 # Define as etapas e garante permissões
-for script in "01-system-deps.sh" "02-setup-venv.sh" "03-install-python-deps.sh" "04-setup-env-file.sh" "05-init-sqlite-db.py" "06-install-cron.sh"; do
+for script in "01-system-deps.sh" "02-setup-venv.sh" "03-install-python-deps.sh" "04-init-sqlite-db.py" "05-install-cron.sh"; do
     chmod +x "$SCRIPT_DIR/$script"
 done
 
@@ -20,21 +20,20 @@ done
 sh "$SCRIPT_DIR/01-system-deps.sh"
 sh "$SCRIPT_DIR/02-setup-venv.sh"
 sh "$SCRIPT_DIR/03-install-python-deps.sh"
-sh "$SCRIPT_DIR/04-setup-env-file.sh"
 
-# Etapa 05: Inicialização do Banco de Dados via Python
-echo "--- [05/06] Inicializando Banco de Dados SQLite ---"
+# Etapa 04: Inicialização do Banco de Dados via Python
+echo "--- [04/05] Inicializando Banco de Dados SQLite ---"
 VENV_PYTHON="$SCRIPT_DIR/../.venv/bin/python3"
 if [ -f "$VENV_PYTHON" ]; then
-    "$VENV_PYTHON" "$SCRIPT_DIR/05-init-sqlite-db.py"
+    "$VENV_PYTHON" "$SCRIPT_DIR/04-init-sqlite-db.py"
 else
     # Fallback caso o venv ainda não tenha sido criado por algum motivo
-    python3 "$SCRIPT_DIR/05-init-sqlite-db.py"
+    python3 "$SCRIPT_DIR/04-init-sqlite-db.py"
 fi
 
-# Etapa 06: Instalação das Tarefas Cron
-echo "--- [06/06] Instalando Tarefas no Cron ---"
-sh "$SCRIPT_DIR/06-install-cron.sh"
+# Etapa 05: Instalação das Tarefas Cron
+echo "--- [05/05] Instalando Tarefas no Cron ---"
+sh "$SCRIPT_DIR/05-install-cron.sh"
 
 echo ""
 echo "------------------------------------------------------------"
