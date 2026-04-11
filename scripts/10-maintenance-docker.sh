@@ -44,4 +44,12 @@ esac
 
 echo ""
 echo "✅ Manutenção concluída!"
+echo ""
+echo "--- Status Atual do Docker ---"
+echo "Containers ativos:"
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+echo ""
+echo "Imagens disponíveis:"
+docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+echo ""
 echo "Para reinstalar/subir os serviços novamente, use: bash scripts/07-start-containers.sh"
