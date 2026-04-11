@@ -43,14 +43,25 @@ async def init_postgres():
                 return
 
     try:
-        # 1. Tabela de Lotes
+        # 1. Tabela de Lotes (Schema C.VALE / PATEL)
+        print("Criando/Sincronizando tabela 'lotes'...")
         await conn.execute('''
             CREATE TABLE IF NOT EXISTS lotes (
-                lote SERIAL PRIMARY KEY,
-                tanque TEXT NOT NULL,
-                data_inicio DATE NOT NULL,
+                id SERIAL PRIMARY KEY,
+                tanque VARCHAR(255) NOT NULL,
+                lote VARCHAR(255) NOT NULL,
+                data_alojamento DATE NOT NULL,
                 data_abate DATE,
-                descricao TEXT
+                peixes_alojados INTEGER,
+                peso_medio NUMERIC(10,2),
+                area_acude NUMERIC(10,2),
+                densidade NUMERIC(10,2),
+                qtd_peixes_entregues INTEGER,
+                peso_entregue NUMERIC(10,2),
+                pct_rend_file NUMERIC(5,2),
+                reais_por_peixe NUMERIC(10,2),
+                descricao TEXT,
+                CONSTRAINT uq_tanque_lote UNIQUE (tanque, lote)
             );
         ''')
 
@@ -72,7 +83,7 @@ async def init_postgres():
             CREATE TABLE IF NOT EXISTS biometria (
                 id SERIAL PRIMARY KEY,
                 tanque TEXT NOT NULL,
-                lote INTEGER NOT NULL,
+                lote VARCHAR(255) NOT NULL,
                 data_biometria DATE NOT NULL,
                 volume_peixes INTEGER,
                 peso_medio_g REAL,

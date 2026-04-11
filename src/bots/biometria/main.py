@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Bot Telegram para biometria e gestão de lotes da piscicultura.
+Bot Telegram para biometria e gestão técnica de lotes (C.VALE / PATEL).
 """
 import os
 import sys
@@ -18,14 +18,14 @@ from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-# Importação local (db.py na mesma pasta)
+# Importação local
 from db import (
     get_tanques_ativos,
     get_todos_tanques,
     get_lote_por_tanque,
     inserir_biometria,
-    criar_lote,
-    fechar_lote,
+    criar_lote_completo,
+    finalizar_lote_abate,
 )
 
 # ==========================
@@ -36,23 +36,15 @@ BOT_TOKEN = os.environ.get("BOT_BIOMETRIA_TOKEN")
 if not BOT_TOKEN:
     raise ValueError("Token do bot de biometria não encontrado no .env")
 
-# Estado simples em memória por chat
 estado_chat: dict[int, dict] = {}
-
 
 # ==========================
 # FUNÇÕES AUXILIARES
 # ==========================
 
-def teclado_sim_nao(prefix: str) -> InlineKeyboardMarkup:
-    kb = InlineKeyboardBuilder()
-    kb.button(text="Sim", callback_data=f"{prefix}:sim")
-    kb.button(text="Não", callback_data=f"{prefix}:nao")
-    kb.adjust(2)
-    return kb.as_markup()
-
 def parse_data_br(texto: str) -> date:
     texto = texto.strip()
+    if not texto: return date.today()
     for fmt in ("%d/%m/%Y", "%d/%m/%y"):
         try:
             return datetime.strptime(texto, fmt).date()
@@ -60,107 +52,105 @@ def parse_data_br(texto: str) -> date:
             continue
     raise ValueError("Formato de data inválido (use DD/MM/AA)")
 
+def parse_float(texto: str) -> float:
+    return float(texto.replace(",", "."))
 
 # ==========================
-# HANDLERS: GESTÃO DE LOTES
+# HANDLERS GERAIS
 # ==========================
 
 async def cmd_start(message: Message):
     await message.answer(
-        "👋 Olá! Bem-vindo ao Gestor de Piscicultura.\n\n"
-        "📊 *Biometria*\n"
-        "/lancar - Registrar biometria\n\n"
-        "📦 *Gestão de Lotes*\n"
-        "/novo_lote - Abrir novo lote\n"
-        "/fechar_lote - Encerrar lote atual\n\n"
+        "🌿 *Gestor de Piscicultura - C.VALE / PATEL*\n\n"
+        "📊 *Manejo*\n"
+        "/lancar - Registrar biometria periódica\n\n"
+        "📦 *Ciclo de Vida*\n"
+        "/novo_lote - Alojamento (Ficha Verde)\n"
+        "/fechar_lote - Abate (Fechamento Final)\n\n"
         "🛠️ *Geral*\n"
         "/cancel - Cancelar operação atual",
         parse_mode="Markdown"
     )
 
+async def cmd_cancel(message: Message):
+    estado_chat.pop(message.chat.id, None)
+    await message.answer("❌ Operação cancelada.")
+
+# ==========================
+# FLUXO: NOVO LOTE (FICHA VERDE)
+# ==========================
+
 async def cmd_novo_lote(message: Message):
     chat_id = message.chat.id
-    try:
-        tanques = await get_todos_tanques()
-        kb = InlineKeyboardBuilder()
-        for t in tanques:
-            kb.button(text=t, callback_data=f"novo_lote_tanque:{t}")
-        kb.adjust(2)
-        estado_chat[chat_id] = {"step": "novo_lote_selecionando_tanque"}
-        await message.answer("--- Abertura de Novo Lote ---\nEscolha o tanque:", reply_markup=kb.as_markup())
-    except Exception as e:
-        await message.answer(f"❌ Erro: {e}")
+    tanques = await get_todos_tanques()
+    kb = InlineKeyboardBuilder()
+    for t in tanques: kb.button(text=t, callback_data=f"nl_t:{t}")
+    kb.adjust(2)
+    estado_chat[chat_id] = {"step": "nl_tanque"}
+    await message.answer("--- Novo Alojamento ---\nEscolha o tanque:", reply_markup=kb.as_markup())
 
 async def callback_novo_lote_tanque(call: CallbackQuery):
     chat_id = call.message.chat.id
     tanque = call.data.split(":")[1]
-    lote_atual = await get_lote_por_tanque(tanque)
-    if lote_atual:
-        await call.message.answer(f"⚠️ O {tanque} já possui o Lote {lote_atual} ativo. Feche-o antes de abrir um novo.")
+    lote_ativo = await get_lote_por_tanque(tanque)
+    if lote_ativo:
+        await call.message.answer(f"⚠️ O {tanque} já possui o Lote {lote_ativo} ativo.")
         estado_chat.pop(chat_id, None)
     else:
-        estado_chat[chat_id] = {"step": "novo_lote_data", "tanque": tanque}
-        await call.message.answer(f">> Novo Lote: {tanque}\nData de Início (DD/MM/AA) [vazio = Hoje]:")
+        estado_chat[chat_id] = {"step": "nl_lote_nome", "tanque": tanque}
+        await call.message.answer(f"📍 Tanque: {tanque}\nDigite a Identificação do Lote (ex: 2024/01):")
     await call.answer()
+
+# ==========================
+# FLUXO: FECHAR LOTE (ABATE)
+# ==========================
 
 async def cmd_fechar_lote(message: Message):
     chat_id = message.chat.id
     tanques = await get_tanques_ativos()
     if not tanques:
-        await message.answer("⚠️ Nenhum lote ativo encontrado para fechar.")
+        await message.answer("⚠️ Nenhum lote ativo para fechar.")
         return
     kb = InlineKeyboardBuilder()
-    for t in tanques:
-        kb.button(text=t, callback_data=f"fechar_lote_tanque:{t}")
+    for t in tanques: kb.button(text=t, callback_data=f"fl_t:{t}")
     kb.adjust(2)
-    estado_chat[chat_id] = {"step": "fechar_lote_selecionando_tanque"}
-    await message.answer("--- Encerramento de Lote ---\nEscolha o tanque:", reply_markup=kb.as_markup())
+    estado_chat[chat_id] = {"step": "fl_tanque"}
+    await message.answer("--- Fechamento de Lote (Abate) ---\nEscolha o tanque:", reply_markup=kb.as_markup())
 
 async def callback_fechar_lote_tanque(call: CallbackQuery):
     chat_id = call.message.chat.id
     tanque = call.data.split(":")[1]
     lote = await get_lote_por_tanque(tanque)
-    estado_chat[chat_id] = {"step": "fechar_lote_data", "tanque": tanque, "lote": lote}
+    estado_chat[chat_id] = {"step": "fl_data", "tanque": tanque, "lote": lote}
     await call.message.answer(f">> Fechar Lote {lote} ({tanque})\nData do Abate (DD/MM/AA) [vazio = Hoje]:")
     await call.answer()
 
-
 # ==========================
-# HANDLERS: BIOMETRIA
+# FLUXO: BIOMETRIA (LANÇAMENTO)
 # ==========================
 
 async def cmd_lancar(message: Message):
     chat_id = message.chat.id
-    try:
-        tanques = await get_tanques_ativos()
-        if not tanques:
-            await message.answer("⚠️ Nenhum tanque com lote ativo encontrado. Use /novo_lote primeiro.")
-            return
-        kb = InlineKeyboardBuilder()
-        for t in tanques:
-            kb.button(text=t, callback_data=f"tanque:{t}")
-        kb.adjust(2)
-        estado_chat[chat_id] = {"step": "selecionando_tanque"}
-        await message.answer("--- Registro de Biometria ---\nEscolha o tanque:", reply_markup=kb.as_markup())
-    except Exception as e:
-        await message.answer(f"❌ Erro: {e}")
+    tanques = await get_tanques_ativos()
+    if not tanques:
+        await message.answer("⚠️ Nenhum lote ativo. Use /novo_lote.")
+        return
+    kb = InlineKeyboardBuilder()
+    for t in tanques: kb.button(text=t, callback_data=f"bio_t:{t}")
+    kb.adjust(2)
+    estado_chat[chat_id] = {"step": "bio_tanque"}
+    await message.answer("--- Registro de Biometria ---\nEscolha o tanque:", reply_markup=kb.as_markup())
 
-async def callback_tanque(call: CallbackQuery):
+async def callback_bio_tanque(call: CallbackQuery):
     chat_id = call.message.chat.id
     tanque = call.data.split(":")[1]
     lote = await get_lote_por_tanque(tanque)
-    estado_chat[chat_id] = {"step": "data", "tanque": tanque, "lote": lote}
-    await call.message.answer(f">> Lançamento: {tanque} (Lote: {lote})\nData (DD/MM/AA) [vazio = Hoje]:")
+    estado_chat[chat_id] = {"step": "bio_data", "tanque": tanque, "lote": lote}
+    await call.message.answer(f"🐟 {tanque} (Lote {lote})\nData (DD/MM/AA) [vazio = Hoje]:")
     await call.answer()
 
-async def cmd_cancel(message: Message):
-    chat_id = message.chat.id
-    estado_chat.pop(chat_id, None)
-    await message.answer("❌ Operação cancelada.")
-
-
 # ==========================
-# FLUXO DE MENSAGENS (MÁQUINA DE ESTADO)
+# MÁQUINA DE ESTADOS (TEXTO)
 # ==========================
 
 async def handle_messages(message: Message):
@@ -172,56 +162,95 @@ async def handle_messages(message: Message):
     texto = message.text.strip()
 
     try:
-        # --- NOVO LOTE ---
-        if step == "novo_lote_data":
-            estado["data_inicio"] = date.today() if texto == "" else parse_data_br(texto)
-            estado["step"] = "novo_lote_desc"
-            await message.answer("Descrição/Observação do lote (vazio para pular):")
+        # --- LÓGICA NOVO LOTE ---
+        if step == "nl_lote_nome":
+            estado["lote"] = texto
+            estado["step"] = "nl_data"
+            await message.answer("Data Alojamento (DD/MM/AA) [vazio = Hoje]:")
         
-        elif step == "novo_lote_desc":
-            lote_id = await criar_lote(estado["tanque"], estado["data_inicio"], texto if texto else None)
-            await message.answer(f"✅ Lote {lote_id} aberto com sucesso para o {estado['tanque']}!")
+        elif step == "nl_data":
+            estado["data_alojamento"] = parse_data_br(texto)
+            estado["step"] = "nl_qtd"
+            await message.answer("Quantidade de Peixes Alojados:")
+
+        elif step == "nl_qtd":
+            estado["peixes_alojados"] = int(texto)
+            estado["step"] = "nl_peso"
+            await message.answer("Peso Médio Inicial (g):")
+
+        elif step == "nl_peso":
+            estado["peso_medio"] = parse_float(texto)
+            estado["step"] = "nl_area"
+            await message.answer("Área do Açude (m²):")
+
+        elif step == "nl_area":
+            area = parse_float(texto)
+            estado["area_acude"] = area
+            estado["densidade"] = round(estado["peixes_alojados"] / area, 2)
+            estado["step"] = "nl_desc"
+            await message.answer(f"Densidade calculada: {estado['densidade']} peixes/m²\n\nDescrição opcional (vazio p/ pular):")
+
+        elif step == "nl_desc":
+            estado["descricao"] = texto if texto else None
+            lote_id = await criar_lote_completo(estado)
+            await message.answer(f"✅ Lote {lote_id} registrado com sucesso!")
             estado_chat.pop(chat_id, None)
 
-        # --- FECHAR LOTE ---
-        elif step == "fechar_lote_data":
-            dt = date.today() if texto == "" else parse_data_br(texto)
-            if await fechar_lote(estado["tanque"], dt):
-                await message.answer(f"✅ Lote {estado['lote']} encerrado com sucesso!")
-            else:
-                await message.answer(f"⚠️ Não foi possível encerrar: o lote para o {estado['tanque']} já pode estar fechado ou não foi encontrado.")
+        # --- LÓGICA FECHAR LOTE ---
+        elif step == "fl_data":
+            estado["data_abate"] = parse_data_br(texto)
+            estado["step"] = "fl_qtd"
+            await message.answer("Quantidade de Peixes Entregues:")
+
+        elif step == "fl_qtd":
+            estado["qtd_peixes_entregues"] = int(texto)
+            estado["step"] = "fl_peso"
+            await message.answer("Peso Total Entregue (kg):")
+
+        elif step == "fl_peso":
+            estado["peso_entregue"] = parse_float(texto)
+            estado["step"] = "fl_rend"
+            await message.answer("Rendimento Filé (%):")
+
+        elif step == "fl_rend":
+            estado["pct_rend_file"] = parse_float(texto)
+            estado["step"] = "fl_valor"
+            await message.answer("Valor Pago por Peixe (R$):")
+
+        elif step == "fl_valor":
+            estado["reais_por_peixe"] = parse_float(texto)
+            if await finalizar_lote_abate(estado):
+                await message.answer(f"✅ Lote {estado['lote']} finalizado com sucesso!")
             estado_chat.pop(chat_id, None)
 
-        # --- BIOMETRIA ---
-        elif step == "data":
-            estado["data_biometria"] = date.today() if texto == "" else parse_data_br(texto)
-            estado["step"] = "volume"
+        # --- LÓGICA BIOMETRIA ---
+        elif step == "bio_data":
+            estado["data_bio"] = parse_data_br(texto)
+            estado["step"] = "bio_vol"
             await message.answer("Volume (Estoque peixes):")
 
-        elif step == "volume":
-            estado["volume_peixes"] = int(texto)
-            estado["step"] = "peso"
+        elif step == "bio_vol":
+            estado["volume"] = int(texto)
+            estado["step"] = "bio_peso"
             await message.answer("Peso Médio (g):")
 
-        elif step == "peso":
-            estado["peso_medio_g"] = float(texto.replace(",", "."))
-            estado["step"] = "racao"
+        elif step == "bio_peso":
+            estado["peso"] = parse_float(texto)
+            estado["step"] = "bio_racao"
             await message.answer("Consumo de Ração (kg):")
 
-        elif step == "racao":
-            estado["consumo_racao_kg"] = float(texto.replace(",", "."))
+        elif step == "bio_racao":
             await inserir_biometria(
-                tanque=estado["tanque"], data_biometria=estado["data_biometria"],
-                volume_peixes=estado["volume_peixes"], peso_medio_g=estado["peso_medio_g"],
-                consumo_racao_kg=estado["consumo_racao_kg"], lote=int(estado["lote"])
+                tanque=estado["tanque"], data_biometria=estado["data_bio"],
+                volume_peixes=estado["volume"], peso_medio_g=estado["peso"],
+                consumo_racao_kg=parse_float(texto), lote=estado["lote"]
             )
-            await message.answer(f"✅ Registro salvo para o {estado['tanque']}!")
+            await message.answer(f"✅ Biometria salva para o {estado['tanque']}!")
             estado_chat.pop(chat_id, None)
 
     except Exception as e:
         await message.answer(f"⚠️ Erro: {e}")
         estado_chat.pop(chat_id, None)
-
 
 # ==========================
 # MAIN
@@ -237,13 +266,13 @@ async def main():
     dp.message.register(cmd_fechar_lote, Command("fechar_lote"))
     dp.message.register(cmd_cancel, Command("cancel"))
     
-    dp.callback_query.register(callback_tanque, F.data.startswith("tanque:"))
-    dp.callback_query.register(callback_novo_lote_tanque, F.data.startswith("novo_lote_tanque:"))
-    dp.callback_query.register(callback_fechar_lote_tanque, F.data.startswith("fechar_lote_tanque:"))
+    dp.callback_query.register(callback_bio_tanque, F.data.startswith("bio_t:"))
+    dp.callback_query.register(callback_novo_lote_tanque, F.data.startswith("nl_t:"))
+    dp.callback_query.register(callback_fechar_lote_tanque, F.data.startswith("fl_t:"))
     
     dp.message.register(handle_messages, F.text)
 
-    print("Iniciando o bot de Biometria...")
+    print("Iniciando o bot de Biometria (Schema C.VALE)...")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
