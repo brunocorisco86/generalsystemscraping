@@ -38,7 +38,15 @@ echo "--- Subindo containers (Postgres, Biometria, Qualidade da Água)... ---"
 cd "$REPO_ROOT"
 $DOCKER_COMPOSE up -d --build
 
+echo "--- Inicializando/Validando Schema do PostgreSQL ---"
+VENV_PYTHON="$REPO_ROOT/.venv/bin/python3"
+if [ -f "$VENV_PYTHON" ]; then
+    "$VENV_PYTHON" -m src.database.postgres.init_db
+else
+    python3 -m src.database.postgres.init_db
+fi
+
 echo ""
-echo "✅ Serviços iniciados com sucesso!"
+echo "✅ Serviços iniciados e Banco de Dados configurado!"
 echo "Para verificar o status: docker compose ps"
 echo "Para ver logs: docker compose logs -f"
