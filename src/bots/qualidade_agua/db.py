@@ -47,6 +47,52 @@ async def get_lote_por_tanque(tanque: str) -> str | None:
         )
     return row["lote"] if row else None
 
+async def get_todos_tanques() -> list[str]:
+    """Lista física de tanques configurados."""
+    return ["Tanque 1", "Tanque 2"]
+
+async def criar_lote_completo(dados: dict) -> str:
+    """Insere o alojamento conforme Ficha Verde."""
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        # Verifica duplicidade
+        existe = await conn.fetchval(
+            "SELECT lote FROM lotes WHERE tanque = $1 AND data_abate IS NULL",
+            dados['tanque']
+        )
+        if existe:
+            raise Exception(f"Já existe o Lote {existe} aberto para este tanque.")
+
+        await conn.execute(
+            """
+            INSERT INTO lotes (
+                tanque, lote, data_alojamento, peixes_alojados, 
+                peso_medio, area_acude, densidade, descricao
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            """,
+            dados['tanque'], dados['lote'], dados['data_alojamento'],
+            dados['peixes_alojados'], dados['peso_medio'],
+            dados['area_acude'], dados['densidade'], dados.get('descricao')
+        )
+    return dados['lote']
+
+async def finalizar_lote_abate(dados: dict) -> bool:
+    """Atualiza dados de abate e fecha o lote."""
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        result = await conn.execute(
+            """
+            UPDATE lotes 
+            SET data_abate = $1, qtd_peixes_entregues = $2,
+                peso_entregue = $3, pct_rend_file = $4, reais_por_peixe = $5
+            WHERE tanque = $6 AND data_abate IS NULL
+            """,
+            dados['data_abate'], dados['qtd_peixes_entregues'],
+            dados['peso_entregue'], dados['pct_rend_file'],
+            dados['reais_por_peixe'], dados['tanque']
+        )
+    return result == "UPDATE 1"
+
 async def inserir_qualidade_agua(dados: dict) -> None:
     """Insere registro de qualidade da água."""
     pool = await get_pool()
