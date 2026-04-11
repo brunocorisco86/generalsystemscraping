@@ -18,8 +18,8 @@ from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-# A importação agora é relativa ao pacote do bot
-from .db import (
+# Importação local (db.py na mesma pasta)
+from db import (
     get_tanques_ativos,
     get_lote_por_tanque,
     inserir_biometria,
