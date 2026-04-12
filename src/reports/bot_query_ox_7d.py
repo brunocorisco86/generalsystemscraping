@@ -1,11 +1,8 @@
-import sqlite3
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import requests
 import os
-import statistics
 import sys
 import logging
 from datetime import datetime, timedelta
@@ -49,7 +46,7 @@ def get_weekly_report():
         conn = get_sqlite_connection()
         if conn is None:
             logger.error("Erro: Não foi possível conectar ao banco de dados SQLite.")
-            send_telegram_message(f"❌ Erro ao gerar relatório de oxigênio (7 dias): falha na conexão com o BD.")
+            send_telegram_message("❌ Erro ao gerar relatório de oxigênio (7 dias): falha na conexão com o BD.")
             return
 
         query = f"""
@@ -72,8 +69,7 @@ def get_weekly_report():
 
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
-        for tank in sorted(df['tanque'].unique()):
-            tank_df = df[df['tanque'] == tank]
+        for tank, tank_df in df.groupby('tanque'):
             if not tank_df.empty:
                 plt.plot(tank_df['timestamp_site'], tank_df['oxigenio'], label=tank, linewidth=1.5)
 
@@ -94,9 +90,8 @@ def get_weekly_report():
         plt.close()
         logger.info(f"Gráfico de tendência de oxigênio (7 dias) salvo em {plot_path}")
 
-        msg = f"🗓️ *Resumo Semanal Oxigênio*\nPeríodo: 7 dias\n"
-        for tank in sorted(df['tanque'].unique()):
-            tank_data = df[df['tanque'] == tank]
+        msg = "🗓️ *Resumo Semanal Oxigênio*\nPeríodo: 7 dias\n"
+        for tank, tank_data in df.groupby('tanque'):
             if not tank_data.empty:
                 msg += f"\n📍 *{tank}*\nMín: `{tank_data['oxigenio'].min():.2f}` | Máx: `{tank_data['oxigenio'].max():.2f}`"
 

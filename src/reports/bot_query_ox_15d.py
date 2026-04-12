@@ -1,9 +1,7 @@
-import sqlite3
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import requests
 import os
 import sys
 import logging
@@ -47,7 +45,7 @@ def get_fortnightly_report():
         conn = get_sqlite_connection()
         if conn is None:
             logger.error("Erro: Não foi possível conectar ao banco de dados SQLite.")
-            send_telegram_message(f"❌ Erro ao gerar relatório de oxigênio (15 dias): falha na conexão com o BD.", chat_id=CHAT_ID_FROM_ARGS)
+            send_telegram_message("❌ Erro ao gerar relatório de oxigênio (15 dias): falha na conexão com o BD.", chat_id=CHAT_ID_FROM_ARGS)
             return
 
         query = f"SELECT tanque, oxigenio, timestamp_site FROM leituras WHERE timestamp_site >= '{fifteen_days_ago.strftime('%Y-%m-%d %H:%M:%S')}' ORDER BY timestamp_site ASC"
@@ -66,8 +64,8 @@ def get_fortnightly_report():
         # 1. Trazer o limiar inferior de 2.0 mg/L
         plt.axhline(y=2.0, color='red', linestyle='--', linewidth=2, label='Limiar Crítico (2.0 mg/L)', alpha=0.7)
 
-        for tank in sorted(df['tanque'].unique()):
-            tank_df = df[df['tanque'] == tank].copy()
+        for tank, tank_df in df.groupby('tanque'):
+            tank_df = tank_df.copy()
             if not tank_df.empty:
                 tank_df.set_index('timestamp_site', inplace=True)
                 
@@ -106,7 +104,7 @@ def get_fortnightly_report():
         plt.close()
         logger.info(f"Gráfico de tendência de oxigênio (15 dias) salvo em {plot_path}")
 
-        msg = f"📅 *Histórico Quinzenal*\n📍 Análise de 15 dias finalizada.\n⚠️ Limiar crítico monitorado em 2.0 mg/L."
+        msg = "📅 *Histórico Quinzenal*\n📍 Análise de 15 dias finalizada.\n⚠️ Limiar crítico monitorado em 2.0 mg/L."
         send_telegram_photo(msg, plot_path, chat_id=CHAT_ID_FROM_ARGS)
         logger.info("Relatório de oxigênio (15 dias) enviado para o Telegram.")
 

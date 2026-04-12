@@ -1,9 +1,7 @@
-import sqlite3
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import requests
 import os
 import statistics
 import sys
@@ -50,7 +48,7 @@ def get_bot_report():
         conn = get_sqlite_connection()
         if conn is None:
             logger.error("Erro: Não foi possível conectar ao banco de dados SQLite.")
-            send_telegram_message(f"❌ Erro ao gerar relatório de oxigênio: falha na conexão com o BD.")
+            send_telegram_message("❌ Erro ao gerar relatório de oxigênio: falha na conexão com o BD.")
             return
 
         query = f"""
@@ -71,8 +69,7 @@ def get_bot_report():
         # 2. GERAR GRÁFICO DE TENDÊNCIA
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
-        for tank in sorted(df['tanque'].unique()):
-            tank_df = df[df['tanque'] == tank]
+        for tank, tank_df in df.groupby('tanque'):
             if not tank_df.empty:
                 plt.plot(tank_df['timestamp_site'], tank_df['oxigenio'], label=tank, linewidth=2)
         
@@ -94,8 +91,8 @@ def get_bot_report():
         # 3. CONSTRUIR MENSAGEM (FOCO SMARTWATCH)
         msg = f"📊 *Relatório {now.strftime('%H:%M')}h*\n"
         
-        for tank in sorted(df['tanque'].unique()):
-            tank_data = df[df['tanque'] == tank].tail(4)
+        for tank, tank_data_full in df.groupby('tanque'):
+            tank_data = tank_data_full.tail(4)
             if tank_data.empty: continue
             
             o2_atual = tank_data['oxigenio'].iloc[-1]
