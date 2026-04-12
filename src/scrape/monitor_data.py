@@ -1,6 +1,7 @@
 import os
 import time
 import re
+import logging
 from datetime import datetime
 from dotenv import load_dotenv
 from selenium import webdriver
@@ -12,6 +13,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # Importar o serviço de banco de dados do projeto
 from src.services.database import get_sqlite_connection
+
+# Configuração do logger
+logger = logging.getLogger(__name__)
 
 # Carregar variáveis de ambiente
 load_dotenv()
@@ -43,19 +47,19 @@ def get_driver():
     service = None
     for caminho in possiveis_caminhos:
         if caminho and os.path.exists(caminho):
-            print(f"--- Usando ChromeDriver encontrado em: {caminho} ---")
+            logger.info("Usando ChromeDriver encontrado em: %s", caminho)
             service = Service(executable_path=caminho)
             break
     
     if not service:
-        print("--- Aviso: ChromeDriver não encontrado nos caminhos padrão. Tentando via PATH do sistema ---")
+        logger.warning("ChromeDriver não encontrado nos caminhos padrão. Tentando via PATH do sistema")
         service = Service()
         
     try:
         driver = webdriver.Chrome(service=service, options=chrome_options)
         return driver
     except Exception as e:
-        print(f"❌ Erro ao iniciar WebDriver: {e}")
+        logger.error("Erro ao iniciar WebDriver: %s", e)
         raise
 
 def scrape_and_save():
@@ -64,14 +68,14 @@ def scrape_and_save():
     sucesso = False
 
     if not EMAIL or not PASSWORD:
-        print("❌ LOGIN_EMAIL ou LOGIN_PASSWORD não configurados no arquivo .env")
+        logger.error("LOGIN_EMAIL ou LOGIN_PASSWORD não configurados no arquivo .env")
         return
 
     while tentativa <= max_tentativas and not sucesso:
         driver = None
         conn = None
         try:
-            print(f"[{datetime.now()}] Iniciando tentativa {tentativa}...")
+            logger.info("Iniciando tentativa %d...", tentativa)
 
             # Garantir que a pasta do banco de dados exista (SQLITE_DB_PATH vem do database service)
             from src.services.database import SQLITE_DB_PATH
@@ -108,7 +112,7 @@ def scrape_and_save():
             driver.find_element(By.XPATH, "//button[contains(text(), 'Entrar')]").click()
 
             # 2. Mapeamento de Tanques Reais (Filtro MAC Address)
-            print("Mapeando tanques (filtrando MACs)...")
+            logger.info("Mapeando tanques (filtrando MACs)...")
             time.sleep(5)
             links_elementos = driver.find_elements(By.XPATH, "//a[contains(@href, '/tanque/')]")
             raw_urls = list(set([el.get_attribute('href') for el in links_elementos]))
@@ -119,7 +123,7 @@ def scrape_and_save():
 
             if not urls_validas:
                 # Tentar novamente se não encontrar tanques (pode ser tempo de carregamento)
-                print("⚠️ Nenhum tanque válido encontrado. Aguardando mais 10s...")
+                logger.warning("Nenhum tanque válido encontrado. Aguardando mais 10s...")
                 time.sleep(5)
                 links_elementos = driver.find_elements(By.XPATH, "//a[contains(@href, '/tanque/')]")
                 raw_urls = list(set([el.get_attribute('href') for el in links_elementos]))
@@ -131,7 +135,7 @@ def scrape_and_save():
             # 3. Coleta Individual
             for url in urls_validas:
                 mac_id = url.split('/')[-1]
-                print(f"--- Acessando Tanque: {mac_id} ---")
+                logger.info("Acessando Tanque: %s", mac_id)
                 driver.get(url)
                 time.sleep(6) # Tempo para o React/Next.js carregar o estado
 
@@ -166,7 +170,7 @@ def scrape_and_save():
                     
                     # Filtro de erro (sensor offline)
                     if oxigenio == 0.0 and temperatura == 0.0:
-                        print(f" ⚠️ {nome} ignorado (O2/Temp em zero).")
+                        logger.warning("%s ignorado (O2/Temp em zero).", nome)
                         continue
 
                     # Tratamento de Timestamp
@@ -176,7 +180,7 @@ def scrape_and_save():
                             dt_obj = datetime.strptime(time_match.group(1), '%d/%m/%Y, %H:%M:%S')
                             ts_sql = dt_obj.strftime('%Y-%m-%d %H:%M:%S')
                         except ValueError:
-                            print(f"  ⚠️ Erro ao formatar data: {time_match.group(1)}")
+                            logger.warning("Erro ao formatar data: %s", time_match.group(1))
 
                     # Gravação seguindo o Schema solicitado
                     cursor.execute('''
@@ -184,25 +188,32 @@ def scrape_and_save():
                         VALUES (?, ?, ?, ?, ?)
                     ''', (nome, oxigenio, temperatura, aeradores, ts_sql))
                     
-                    print(f"  ✅ {nome} | O2: {oxigenio} | Temp: {temperatura} | Aeradores: {aeradores}")
+                    logger.info("%s | O2: %s | Temp: %s | Aeradores: %s", nome, oxigenio, temperatura, aeradores)
 
             conn.commit()
-            print(f"[{datetime.now()}] Todos os dados salvos com sucesso!")
+            logger.info("Todos os dados salvos com sucesso!")
             sucesso = True
 
         except Exception as e:
-            print(f"❌ Erro na tentativa {tentativa}: {e}")
+            logger.error("Erro na tentativa %d: %s", tentativa, e)
             tentativa += 1
             if tentativa <= max_tentativas:
                 atraso = 5 * tentativa
-                print(f"Reiniciando em {atraso} segundos...")
+                logger.info("Reiniciando em %d segundos...", atraso)
                 time.sleep(atraso)
         
         finally:
-            if driver: driver.quit()
-            if conn: conn.close()
+            if driver:
+                driver.quit()
+            if conn:
+                conn.close()
 
 if __name__ == "__main__":
+    # Configuração básica de logging para execução direta
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
     # Para executar este script manualmente do root do projeto:
     # python3 -m src.scrape.monitor_data
     scrape_and_save()

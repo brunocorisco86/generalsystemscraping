@@ -1,5 +1,6 @@
 import os
 import glob
+import logging
 from datetime import datetime, timedelta
 import pandas as pd
 import matplotlib
@@ -10,6 +11,9 @@ from dotenv import load_dotenv
 # Importar serviços centralizados do projeto
 from src.services.database import get_sqlite_connection
 from src.services.notification import send_telegram_photo
+
+# Configuração do logger
+logger = logging.getLogger(__name__)
 
 # Carregar variáveis de ambiente
 load_dotenv()
@@ -32,7 +36,7 @@ def generate_nightly_report():
         try:
             os.remove(f)
         except OSError as e:
-            print(f"Erro ao remover arquivo antigo {f}: {e}")
+            logger.error("Erro ao remover arquivo antigo %s: %s", f, e)
 
     # Definição do intervalo: Ontem 18:00 até Hoje 08:00
     now = datetime.now()
@@ -44,7 +48,7 @@ def generate_nightly_report():
         # Conexão via serviço centralizado
         conn = get_sqlite_connection()
         if conn is None:
-            print("Erro: Não foi possível conectar ao banco de dados SQLite.")
+            logger.error("Erro: Não foi possível conectar ao banco de dados SQLite.")
             return
 
         query = f"""
@@ -58,7 +62,7 @@ def generate_nightly_report():
         df = pd.read_sql_query(query, conn)
 
         if df.empty:
-            print(f"Sem dados encontrados entre {start_time} e {end_time}")
+            logger.warning("Sem dados encontrados entre %s e %s", start_time, end_time)
             return
 
         # Converter para datetime e garantir ordenação
@@ -100,14 +104,19 @@ def generate_nightly_report():
 
         # Enviar para o Telegram via serviço centralizado
         send_telegram_photo(analysis_text, plot_path)
-        print(f"Relatório noturno gerado e enviado com sucesso para {plot_path}.")
+        logger.info("Relatório noturno gerado e enviado com sucesso para %s.", plot_path)
 
     except Exception as e:
-        print(f"Ocorreu um erro no processamento do relatório noturno: {e}")
+        logger.error("Ocorreu um erro no processamento do relatório noturno: %s", e)
     finally:
         if conn:
             conn.close()
 
 if __name__ == "__main__":
+    # Configuração básica de logging para execução direta
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
     # Para executar do root: python3 -m src.jobs.nightly_report
     generate_nightly_report()

@@ -2,6 +2,7 @@ import os
 import sys
 import asyncio
 import asyncpg
+import logging
 from dotenv import load_dotenv
 
 # Adicionar a raiz do projeto ao sys.path
@@ -19,12 +20,15 @@ PG_PORT = os.environ.get("PG_PORT", 5432)
 
 PG_DSN = f"postgresql://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:{PG_PORT}/{PG_DBNAME}"
 
+# Configuração do logger
+logger = logging.getLogger(__name__)
+
 async def init_postgres():
     """Cria as tabelas iniciais no PostgreSQL de forma resiliente."""
-    print(f"--- Configurando Schema do PostgreSQL em '{PG_HOST}' ---")
+    logger.info("--- Configurando Schema do PostgreSQL em '%s' ---", PG_HOST)
     
     if not all([PG_HOST, PG_DBNAME, PG_USER, PG_PASSWORD]):
-        print("❌ Erro: Configurações do PostgreSQL incompletas no .env")
+        logger.error("Configurações do PostgreSQL incompletas no .env")
         return
 
     conn = None
@@ -35,15 +39,15 @@ async def init_postgres():
             break
         except Exception as e:
             if i < max_retries - 1:
-                print(f"⏳ Aguardando Postgres inicializar (tentativa {i+1}/{max_retries})...")
+                logger.info("Aguardando Postgres inicializar (tentativa %d/%d)...", i+1, max_retries)
                 await asyncio.sleep(5)
             else:
-                print(f"❌ Não foi possível conectar ao Postgres após {max_retries} tentativas: {e}")
+                logger.error("Não foi possível conectar ao Postgres após %d tentativas: %s", max_retries, e)
                 return
 
     try:
         # 1. Tabela de Lotes (Schema C.VALE / PATEL)
-        print("Criando/Sincronizando tabela 'lotes'...")
+        logger.info("Criando/Sincronizando tabela 'lotes'...")
         await conn.execute('''
             CREATE TABLE IF NOT EXISTS lotes (
                 id SERIAL PRIMARY KEY,
@@ -65,7 +69,7 @@ async def init_postgres():
         ''')
 
         # Migração: Garante que todas as colunas novas existam e tipos estejam corretos
-        print("Sincronizando colunas e tipos da tabela 'lotes'...")
+        logger.info("Sincronizando colunas e tipos da tabela 'lotes'...")
         migracoes = [
             "ALTER TABLE lotes RENAME COLUMN data_inicio TO data_alojamento;",
             "ALTER TABLE lotes ALTER COLUMN lote TYPE VARCHAR(255);",
@@ -132,12 +136,17 @@ async def init_postgres():
         await conn.execute('CREATE INDEX IF NOT EXISTS idx_biometria_lote ON biometria(lote);')
 
         await conn.close()
-        print("✅ Schema do PostgreSQL validado/criado com sucesso!")
+        logger.info("Schema do PostgreSQL validado/criado com sucesso!")
 
     except Exception as e:
-        print(f"❌ Erro ao processar comandos SQL: {e}")
+        logger.error("Erro ao processar comandos SQL: %s", e)
         if conn:
             await conn.close()
 
 if __name__ == "__main__":
+    # Configuração básica de logging para execução direta
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
     asyncio.run(init_postgres())

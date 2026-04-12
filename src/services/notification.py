@@ -28,7 +28,7 @@ def send_telegram_message(text: str):
         response = requests.post(url, json=payload, timeout=10)
         response.raise_for_status()
     except requests.RequestException as e:
-        logger.error(f"Erro ao enviar mensagem para o Telegram: {e}")
+        logger.error("Erro ao enviar mensagem para o Telegram: %s", e)
 
 def send_telegram_photo(caption: str, photo_path: str):
     """Envia uma imagem com legenda para o chat configurado."""
@@ -48,6 +48,6 @@ def send_telegram_photo(caption: str, photo_path: str):
             response = requests.post(url, data=data, files=files, timeout=30)
             response.raise_for_status()
     except FileNotFoundError:
-        logger.error(f"Arquivo de imagem não encontrado em {photo_path}")
+        logger.error("Arquivo de imagem não encontrado em %s", photo_path)
     except requests.RequestException as e:
-        logger.error(f"Erro ao enviar imagem para o Telegram: {e}")
+        logger.error("Erro ao enviar imagem para o Telegram: %s", e)
