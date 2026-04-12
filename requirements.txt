@@ -1,5 +1,7 @@
 # Backend e análise
 selenium
+setuptools
+wheel
 
 # Telegram Bots
 aiogram==3.4.1
