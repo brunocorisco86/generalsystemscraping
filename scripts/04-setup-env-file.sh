@@ -27,7 +27,10 @@ if [ ! -f "$ENV_FILE" ]; then
     echo ""
     echo "------------------------------------------------------------"
     echo "⚠️  IMPORTANTE: O arquivo '$ENV_FILE' foi gerado."
-    echo "   Por favor, edite-o agora com suas senhas e tokens."
+    echo "   Por favor, edite-o agora com suas credenciais:"
+    echo "   1. Tokens do Telegram"
+    echo "   2. Acessos do Noctua (Scraping)"
+    echo "   3. Chaves do Cloudflare R2 (Backups)"
     echo "------------------------------------------------------------"
 else
     echo "--- Arquivo '.env' já existe. Nenhuma ação necessária. ---"
