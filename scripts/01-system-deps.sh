@@ -36,8 +36,8 @@ install_sequentially() {
             $SUDO apt-get install -y "$pkg"
         fi
 
-        echo "✅ $pkg instalado. Pausando 5 segundos para arrefecimento..."
-        sleep 5
+        echo "✅ $pkg instalado. Pausando 1 segundo para arrefecimento..."
+        sleep 1
         count=$((count + 1))
     done
 }
