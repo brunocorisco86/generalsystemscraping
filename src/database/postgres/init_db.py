@@ -136,7 +136,8 @@ async def init_postgres():
 
     except Exception as e:
         print(f"❌ Erro ao processar comandos SQL: {e}")
-        if conn: await conn.close()
+        if conn:
+            await conn.close()
 
 if __name__ == "__main__":
     asyncio.run(init_postgres())
