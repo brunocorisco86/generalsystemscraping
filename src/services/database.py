@@ -1,7 +1,11 @@
 import os
 import sqlite3
 import psycopg2
+import logging
 from dotenv import load_dotenv
+
+# Configuração do logger
+logger = logging.getLogger(__name__)
 
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -23,13 +27,13 @@ def get_sqlite_connection():
         conn = sqlite3.connect(SQLITE_DB_PATH, check_same_thread=False)
         return conn
     except sqlite3.Error as e:
-        print(f"Erro ao conectar ao SQLite: {e}")
+        logger.error(f"Erro ao conectar ao SQLite: {e}")
         return None
 
 def get_postgres_connection():
     """Retorna uma conexão com o banco de dados PostgreSQL."""
     if not all([PG_HOST, PG_DBNAME, PG_USER, PG_PASSWORD]):
-        print("AVISO: Configurações do PostgreSQL incompletas. Conexão não estabelecida.")
+        logger.warning("Configurações do PostgreSQL incompletas. Conexão não estabelecida.")
         return None
     
     try:
@@ -42,7 +46,7 @@ def get_postgres_connection():
         )
         return conn
     except psycopg2.OperationalError as e:
-        print(f"Erro ao conectar ao PostgreSQL: {e}")
+        logger.error(f"Erro ao conectar ao PostgreSQL: {e}")
         return None
 
 # Funções para conexões assíncronas (asyncpg) serão adicionadas
