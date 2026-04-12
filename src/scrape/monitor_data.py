@@ -12,7 +12,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # Importar o serviço de banco de dados do projeto
-from src.services.database import get_sqlite_connection
+from src.services.database import get_sqlite_connection, get_estrutura_uid, get_default_estrutura_info
 
 # Configuração do logger
 logger = logging.getLogger(__name__)
@@ -88,11 +88,11 @@ def scrape_and_save():
             
             cursor = conn.cursor()
 
-            # Garantir que a tabela exista antes de prosseguir
+            # Garantir que a tabela exista antes de prosseguir (Novo MER)
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS leituras (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    tanque TEXT,
+                    estrutura_uid TEXT,
                     oxigenio REAL,
                     temperatura REAL,
                     timestamp_site TIMESTAMP,
@@ -182,11 +182,16 @@ def scrape_and_save():
                         except ValueError:
                             logger.warning("Erro ao formatar data: %s", time_match.group(1))
 
-                    # Gravação seguindo o Schema solicitado
+                    # Recupera info da estrutura do .env para bater com o nome coletado
+                    info_env = get_default_estrutura_info()
+                    pluscode = info_env['pluscode'] if nome == info_env['nome'] else "UNKNOWN"
+                    uid = get_estrutura_uid(nome, pluscode)
+
+                    # Gravação seguindo o Novo Schema
                     cursor.execute('''
-                        INSERT INTO leituras (tanque, oxigenio, temperatura, aeradores_ativos, timestamp_site)
+                        INSERT INTO leituras (estrutura_uid, oxigenio, temperatura, aeradores_ativos, timestamp_site)
                         VALUES (?, ?, ?, ?, ?)
-                    ''', (nome, oxigenio, temperatura, aeradores, ts_sql))
+                    ''', (uid, oxigenio, temperatura, aeradores, ts_sql))
                     
                     logger.info("%s | O2: %s | Temp: %s | Aeradores: %s", nome, oxigenio, temperatura, aeradores)
 
