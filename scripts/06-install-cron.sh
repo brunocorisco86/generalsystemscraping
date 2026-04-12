@@ -37,9 +37,9 @@ fi
 # Gera o conteúdo do cron temporariamente com caminhos REAIS (Hardcoded)
 TMP_NEW=$(mktemp)
 echo "# --- PISCICULTURA: $PROJECT_ROOT ---" >> "$TMP_NEW"
-echo "1-46/15 * * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.scrape.monitor_data >> $PROJECT_ROOT/logs/scrape.log 2>&1" >> "$TMP_NEW"
-echo "3-48/15 * * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.alerts.offline_check >> $PROJECT_ROOT/logs/alerts.log 2>&1" >> "$TMP_NEW"
-echo "4-49/15 * * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.alerts.alert_check >> $PROJECT_ROOT/logs/alerts.log 2>&1" >> "$TMP_NEW"
+echo "1/15 * * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.scrape.monitor_data >> $PROJECT_ROOT/logs/scrape.log 2>&1" >> "$TMP_NEW"
+echo "3/15 * * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.alerts.offline_check >> $PROJECT_ROOT/logs/alerts.log 2>&1" >> "$TMP_NEW"
+echo "4/15 * * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.alerts.alert_check >> $PROJECT_ROOT/logs/alerts.log 2>&1" >> "$TMP_NEW"
 echo "3 7-22 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.hourly_report >> $PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_NEW"
 echo "5 8 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.nightly_report >> $PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_NEW"
 echo "32 8 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.analysis.feed_prediction >> $PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_NEW"
