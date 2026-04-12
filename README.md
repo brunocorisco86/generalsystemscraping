@@ -27,10 +27,18 @@ Este repositório contém o código para um sistema completo de monitoramento e 
 ├── nodered/                 # Fluxos de integração Telegram/Scripts
 ├── reports/                 # Imagens e PDFs de relatórios gerados
 │
-├── scripts/                 # Utilitários de sistema
-│   ├── setup.sh             # Instalação completa (Alpine/Python)
-│   ├── setup_cron.sh        # Configurador de agendamentos (Crontab)
-│   └── cleanup_logs.sh      # Manutenção de armazenamento
+├── scripts/                 # Utilitários de sistema (Sequência de Comissionamento)
+│   ├── setup.sh             # [Master] Executa etapas 01 a 06
+│   ├── 01-system-deps.sh    # Dependências do SO (Alpine/Debian)
+│   ├── 02-setup-venv.sh     # Criação do ambiente virtual Python
+│   ├── 03-install-python-deps.sh # Instalação de libs Python
+│   ├── 04-setup-env-file.sh # Configuração inicial do .env
+│   ├── 05-init-sqlite-db.py # Inicialização do banco SQLite local
+│   ├── 06-install-cron.sh   # Agendamento de tarefas automáticas
+│   ├── 07-start-containers.sh # Inicialização do Docker (Postgres/Bots)
+│   ├── 08-fix-permissions.sh # Ajuste de permissões e criação de logs
+│   ├── 09-cleanup-logs.sh   # Limpeza automática de logs antigos
+│   └── 10-maintenance-docker.sh # Ferramenta de manutenção Docker
 │
 └── src/                     # Código-fonte principal
     ├── alerts/              # Verificadores de limites e status (Telegram)
@@ -42,30 +50,48 @@ Este repositório contém o código para um sistema completo de monitoramento e 
     └── services/            # Serviços compartilhados (DB, Notificação)
 ```
 
-## Como Começar
+## Sequência de Comissionamento
 
-1.  **Instalação Automatizada:**
-    O projeto conta com um script mestre que configura todo o ambiente (sistema, venv, dependências, .env, banco de dados e cron):
+Para colocar o sistema em operação, siga estas etapas na ordem:
+
+1.  **Instalação Base (Etapas 01 a 06):**
+    Execute o script mestre para preparar o ambiente, dependências e agendamentos:
     ```bash
     bash scripts/setup.sh
     ```
-    *Este script detecta automaticamente o diretório de instalação e configura o `PROJECT_ROOT` no seu arquivo `.env`.*
+    *Este script detecta o sistema operacional, cria o ambiente virtual, instala dependências e configura o crontab.*
 
 2.  **Configuração de Credenciais:**
-    *   Após rodar o setup, edite o arquivo `.env` gerado na raiz.
-    *   Preencha os tokens do Telegram e as credenciais de acesso ao sistema de monitoramento externo (Noctua).
+    *   Edite o arquivo `.env` gerado na raiz do projeto.
+    *   Preencha os tokens do Telegram, credenciais do banco e acessos ao portal Noctua IoT.
 
-3.  **Inicie os Serviços Docker:**
+3.  **Inicialização de Serviços Docker (Etapa 07):**
+    Inicie o PostgreSQL e os bots de suporte:
     ```bash
-    docker-compose up --build -d
+    bash scripts/07-start-containers.sh
     ```
-    *Isso iniciará o banco de dados PostgreSQL e os bots de Biometria e Qualidade da Água.*
+    *Este comando também inicializa o schema do banco de dados PostgreSQL automaticamente.*
 
-4.  **Verifique os Agendamentos:**
-    As tarefas de monitoramento e alertas já estarão no seu crontab. Verifique com:
+4.  **Ajuste Final de Permissões (Etapa 08):**
+    Garanta que todos os diretórios e arquivos de log tenham permissões corretas:
     ```bash
-    crontab -l
+    bash scripts/08-fix-permissions.sh
     ```
+
+## Verificação e Saúde do Sistema
+
+Após o comissionamento, valide a operação com os seguintes comandos:
+
+*   **Status dos Containers:** `docker compose ps`
+*   **Logs do Monitoramento:** `tail -f logs/scrape.log`
+*   **Logs de Alertas:** `tail -f logs/alerts.log`
+*   **Agendamentos Ativos:** `crontab -l`
+
+## Manutenção
+
+*   **Limpeza de Logs:** O sistema limpa logs automaticamente via cron (`09-cleanup-logs.sh`), mas você pode executar manualmente se necessário.
+*   **Reinicialização/Limpeza Docker:** Utilize `bash scripts/10-maintenance-docker.sh` para gerenciar a limpeza de imagens e containers órfãos de forma segura.
+*   **Atualização de Permissões:** O script `08-fix-permissions.sh` é executado automaticamente em cada boot do sistema via `@reboot` no cron.
 
 ## Estrutura de Dados e Portabilidade
 

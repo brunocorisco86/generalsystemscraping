@@ -33,9 +33,13 @@ chmod -R 777 "${MONITOR_DIR}/data"
 # 5. Permissões gerais do diretório do projeto
 chmod 755 "${MONITOR_DIR}"
 
-# 6. Garantir que o arquivo de log de scripts seja acessível
+# 6. Garantir que os arquivos de log previstos no cron sejam acessíveis
 touch "${LOG_FILE}"
-chmod 666 "${LOG_FILE}"
+touch "${MONITOR_DIR}/logs/scrape.log"
+touch "${MONITOR_DIR}/logs/alerts.log"
+touch "${MONITOR_DIR}/logs/cron.log"
+touch "${MONITOR_DIR}/logs/migrate.log"
+chmod 666 "${MONITOR_DIR}/logs/"*.log
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Permissões ajustadas com sucesso" >> "${LOG_FILE}"
 echo "✅ Permissões configuradas!"
