@@ -46,7 +46,7 @@ install_sequentially() {
 # Adicionadas bibliotecas py3- para evitar compilação em hardware limitado
 ALPINE_DEPS="git docker docker-cli-compose python3 py3-pip py3-virtualenv python3-dev build-base postgresql-dev sqlite-dev libffi-dev zlib-dev util-linux openblas openblas-dev freetype freetype-dev libpng libpng-dev jpeg jpeg-dev tiff tiff-dev chromium chromium-chromedriver ncurses-dev py3-matplotlib py3-numpy py3-pandas py3-scipy py3-requests py3-sqlalchemy py3-psycopg2 py3-dotenv py3-seaborn py3-openpyxl"
 
-DEBIAN_DEPS="git docker.io docker-compose python3 python3-pip python3-venv python3-dev build-essential libpq-dev libsqlite3-dev libffi-dev zlib1g-dev libopenblas-dev libfreetype6-dev libpng-dev libjpeg-dev libtiff-dev chromium-browser chromium-chromedriver libncurses5-dev python3-matplotlib python3-numpy python3-pandas python3-scipy"
+DEBIAN_DEPS="git docker docker-cli-compose python3 py3-pip py3-virtualenv python3-dev build-base postgresql-dev sqlite-dev libffi-dev zlib-dev util-linux openblas openblas-dev freetype freetype-dev libpng libpng-dev jpeg jpeg-dev tiff tiff-dev chromium chromium-chromedriver ncurses-dev py3-matplotlib py3-numpy py3-pandas py3-scipy py3-requests py3-sqlalchemy py3-psycopg2 py3-dotenv py3-seaborn py3-openpyxl"
 
 if [ -f "/etc/os-release" ]; then
     . /etc/os-release

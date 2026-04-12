@@ -59,7 +59,7 @@ def get_driver():
         raise
 
 def scrape_and_save():
-    max_tentativas = 3
+    max_tentativas = 5
     tentativa = 1
     sucesso = False
 
@@ -100,7 +100,7 @@ def scrape_and_save():
 
             # 1. Login
             driver.get(URL_LOGIN)
-            wait = WebDriverWait(driver, 30)
+            wait = WebDriverWait(driver, 10)
             
             email_field = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="email"]')))
             driver.find_element(By.CSS_SELECTOR, 'input[type="password"]').send_keys(PASSWORD)
@@ -109,7 +109,7 @@ def scrape_and_save():
 
             # 2. Mapeamento de Tanques Reais (Filtro MAC Address)
             print("Mapeando tanques (filtrando MACs)...")
-            time.sleep(10)
+            time.sleep(5)
             links_elementos = driver.find_elements(By.XPATH, "//a[contains(@href, '/tanque/')]")
             raw_urls = list(set([el.get_attribute('href') for el in links_elementos]))
             
@@ -120,7 +120,7 @@ def scrape_and_save():
             if not urls_validas:
                 # Tentar novamente se não encontrar tanques (pode ser tempo de carregamento)
                 print("⚠️ Nenhum tanque válido encontrado. Aguardando mais 10s...")
-                time.sleep(10)
+                time.sleep(5)
                 links_elementos = driver.find_elements(By.XPATH, "//a[contains(@href, '/tanque/')]")
                 raw_urls = list(set([el.get_attribute('href') for el in links_elementos]))
                 urls_validas = [url for url in raw_urls if padrao_mac.search(url)]
@@ -133,7 +133,7 @@ def scrape_and_save():
                 mac_id = url.split('/')[-1]
                 print(f"--- Acessando Tanque: {mac_id} ---")
                 driver.get(url)
-                time.sleep(12) # Tempo para o React/Next.js carregar o estado
+                time.sleep(6) # Tempo para o React/Next.js carregar o estado
 
                 # JS Cirúrgico para extrair Nome, Texto e Aeradores
                 js_extrair = r'''
@@ -194,7 +194,7 @@ def scrape_and_save():
             print(f"❌ Erro na tentativa {tentativa}: {e}")
             tentativa += 1
             if tentativa <= max_tentativas:
-                atraso = 15 * tentativa
+                atraso = 5 * tentativa
                 print(f"Reiniciando em {atraso} segundos...")
                 time.sleep(atraso)
         
