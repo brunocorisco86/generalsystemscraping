@@ -13,8 +13,8 @@ from dotenv import load_dotenv
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(project_root)
 
-from src.services.database import get_sqlite_connection
-from src.services.notification import send_telegram_photo, send_telegram_message
+from src.services.database import get_sqlite_connection  # noqa: E402
+from src.services.notification import send_telegram_photo, send_telegram_message  # noqa: E402
 
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -93,8 +93,9 @@ def get_bot_report():
         
         for tank, tank_data_full in df.groupby('tanque'):
             tank_data = tank_data_full.tail(4)
-            if tank_data.empty: continue
-            
+            if tank_data.empty:
+                continue
+
             o2_atual = tank_data['oxigenio'].iloc[-1]
             avg_4 = tank_data['oxigenio'].mean()
             ts_site = tank_data['timestamp_site'].iloc[-1]
