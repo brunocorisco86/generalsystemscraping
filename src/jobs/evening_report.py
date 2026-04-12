@@ -1,5 +1,6 @@
 import os
 import glob
+import logging
 from datetime import datetime
 import pandas as pd
 import matplotlib
@@ -14,8 +15,11 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..
 sys.path.append(project_root)
 
 
-from src.services.database import get_sqlite_connection
-from src.services.notification import send_telegram_photo
+from src.services.database import get_sqlite_connection  # noqa: E402
+from src.services.notification import send_telegram_photo  # noqa: E402
+
+# Configuração do logger
+logger = logging.getLogger(__name__)
 
 # --- CONFIGURAÇÕES ---
 load_dotenv()
@@ -35,7 +39,7 @@ def generate_evening_report():
         try:
             os.remove(f)
         except OSError as e:
-            print(f"Erro ao remover arquivo antigo {f}: {e}")
+            logger.error("Erro ao remover arquivo antigo %s: %s", f, e)
 
     now = datetime.now()
     start_time = now.replace(hour=16, minute=0, second=0, microsecond=0)
@@ -44,7 +48,7 @@ def generate_evening_report():
     try:
         conn = get_sqlite_connection()
         if conn is None:
-            print("Erro: Não foi possível conectar ao banco de dados SQLite.")
+            logger.error("Erro: Não foi possível conectar ao banco de dados SQLite.")
             return
 
         query = f"""
@@ -56,7 +60,7 @@ def generate_evening_report():
         df = pd.read_sql_query(query, conn)
 
         if df.empty:
-            print("Nenhum dado encontrado para o relatório da noite.")
+            logger.warning("Nenhum dado encontrado para o relatório da noite.")
             return
 
         df['timestamp_site'] = pd.to_datetime(df['timestamp_site'])
@@ -95,14 +99,19 @@ def generate_evening_report():
 
         # Envia a foto para o Telegram usando o serviço centralizado
         send_telegram_photo(analysis_text, plot_path)
-        print(f"Relatório noturno gerado e enviado com sucesso para {plot_path}.")
+        logger.info("Relatório noturno gerado e enviado com sucesso para %s.", plot_path)
 
     except Exception as e:
-        print(f"Erro no fechamento: {e}")
+        logger.error("Erro no fechamento: %s", e)
     finally:
         if conn:
             conn.close()
 
 if __name__ == "__main__":
+    # Configuração básica de logging para execução direta
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
     generate_evening_report()
 

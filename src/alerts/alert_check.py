@@ -1,10 +1,14 @@
 import os
+import logging
 from datetime import datetime
 from dotenv import load_dotenv
 
 # Importar serviços do projeto
 from src.services.database import get_sqlite_connection
 from src.services.notification import send_telegram_message
+
+# Configuração do logger
+logger = logging.getLogger(__name__)
 
 # Carregar variáveis de ambiente
 load_dotenv()
@@ -18,7 +22,7 @@ def check_alerts():
     try:
         conn = get_sqlite_connection()
         if not conn:
-            print("❌ Erro: Não foi possível conectar ao banco de dados.")
+            logger.error("Não foi possível conectar ao banco de dados SQLite.")
             return
             
         cursor = conn.cursor()
@@ -39,12 +43,12 @@ def check_alerts():
         leituras = cursor.fetchall()
 
         if not leituras:
-            print(f"[{datetime.now()}] Nenhuma leitura encontrada para verificar.")
+            logger.info("Nenhuma leitura encontrada para verificar.")
             return
 
         for tanque, oxigenio, temperatura in leituras:
-            # Log de monitoramento no console
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Verificando {tanque}: {oxigenio} Mg/L")
+            # Log de monitoramento
+            logger.info("Verificando %s: %s Mg/L", tanque, oxigenio)
 
             # Dispara o alerta se estiver abaixo do limite
             if oxigenio < LIMITE_OXIGENIO_CRITICO:
@@ -56,14 +60,19 @@ def check_alerts():
                     f"⏰ Hora: {datetime.now().strftime('%H:%M:%S')}"
                 )
                 send_telegram_message(mensagem)
-                print(f"✅ Alerta enviado para {tanque} (O2: {oxigenio})")
+                logger.info("Alerta enviado para %s (O2: %s)", tanque, oxigenio)
 
     except Exception as e:
-        print(f"❌ Erro ao processar alertas: {e}")
+        logger.error("Erro ao processar alertas: %s", e)
     finally:
         if conn:
             conn.close()
 
 if __name__ == "__main__":
+    # Configuração básica de logging para execução direta
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
     # Para executar do root: python3 -m src.alerts.alert_check
     check_alerts()
