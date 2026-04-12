@@ -2,7 +2,6 @@ import os
 import sys
 import asyncio
 import asyncpg
-import time
 from dotenv import load_dotenv
 
 # Adicionar a raiz do projeto ao sys.path

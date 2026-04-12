@@ -5,7 +5,7 @@ Bot Telegram para qualidade da água e gestão técnica de lotes (C.VALE / PATEL
 import os
 import sys
 import asyncio
-from datetime import date, datetime, time
+from datetime import date, datetime
 from dotenv import load_dotenv
 
 # Adicionar o caminho do projeto ao sys.path para permitir importações do src

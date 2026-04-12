@@ -4,7 +4,6 @@ Acesso ao PostgreSQL com asyncpg para o bot de qualidade de água.
 """
 import os
 import asyncpg
-from datetime import date, time
 from dotenv import load_dotenv
 
 # Carrega variáveis de ambiente

@@ -29,7 +29,7 @@ def get_vigi_report():
         conn = get_sqlite_connection()
         if not conn:
             return "❌ Erro: DB indisponível"
-            
+
         cursor = conn.cursor()
         # Busca as últimas 4 leituras para todos os tanques em uma única query
         # Otimizado para evitar o problema N+1
@@ -38,7 +38,9 @@ def get_vigi_report():
                 SELECT
                     tanque,
                     oxigenio,
-                    ROW_NUMBER() OVER (PARTITION BY tanque ORDER BY data_coleta DESC) as rn
+                    ROW_NUMBER() OVER (
+                    PARTITION BY tanque ORDER BY data_coleta DESC
+                ) as rn
                 FROM leituras
             )
             SELECT tanque, oxigenio
@@ -55,18 +57,18 @@ def get_vigi_report():
             if tanque not in dados_tanques:
                 dados_tanques[tanque] = []
             dados_tanques[tanque].append(oxigenio)
-        
+
         relatorio_lista = []
         for tanque in sorted(dados_tanques.keys()):
             leituras = dados_tanques[tanque]
-            
+
             ox_atual = leituras[0]
             avg_ox = statistics.mean(leituras)
-            
+
             # Emojis de Estado
             status = "🟢" if ox_atual >= LIMITE_OXIGENIO_CRITICO else "🔴"
             trend = "↑" if ox_atual >= avg_ox else "↓"
-            
+
             # Cálculo de Confiança (CV < 15% é estável)
             confianca = "✅"
             if len(leituras) > 1:
@@ -74,7 +76,7 @@ def get_vigi_report():
                 cv = (stdev / avg_ox) if avg_ox > 0 else 0
                 if cv > 0.15:
                     confianca = "⚠️"
-            
+
             # Formatação UX: 🐟0️⃣1️⃣: 2.8↑🟢✅
             t_id = tanque.replace("Tanque ", "").strip()
             t_visual = f"🐟{get_emoji_number(t_id)}"
