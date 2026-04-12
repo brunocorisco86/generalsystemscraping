@@ -16,6 +16,9 @@ fi
 # Carrega a variavel PROJECT_ROOT e remove aspas extras
 PROJECT_ROOT=$(grep -v '^#' "$ENV_FILE" | grep 'PROJECT_ROOT' | cut -d '=' -f2- | sed 's/^[ 	]*//;s/[ 	]*$//' | tr -d '"' | tr -d "'")
 
+# Remove barra final se existir
+PROJECT_ROOT=$(echo "$PROJECT_ROOT" | sed 's|/*$||')
+
 LOGS_DIR="$PROJECT_ROOT/logs"
 RETENTION_DAYS=7 # Valor padrão: 7 dias
 

@@ -22,6 +22,9 @@ if [ -z "$PROJECT_ROOT" ]; then
     PROJECT_ROOT="$PROJECT_ROOT_DIR"
 fi
 
+# Remove barra final se existir para evitar caminhos como //logs
+PROJECT_ROOT=$(echo "$PROJECT_ROOT" | sed 's|/*$||')
+
 VENV_PYTHON="$PROJECT_ROOT/.venv/bin/python3"
 
 # Verifica se o ambiente virtual existe
