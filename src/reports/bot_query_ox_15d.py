@@ -1,5 +1,7 @@
 import sqlite3
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import requests
 import os

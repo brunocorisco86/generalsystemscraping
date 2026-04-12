@@ -2,6 +2,8 @@ import os
 import glob
 from datetime import datetime
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 

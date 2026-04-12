@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from dotenv import load_dotenv
