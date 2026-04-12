@@ -67,12 +67,19 @@ def get_weekly_temp_report():
         # --- AJUSTE DE EIXO DINÂMICO ---
         v_min, v_max = df['temperatura'].min(), df['temperatura'].max()
 
-        # 2. GERAR GRÁFICO DE TENDÊNCIA
+        # 2. GERAR GRÁFICO E CONSTRUIR MENSAGEM (UNIFICADO)
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
+
+        msg = "🌡️ *Resumo Semanal Temperatura*\nPeríodo: 7 dias\n"
+
         for tank, tank_df in df.groupby('tanque'):
             if not tank_df.empty:
+                # Plotagem
                 plt.plot(tank_df['timestamp_site'], tank_df['temperatura'], label=tank, linewidth=1.5)
+
+                # Mensagem
+                msg += f"\n📍 *{tank}*\nMín: `{tank_df['temperatura'].min():.1f}ºC` | Máx: `{tank_df['temperatura'].max():.1f}ºC`"
 
         # Ajuste dinâmico para preencher a tela do smartwatch
         plt.ylim(v_min - 0.5, v_max + 0.5)
@@ -90,12 +97,6 @@ def get_weekly_temp_report():
         plt.savefig(plot_path, dpi=100)
         plt.close()
         logger.info(f"Gráfico de tendência de temperatura (7 dias) salvo em {plot_path}")
-
-        # 3. CONSTRUIR MENSAGEM
-        msg = "🌡️ *Resumo Semanal Temperatura*\nPeríodo: 7 dias\n"
-        for tank, tank_data in df.groupby('tanque'):
-            if not tank_data.empty:
-                msg += f"\n📍 *{tank}*\nMín: `{tank_data['temperatura'].min():.1f}ºC` | Máx: `{tank_data['temperatura'].max():.1f}ºC`"
 
         # 4. ENVIAR PARA o TELEGRAM
         send_telegram_photo(msg, plot_path, chat_id=CHAT_ID_FROM_ARGS)

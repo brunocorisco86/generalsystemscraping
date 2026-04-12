@@ -66,36 +66,21 @@ def get_bot_report():
 
         df['timestamp_site'] = pd.to_datetime(df['timestamp_site'])
 
-        # 2. GERAR GRÁFICO DE TENDÊNCIA
+        # 2. GERAR GRÁFICO E CONSTRUIR MENSAGEM (UNIFICADO)
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
-        for tank, tank_df in df.groupby('tanque'):
-            if not tank_df.empty:
-                plt.plot(tank_df['timestamp_site'], tank_df['oxigenio'], label=tank, linewidth=2)
         
-        plt.axhline(y=LIMITE_O2, color='red', linestyle='--', alpha=0.5, label="Limite Crítico")
-        plt.title('Tendencia de O2 (Ultimas 12h)')
-        plt.xlabel('Hora')
-        plt.ylabel('Mg/L')
-        plt.grid(True, which='both', linestyle='--', linewidth=0.5)
-        plt.legend()
-        plt.tight_layout()
-        
-        plot_path = os.path.join(REPORT_DIR, 'bot_oxygen_trend.png')
-        if not os.path.exists(REPORT_DIR):
-            os.makedirs(REPORT_DIR)
-        plt.savefig(plot_path, dpi=100)
-        plt.close()
-        logger.info(f"Gráfico de tendência de oxigênio salvo em {plot_path}")
-
-        # 3. CONSTRUIR MENSAGEM (FOCO SMARTWATCH)
         msg = f"📊 *Relatório {now.strftime('%H:%M')}h*\n"
-        
-        for tank, tank_data_full in df.groupby('tanque'):
-            tank_data = tank_data_full.tail(4)
-            if tank_data.empty:
+
+        for tank, tank_df in df.groupby('tanque'):
+            if tank_df.empty:
                 continue
 
+            # Plotagem
+            plt.plot(tank_df['timestamp_site'], tank_df['oxigenio'], label=tank, linewidth=2)
+
+            # Construção da Mensagem (últimos 4 pontos)
+            tank_data = tank_df.tail(4)
             o2_atual = tank_data['oxigenio'].iloc[-1]
             avg_4 = tank_data['oxigenio'].mean()
             ts_site = tank_data['timestamp_site'].iloc[-1]
@@ -113,6 +98,22 @@ def get_bot_report():
             msg += f"\n📍 *{tank}*\n"
             msg += f"Oxigênio: `{o2_atual:.2f}` {trend} {status}\n"
             msg += f"Md4: `{avg_4:.2f}` | ⌚{hora_f} {conf_emoji}\n"
+
+        # Finalizar Gráfico
+        plt.axhline(y=LIMITE_O2, color='red', linestyle='--', alpha=0.5, label="Limite Crítico")
+        plt.title('Tendencia de O2 (Ultimas 12h)')
+        plt.xlabel('Hora')
+        plt.ylabel('Mg/L')
+        plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+        plt.legend()
+        plt.tight_layout()
+
+        plot_path = os.path.join(REPORT_DIR, 'bot_oxygen_trend.png')
+        if not os.path.exists(REPORT_DIR):
+            os.makedirs(REPORT_DIR)
+        plt.savefig(plot_path, dpi=100)
+        plt.close()
+        logger.info(f"Gráfico de tendência de oxigênio salvo em {plot_path}")
 
         # 4. ENVIAR PARA O TELEGRAM
         send_telegram_photo(msg, plot_path, chat_id=CHAT_ID_FROM_ARGS)
