@@ -1,6 +1,5 @@
 import os
-import sqlite3
-from datetime import datetime, timedelta
+from datetime import datetime
 from dotenv import load_dotenv
 
 # Importar serviços do projeto
@@ -30,27 +29,23 @@ def check_last_reading():
 
         cursor = conn.cursor()
 
-        # Busca tanques distintos
-        cursor.execute("SELECT DISTINCT tanque FROM leituras")
-        tanks = [row[0] for row in cursor.fetchall()]
+        # Busca a última leitura de cada tanque em uma única consulta
+        cursor.execute("""
+            SELECT tanque, MAX(timestamp_site) as last_reading
+            FROM leituras
+            GROUP BY tanque
+        """)
+        results = cursor.fetchall()
 
-        if not tanks:
+        if not results:
             print("⚠️ Aviso: Nenhum dado de tanque encontrado na tabela 'leituras'.")
             send_telegram_message("🚫 *Atenção:* Nenhum dado de tanque encontrado para monitoramento offline.")
             return
 
-        print(f"Encontrados {len(tanks)} tanques para verificar: {', '.join(tanks)}")
+        print(f"Encontrados {len(results)} tanques para verificar.")
 
-        for tank in sorted(tanks):
-            # Busca a última leitura baseada no timestamp_site (que reflete o sensor)
-            cursor.execute("""
-                SELECT timestamp_site FROM leituras
-                WHERE tanque = ? ORDER BY timestamp_site DESC LIMIT 1
-            """, (tank,))
-            result = cursor.fetchone()
-
-            if result and result[0]:
-                last_reading_str = result[0]
+        for tank, last_reading_str in sorted(results):
+            if last_reading_str:
                 try:
                     last_reading_time = datetime.strptime(last_reading_str, '%Y-%m-%d %H:%M:%S')
                     time_difference = datetime.now() - last_reading_time
@@ -69,9 +64,9 @@ def check_last_reading():
                             f"O sistema não registra dados há mais de {MINUTOS_OFFLINE_ALERTA} minutos."
                         )
                         send_telegram_message(message)
-                        print(f"   ✅ Notificação enviada para o Telegram.")
+                        print("   ✅ Notificação enviada para o Telegram.")
                     else:
-                        print(f"   🟢 STATUS: ONLINE (Dentro do limite)")
+                        print("   🟢 STATUS: ONLINE (Dentro do limite)")
                 
                 except ValueError:
                     print(f"   ❌ Erro: Formato de timestamp inválido para o tanque {tank}: {last_reading_str}")
