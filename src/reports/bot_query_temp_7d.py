@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(project_root)
 
-from src.services.database import get_sqlite_connection
-from src.services.notification import send_telegram_photo, send_telegram_message
+from src.services.database import get_sqlite_connection  # noqa: E402
+from src.services.notification import send_telegram_photo, send_telegram_message  # noqa: E402
 
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
