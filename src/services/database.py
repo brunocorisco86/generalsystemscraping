@@ -2,13 +2,20 @@ import os
 import sqlite3
 import psycopg2
 import logging
+import hashlib
 from dotenv import load_dotenv
 
 # Configuração do logger
 logger = logging.getLogger(__name__)
 
 # Carregar variáveis de ambiente do arquivo .env
-load_dotenv()
+# Tenta carregar do diretório atual ou da raiz do projeto
+env_path = os.path.join(os.getcwd(), ".env")
+if not os.path.exists(env_path):
+    # Procura na raiz se estiver em um subdiretório (src/services)
+    env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '.env'))
+
+load_dotenv(env_path)
 
 # --- Configurações do .env ---
 SQLITE_DB_PATH = os.environ.get("SQLITE_DB_PATH", "data/piscicultura_dados.db")
@@ -49,6 +56,18 @@ def get_postgres_connection():
         logger.error(f"Erro ao conectar ao PostgreSQL: {e}")
         return None
 
-# Funções para conexões assíncronas (asyncpg) serão adicionadas
-# conforme necessário para os bots, ou mantidas nos módulos dos bots
-# se a lógica for muito específica.
+def generate_sha256(data_string: str) -> str:
+    """Gera um hash SHA256 a partir de uma string."""
+    return hashlib.sha256(data_string.encode('utf-8')).hexdigest()
+
+def get_estrutura_uid(nome: str, pluscode: str) -> str:
+    """Gera o UID para uma estrutura baseado no nome e pluscode."""
+    return generate_sha256(nome + pluscode)
+
+def get_default_estrutura_info():
+    """Retorna as informações da estrutura configurada no .env."""
+    return {
+        "nome": os.environ.get("STRUCT_NAME"),
+        "pluscode": os.environ.get("STRUCT_PLUSCODE"),
+        "type_id": os.environ.get("STRUCT_TYPE_ID")
+    }
