@@ -68,6 +68,9 @@ async def criar_lote_completo(dados: dict) -> str:
     """Insere o alojamento."""
     pool = await get_pool()
     async with pool.acquire() as conn:
+        # Busca UID da estrutura pelo nome
+        struct_uid = await conn.fetchval("SELECT uid FROM estruturas WHERE nome = $1", dados['tanque'])
+
         # Verifica duplicidade
         existe = await conn.fetchval(
             "SELECT lote FROM lotes WHERE estrutura_uid = $1 AND data_abate IS NULL",
@@ -93,6 +96,7 @@ async def finalizar_lote_abate(dados: dict) -> bool:
     """Atualiza dados de abate e fecha o lote."""
     pool = await get_pool()
     async with pool.acquire() as conn:
+        struct_uid = await conn.fetchval("SELECT uid FROM estruturas WHERE nome = $1", dados['tanque'])
         result = await conn.execute(
             """
             UPDATE lotes 
@@ -117,6 +121,7 @@ async def inserir_biometria(
 ) -> None:
     pool = await get_pool()
     async with pool.acquire() as conn:
+        struct_uid = await conn.fetchval("SELECT uid FROM estruturas WHERE nome = $1", tanque)
         await conn.execute(
             """
             INSERT INTO biometria
