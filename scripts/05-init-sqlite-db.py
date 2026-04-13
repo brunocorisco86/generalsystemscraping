@@ -59,6 +59,16 @@ def init_sqlite():
             )
         ''')
 
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS usuarios_telegram (
+                telegram_id INTEGER PRIMARY KEY,
+                proprietario_uid TEXT REFERENCES proprietarios(uid),
+                username TEXT,
+                nome_completo TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
         # 2. Tabelas de Operação e Monitoramento (Principais para o SQLite local)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS lotes (
@@ -97,9 +107,11 @@ def init_sqlite():
                 estrutura_uid TEXT REFERENCES estruturas(uid),
                 lote TEXT NOT NULL,
                 data_biometria DATE NOT NULL,
-                volume_peixes INTEGER,
-                peso_medio_g REAL,
-                consumo_racao_kg REAL
+                quantidade INTEGER,
+                peso_medio REAL,
+                mortalidade INTEGER DEFAULT 0,
+                consumo_racao REAL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
 

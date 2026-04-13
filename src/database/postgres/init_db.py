@@ -84,6 +84,16 @@ async def init_postgres():
             );
         ''')
 
+        await conn.execute('''
+            CREATE TABLE IF NOT EXISTS usuarios_telegram (
+                telegram_id BIGINT PRIMARY KEY,
+                proprietario_uid VARCHAR(64) REFERENCES proprietarios(uid),
+                username VARCHAR(255),
+                nome_completo VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        ''')
+
         # 2. Tabelas de Operação e Monitoramento
         logger.info("Criando tabelas de operação e monitoramento...")
 
@@ -124,9 +134,11 @@ async def init_postgres():
                 estrutura_uid VARCHAR(64) REFERENCES estruturas(uid),
                 lote VARCHAR(255) NOT NULL,
                 data_biometria DATE NOT NULL,
-                volume_peixes INTEGER,
-                peso_medio_g REAL,
-                consumo_racao_kg REAL
+                quantidade INTEGER,
+                peso_medio REAL,
+                mortalidade INTEGER DEFAULT 0,
+                consumo_racao REAL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         ''')
 

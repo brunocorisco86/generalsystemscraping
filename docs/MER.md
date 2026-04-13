@@ -7,6 +7,7 @@ Este documento descreve a nova estrutura de dados do sistema de monitoramento de
 ```mermaid
 erDiagram
     PROPRIETARIO ||--o{ PROPRIEDADE : possui
+    PROPRIETARIO ||--o{ USUARIOS_TELEGRAM : vinculado
     PROPRIEDADE ||--o{ ESTRUTURA : contem
     TIPO_EXPLORACAO ||--o{ ESTRUTURA : define
     ESTRUTURA ||--o{ LOTES : abriga
@@ -19,6 +20,13 @@ erDiagram
         string uid PK "Hash SHA256(Nome + CPF)"
         string nome
         string cpf
+    }
+
+    USUARIOS_TELEGRAM {
+        bigint telegram_id PK
+        string proprietario_uid FK
+        string username
+        string nome_completo
     }
 
     PROPRIEDADE {
@@ -56,6 +64,17 @@ erDiagram
         float oxigenio
         float temperatura
         timestamp timestamp_site
+    }
+
+    BIOMETRIA {
+        integer id PK
+        string estrutura_uid FK
+        string lote
+        date data_biometria
+        integer quantidade
+        float peso_medio
+        integer mortalidade
+        float consumo_racao
     }
 
     QUALIDADE_AGUA_LIMNOLOGIA {
