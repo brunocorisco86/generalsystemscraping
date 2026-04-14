@@ -46,7 +46,7 @@ install_sequentially() {
 # Adicionadas bibliotecas py3- para evitar compilação em hardware limitado
 ALPINE_DEPS="git docker docker-cli-compose g++ musl-dev make python3 py3-pip py3-virtualenv python3-dev build-base postgresql-dev sqlite-dev libffi-dev zlib-dev util-linux openblas openblas-dev freetype freetype-dev libpng libpng-dev jpeg jpeg-dev tiff tiff-dev chromium chromium-chromedriver ncurses-dev py3-matplotlib py3-numpy py3-pandas py3-scipy py3-requests py3-sqlalchemy py3-psycopg2 py3-dotenv py3-seaborn py3-openpyxl"
 
-DEBIAN_DEPS="git docker docker-cli-compose g++ python3 py3-pip py3-virtualenv python3-dev build-base postgresql-dev sqlite-dev libffi-dev zlib-dev util-linux openblas openblas-dev freetype freetype-dev libpng libpng-dev jpeg jpeg-dev tiff tiff-dev chromium chromium-chromedriver ncurses-dev py3-matplotlib py3-numpy py3-pandas py3-scipy py3-requests py3-sqlalchemy py3-psycopg2 py3-dotenv py3-seaborn py3-openpyxl"
+DEBIAN_DEPS="git docker docker-cli-compose g++ python3 py3-pip py3-virtualenv python3-dev build-base postgresql-dev sqlite-dev libffi-dev zlib-dev util-linux openblas openblas-dev freetype freetype-dev libpng libpng-dev jpeg jpeg-dev tiff tiff-dev chromium chromium-chromedriver ncurses-dev py3-matplotlib py3-numpy py3-pandas py3-scipy py3-requests py3-sqlalchemy py3-psycopg2 py3-dotenv py3-seaborn py3-openpyxl rclone"
 
 if [ -f "/etc/os-release" ]; then
     . /etc/os-release
