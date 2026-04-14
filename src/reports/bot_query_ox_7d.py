@@ -72,10 +72,16 @@ def get_weekly_report():
 
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
-        for tank in sorted(df['tanque'].unique()):
-            tank_df = df[df['tanque'] == tank]
-            if not tank_df.empty:
-                plt.plot(tank_df['timestamp_site'], tank_df['oxigenio'], label=tank, linewidth=1.5)
+
+        msg = f"🗓️ *Resumo Semanal Oxigênio*\nPeríodo: 7 dias\n"
+
+        # Agrupamos por tanque para iterar apenas uma vez sobre os dados
+        for tank, tank_data in df.groupby('tanque'):
+            if not tank_data.empty:
+                # Plotagem
+                plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=tank, linewidth=1.5)
+                # Estatísticas para a mensagem
+                msg += f"\n📍 *{tank}*\nMín: `{tank_data['oxigenio'].min():.2f}` | Máx: `{tank_data['oxigenio'].max():.2f}`"
 
         plt.axhline(y=LIMITE_O2, color='red', linestyle='--', alpha=0.4, label="Limite Crítico")
         plt.ylim(max(0, v_min - 0.5), v_max + 0.5)
@@ -93,12 +99,6 @@ def get_weekly_report():
         plt.savefig(plot_path, dpi=100)
         plt.close()
         logger.info(f"Gráfico de tendência de oxigênio (7 dias) salvo em {plot_path}")
-
-        msg = f"🗓️ *Resumo Semanal Oxigênio*\nPeríodo: 7 dias\n"
-        for tank in sorted(df['tanque'].unique()):
-            tank_data = df[df['tanque'] == tank]
-            if not tank_data.empty:
-                msg += f"\n📍 *{tank}*\nMín: `{tank_data['oxigenio'].min():.2f}` | Máx: `{tank_data['oxigenio'].max():.2f}`"
 
         send_telegram_photo(msg, plot_path, chat_id=CHAT_ID_FROM_ARGS)
         logger.info("Relatório de oxigênio (7 dias) enviado para o Telegram.")

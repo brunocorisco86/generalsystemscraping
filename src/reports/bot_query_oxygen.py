@@ -71,11 +71,38 @@ def get_bot_report():
         # 2. GERAR GRÁFICO DE TENDÊNCIA
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
-        for tank in sorted(df['tanque'].unique()):
-            tank_df = df[df['tanque'] == tank]
-            if not tank_df.empty:
-                plt.plot(tank_df['timestamp_site'], tank_df['oxigenio'], label=tank, linewidth=2)
         
+        # 3. CONSTRUIR MENSAGEM (FOCO SMARTWATCH)
+        msg = f"📊 *Relatório {now.strftime('%H:%M')}h*\n"
+
+        # Agrupamos por tanque para iterar apenas uma vez sobre os dados
+        for tank, tank_data in df.groupby('tanque'):
+            if not tank_data.empty:
+                # Plotagem
+                plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=tank, linewidth=2)
+
+                # Dados para a mensagem (últimas 4 leituras)
+                tank_last_data = tank_data.tail(4)
+                if tank_last_data.empty: continue
+
+                o2_atual = tank_last_data['oxigenio'].iloc[-1]
+                avg_4 = tank_last_data['oxigenio'].mean()
+                ts_site = tank_last_data['timestamp_site'].iloc[-1]
+
+                # Cálculo de Confiança (CV < 0.15)
+                # Evita ZeroDivisionError
+                std_dev = statistics.stdev(tank_last_data['oxigenio']) if len(tank_last_data) > 1 else 0
+                cv = (std_dev / avg_4) if avg_4 > 0 else 0
+
+                conf_emoji = "🛡️" if cv < 0.15 else "⚠️"
+                trend = "📈" if o2_atual >= avg_4 else "📉"
+                status = "🟢" if o2_atual >= LIMITE_O2 else "🔴"
+                hora_f = ts_site.strftime('%H:%M')
+
+                msg += f"\n📍 *{tank}*\n"
+                msg += f"Oxigênio: `{o2_atual:.2f}` {trend} {status}\n"
+                msg += f"Md4: `{avg_4:.2f}` | ⌚{hora_f} {conf_emoji}\n"
+
         plt.axhline(y=LIMITE_O2, color='red', linestyle='--', alpha=0.5, label="Limite Crítico")
         plt.title('Tendencia de O2 (Ultimas 12h)')
         plt.xlabel('Hora')
@@ -90,31 +117,6 @@ def get_bot_report():
         plt.savefig(plot_path, dpi=100)
         plt.close()
         logger.info(f"Gráfico de tendência de oxigênio salvo em {plot_path}")
-
-        # 3. CONSTRUIR MENSAGEM (FOCO SMARTWATCH)
-        msg = f"📊 *Relatório {now.strftime('%H:%M')}h*\n"
-        
-        for tank in sorted(df['tanque'].unique()):
-            tank_data = df[df['tanque'] == tank].tail(4)
-            if tank_data.empty: continue
-            
-            o2_atual = tank_data['oxigenio'].iloc[-1]
-            avg_4 = tank_data['oxigenio'].mean()
-            ts_site = tank_data['timestamp_site'].iloc[-1]
-            
-            # Cálculo de Confiança (CV < 0.15)
-            # Evita ZeroDivisionError
-            std_dev = statistics.stdev(tank_data['oxigenio']) if len(tank_data) > 1 else 0
-            cv = (std_dev / avg_4) if avg_4 > 0 else 0
-
-            conf_emoji = "🛡️" if cv < 0.15 else "⚠️"
-            trend = "📈" if o2_atual >= avg_4 else "📉"
-            status = "🟢" if o2_atual >= LIMITE_O2 else "🔴"
-            hora_f = ts_site.strftime('%H:%M')
-
-            msg += f"\n📍 *{tank}*\n"
-            msg += f"Oxigênio: `{o2_atual:.2f}` {trend} {status}\n"
-            msg += f"Md4: `{avg_4:.2f}` | ⌚{hora_f} {conf_emoji}\n"
 
         # 4. ENVIAR PARA O TELEGRAM
         send_telegram_photo(msg, plot_path, chat_id=CHAT_ID_FROM_ARGS)
