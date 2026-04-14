@@ -42,6 +42,24 @@ services:
       - postgres
     restart: unless-stopped
 
+  nodered:
+    build:
+      context: ./nodered
+      dockerfile: Dockerfile
+    container_name: piscicultura_nodered
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./nodered/flows.json:/data/flows.json
+      - ${PROJECT_ROOT}:/app # Monta a raiz do projeto para scripts Python
+    environment:
+      # PROJECT_ROOT dentro do container
+      - PROJECT_ROOT=/app
+      - TZ=America/Sao_Paulo # Define o fuso horário
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
 # Volumes persistentes configurados via diretório local
 # volumes:
 #   postgres_data:
