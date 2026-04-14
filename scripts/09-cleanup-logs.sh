@@ -3,7 +3,7 @@
 
 set -e
 
-# Detecta a pasta do script e a raiz do projeto
+# Detecta a pasta do script e a raiz do projeto (Compatível com POSIX/Alpine)
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 ENV_FILE="$PROJECT_ROOT_DIR/.env"
@@ -13,8 +13,11 @@ if [ ! -f "$ENV_FILE" ]; then
     exit 1
 fi
 
-# Carrega a variável PROJECT_ROOT do arquivo .env
-PROJECT_ROOT=$(grep -v '^#' "$ENV_FILE" | grep 'PROJECT_ROOT' | cut -d '=' -f2- | sed 's/^[ 	]*//;s/[ 	]*$//')
+# Carrega a variavel PROJECT_ROOT e remove aspas extras
+PROJECT_ROOT=$(grep -v '^#' "$ENV_FILE" | grep 'PROJECT_ROOT' | cut -d '=' -f2- | sed 's/^[ 	]*//;s/[ 	]*$//' | tr -d '"' | tr -d "'")
+
+# Remove barra final se existir
+PROJECT_ROOT=$(echo "$PROJECT_ROOT" | sed 's|/*$||')
 
 LOGS_DIR="$PROJECT_ROOT/logs"
 RETENTION_DAYS=7 # Valor padrão: 7 dias

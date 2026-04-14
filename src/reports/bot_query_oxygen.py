@@ -1,9 +1,7 @@
-import sqlite3
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import requests
 import os
 import statistics
 import sys
@@ -15,8 +13,8 @@ from dotenv import load_dotenv
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(project_root)
 
-from src.services.database import get_sqlite_connection
-from src.services.notification import send_telegram_photo, send_telegram_message
+from src.services.database import get_sqlite_connection  # noqa: E402
+from src.services.notification import send_telegram_photo, send_telegram_message  # noqa: E402
 
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -50,7 +48,7 @@ def get_bot_report():
         conn = get_sqlite_connection()
         if conn is None:
             logger.error("Erro: Não foi possível conectar ao banco de dados SQLite.")
-            send_telegram_message(f"❌ Erro ao gerar relatório de oxigênio: falha na conexão com o BD.")
+            send_telegram_message("❌ Erro ao gerar relatório de oxigênio: falha na conexão com o BD.")
             return
 
         query = f"""
@@ -68,7 +66,7 @@ def get_bot_report():
 
         df['timestamp_site'] = pd.to_datetime(df['timestamp_site'])
 
-        # 2. GERAR GRÁFICO DE TENDÊNCIA
+        # 2. GERAR GRÁFICO E CONSTRUIR MENSAGEM (UNIFICADO)
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
         

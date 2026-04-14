@@ -1,9 +1,7 @@
-import sqlite3
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import requests
 import os
 import sys
 import logging
@@ -14,8 +12,8 @@ from dotenv import load_dotenv
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(project_root)
 
-from src.services.database import get_sqlite_connection
-from src.services.notification import send_telegram_photo, send_telegram_message
+from src.services.database import get_sqlite_connection  # noqa: E402
+from src.services.notification import send_telegram_photo, send_telegram_message  # noqa: E402
 
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -48,7 +46,7 @@ def get_weekly_temp_report():
         conn = get_sqlite_connection()
         if conn is None:
             logger.error("Erro: Não foi possível conectar ao banco de dados SQLite.")
-            send_telegram_message(f"❌ Erro ao gerar relatório de temperatura (7 dias): falha na conexão com o BD.", chat_id=CHAT_ID_FROM_ARGS)
+            send_telegram_message("❌ Erro ao gerar relatório de temperatura (7 dias): falha na conexão com o BD.", chat_id=CHAT_ID_FROM_ARGS)
             return
 
         query = f"""
@@ -69,7 +67,7 @@ def get_weekly_temp_report():
         # --- AJUSTE DE EIXO DINÂMICO ---
         v_min, v_max = df['temperatura'].min(), df['temperatura'].max()
 
-        # 2. GERAR GRÁFICO DE TENDÊNCIA
+        # 2. GERAR GRÁFICO E CONSTRUIR MENSAGEM (UNIFICADO)
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
 
@@ -82,6 +80,9 @@ def get_weekly_temp_report():
                 plt.plot(tank_data['timestamp_site'], tank_data['temperatura'], label=tank, linewidth=1.5)
                 # Estatísticas para a mensagem
                 msg += f"\n📍 *{tank}*\nMín: `{tank_data['temperatura'].min():.1f}ºC` | Máx: `{tank_data['temperatura'].max():.1f}ºC`"
+
+                # Mensagem
+                msg += f"\n📍 *{tank}*\nMín: `{tank_df['temperatura'].min():.1f}ºC` | Máx: `{tank_df['temperatura'].max():.1f}ºC`"
 
         # Ajuste dinâmico para preencher a tela do smartwatch
         plt.ylim(v_min - 0.5, v_max + 0.5)

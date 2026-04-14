@@ -92,7 +92,7 @@ docs/_build/
 # Project-specific
 /data/
 /reports/
-*.db
+# *.db
 *.db-journal
 *.log
 /piscicultura_dados_backup.db

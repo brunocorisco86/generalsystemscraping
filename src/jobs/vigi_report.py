@@ -1,6 +1,5 @@
 import os
 import statistics
-from datetime import datetime
 from dotenv import load_dotenv
 
 # Importar serviços centralizados do projeto
@@ -30,37 +29,54 @@ def get_vigi_report():
         conn = get_sqlite_connection()
         if not conn:
             return "❌ Erro: DB indisponível"
-            
+
         cursor = conn.cursor()
-        cursor.execute("SELECT DISTINCT tanque FROM leituras")
-        tanques = [row[0] for row in cursor.fetchall()]
-        
+        # Busca as últimas 4 leituras para todos os tanques em uma única query
+        # Otimizado para evitar o problema N+1
+        cursor.execute("""
+            WITH RankedLeituras AS (
+                SELECT
+                    tanque,
+                    oxigenio,
+                    ROW_NUMBER() OVER (
+                    PARTITION BY tanque ORDER BY data_coleta DESC
+                ) as rn
+                FROM leituras
+            )
+            SELECT tanque, oxigenio
+            FROM RankedLeituras
+            WHERE rn <= 4
+            ORDER BY tanque ASC, rn ASC
+        """)
+
+        rows = cursor.fetchall()
+
+        # Agrupa leituras por tanque preservando a ordem (mais recente primeiro)
+        dados_tanques = {}
+        for tanque, oxigenio in rows:
+            if tanque not in dados_tanques:
+                dados_tanques[tanque] = []
+            dados_tanques[tanque].append(oxigenio)
+
         relatorio_lista = []
-        for tanque in sorted(tanques):
-            # Busca as últimas 4 leituras para calcular média e tendência
-            cursor.execute("""
-                SELECT oxigenio FROM leituras 
-                WHERE tanque = ? 
-                ORDER BY data_coleta DESC LIMIT 4
-            """, (tanque,))
-            leituras = [r[0] for r in cursor.fetchall()]
-            
-            if not leituras: continue
-            
+        for tanque in sorted(dados_tanques.keys()):
+            leituras = dados_tanques[tanque]
+
             ox_atual = leituras[0]
             avg_ox = statistics.mean(leituras)
-            
+
             # Emojis de Estado
             status = "🟢" if ox_atual >= LIMITE_OXIGENIO_CRITICO else "🔴"
             trend = "↑" if ox_atual >= avg_ox else "↓"
-            
+
             # Cálculo de Confiança (CV < 15% é estável)
             confianca = "✅"
             if len(leituras) > 1:
                 stdev = statistics.stdev(leituras)
                 cv = (stdev / avg_ox) if avg_ox > 0 else 0
-                if cv > 0.15: confianca = "⚠️"
-            
+                if cv > 0.15:
+                    confianca = "⚠️"
+
             # Formatação UX: 🐟0️⃣1️⃣: 2.8↑🟢✅
             t_id = tanque.replace("Tanque ", "").strip()
             t_visual = f"🐟{get_emoji_number(t_id)}"

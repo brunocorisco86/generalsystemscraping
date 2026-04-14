@@ -2,7 +2,7 @@ import os
 import sys
 import asyncio
 import asyncpg
-import time
+import logging
 from dotenv import load_dotenv
 
 # Adicionar a raiz do projeto ao sys.path
@@ -20,12 +20,15 @@ PG_PORT = os.environ.get("PG_PORT", 5432)
 
 PG_DSN = f"postgresql://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:{PG_PORT}/{PG_DBNAME}"
 
+# Configuração do logger
+logger = logging.getLogger(__name__)
+
 async def init_postgres():
-    """Cria as tabelas iniciais no PostgreSQL de forma resiliente."""
-    print(f"--- Configurando Schema do PostgreSQL em '{PG_HOST}' ---")
+    """Cria as tabelas do novo MER no PostgreSQL."""
+    logger.info("--- Configurando Schema do PostgreSQL em '%s' ---", PG_HOST)
     
     if not all([PG_HOST, PG_DBNAME, PG_USER, PG_PASSWORD]):
-        print("❌ Erro: Configurações do PostgreSQL incompletas no .env")
+        logger.error("Configurações do PostgreSQL incompletas no .env")
         return
 
     conn = None
@@ -36,19 +39,68 @@ async def init_postgres():
             break
         except Exception as e:
             if i < max_retries - 1:
-                print(f"⏳ Aguardando Postgres inicializar (tentativa {i+1}/{max_retries})...")
+                logger.info("Aguardando Postgres inicializar (tentativa %d/%d)...", i+1, max_retries)
                 await asyncio.sleep(5)
             else:
-                print(f"❌ Não foi possível conectar ao Postgres após {max_retries} tentativas: {e}")
+                logger.error("Não foi possível conectar ao Postgres após %d tentativas: %s", max_retries, e)
                 return
 
     try:
-        # 1. Tabela de Lotes (Schema C.VALE / PATEL)
-        print("Criando/Sincronizando tabela 'lotes'...")
+        # 1. Tabelas de Cadastro (Base)
+        logger.info("Criando tabelas de cadastro...")
+
+        await conn.execute('''
+            CREATE TABLE IF NOT EXISTS proprietarios (
+                uid VARCHAR(64) PRIMARY KEY,
+                nome VARCHAR(255) NOT NULL,
+                cpf VARCHAR(20) NOT NULL
+            );
+        ''')
+
+        await conn.execute('''
+            CREATE TABLE IF NOT EXISTS propriedades (
+                uid VARCHAR(64) PRIMARY KEY,
+                proprietario_uid VARCHAR(64) REFERENCES proprietarios(uid),
+                nome VARCHAR(255) NOT NULL,
+                endereco TEXT NOT NULL,
+                cadpro VARCHAR(50) NOT NULL
+            );
+        ''')
+
+        await conn.execute('''
+            CREATE TABLE IF NOT EXISTS tipos_exploracao (
+                id INTEGER PRIMARY KEY,
+                nome VARCHAR(100) NOT NULL
+            );
+        ''')
+
+        await conn.execute('''
+            CREATE TABLE IF NOT EXISTS estruturas (
+                uid VARCHAR(64) PRIMARY KEY,
+                propriedade_uid VARCHAR(64) REFERENCES propriedades(uid),
+                tipo_exploracao_id INTEGER REFERENCES tipos_exploracao(id),
+                nome VARCHAR(255) NOT NULL,
+                pluscode VARCHAR(50) NOT NULL
+            );
+        ''')
+
+        await conn.execute('''
+            CREATE TABLE IF NOT EXISTS usuarios_telegram (
+                telegram_id BIGINT PRIMARY KEY,
+                proprietario_uid VARCHAR(64) REFERENCES proprietarios(uid),
+                username VARCHAR(255),
+                nome_completo VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        ''')
+
+        # 2. Tabelas de Operação e Monitoramento
+        logger.info("Criando tabelas de operação e monitoramento...")
+
         await conn.execute('''
             CREATE TABLE IF NOT EXISTS lotes (
                 id SERIAL PRIMARY KEY,
-                tanque VARCHAR(255) NOT NULL,
+                estrutura_uid VARCHAR(64) REFERENCES estruturas(uid),
                 lote VARCHAR(255) NOT NULL,
                 data_alojamento DATE NOT NULL DEFAULT CURRENT_DATE,
                 data_abate DATE,
@@ -60,38 +112,14 @@ async def init_postgres():
                 peso_entregue NUMERIC(10,2),
                 pct_rend_file NUMERIC(5,2),
                 reais_por_peixe NUMERIC(10,2),
-                descricao TEXT,
-                CONSTRAINT uq_tanque_lote UNIQUE (tanque, lote)
+                descricao TEXT
             );
         ''')
 
-        # Migração: Garante que todas as colunas novas existam e tipos estejam corretos
-        print("Sincronizando colunas e tipos da tabela 'lotes'...")
-        migracoes = [
-            "ALTER TABLE lotes RENAME COLUMN data_inicio TO data_alojamento;",
-            "ALTER TABLE lotes ALTER COLUMN lote TYPE VARCHAR(255);",
-            "ALTER TABLE biometria ALTER COLUMN lote TYPE VARCHAR(255);",
-            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS peixes_alojados INTEGER;",
-            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS peso_medio NUMERIC(10,2);",
-            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS area_acude NUMERIC(10,2);",
-            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS densidade NUMERIC(10,2);",
-            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS qtd_peixes_entregues INTEGER;",
-            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS peso_entregue NUMERIC(10,2);",
-            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS pct_rend_file NUMERIC(5,2);",
-            "ALTER TABLE lotes ADD COLUMN IF NOT EXISTS reais_por_peixe NUMERIC(10,2);"
-        ]
-
-        for sql in migracoes:
-            try:
-                await conn.execute(sql)
-            except Exception:
-                pass # Ignora se a coluna já existir ou se o rename falhar (já renomeado)
-
-        # 2. Tabela de Leituras
         await conn.execute('''
             CREATE TABLE IF NOT EXISTS leituras (
-                id INTEGER PRIMARY KEY,
-                tanque TEXT,
+                id SERIAL PRIMARY KEY,
+                estrutura_uid VARCHAR(64) REFERENCES estruturas(uid),
                 oxigenio REAL,
                 temperatura REAL,
                 timestamp_site TIMESTAMP,
@@ -100,44 +128,85 @@ async def init_postgres():
             );
         ''')
 
-        # 3. Tabela de Biometria
         await conn.execute('''
             CREATE TABLE IF NOT EXISTS biometria (
                 id SERIAL PRIMARY KEY,
-                tanque TEXT NOT NULL,
+                estrutura_uid VARCHAR(64) REFERENCES estruturas(uid),
                 lote VARCHAR(255) NOT NULL,
                 data_biometria DATE NOT NULL,
-                volume_peixes INTEGER,
-                peso_medio_g REAL,
-                consumo_racao_kg REAL
+                quantidade INTEGER,
+                peso_medio REAL,
+                mortalidade INTEGER DEFAULT 0,
+                consumo_racao REAL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         ''')
 
-        # 4. Tabela de Qualidade da Água
+        # 3. Tabelas de Qualidade da Água (Específicas)
+        logger.info("Criando tabelas de qualidade da água...")
+
         await conn.execute('''
-            CREATE TABLE IF NOT EXISTS qualidade_agua (
+            CREATE TABLE IF NOT EXISTS qualidade_agua_limnologia (
                 id SERIAL PRIMARY KEY,
-                id_tanque TEXT NOT NULL,
-                id_lote INTEGER,
+                estrutura_uid VARCHAR(64) REFERENCES estruturas(uid),
                 data_coleta DATE NOT NULL,
                 hora_coleta TIME NOT NULL,
                 ph REAL,
                 amonia REAL,
                 nitrito REAL,
-                anotacao_manejo TEXT,
+                alcalinidade REAL,
+                transparencia REAL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         ''')
 
-        await conn.execute('CREATE INDEX IF NOT EXISTS idx_leituras_tanque ON leituras(tanque);')
-        await conn.execute('CREATE INDEX IF NOT EXISTS idx_biometria_lote ON biometria(lote);')
+        await conn.execute('''
+            CREATE TABLE IF NOT EXISTS qualidade_agua_consumo (
+                id SERIAL PRIMARY KEY,
+                estrutura_uid VARCHAR(64) REFERENCES estruturas(uid),
+                data_coleta DATE NOT NULL,
+                hora_coleta TIME NOT NULL,
+                ph REAL,
+                sdt REAL,
+                orp REAL,
+                ppm_cloro REAL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        ''')
+
+        # Índices para performance
+        await conn.execute('CREATE INDEX IF NOT EXISTS idx_leituras_estrutura ON leituras(estrutura_uid);')
+        await conn.execute('CREATE INDEX IF NOT EXISTS idx_lotes_estrutura ON lotes(estrutura_uid);')
+
+        # Popula catálogo de tipos de exploração
+        tipos = [
+            (1, 'Piscicultura'),
+            (2, 'Avicultura'),
+            (3, 'Suinocultura'),
+            (4, 'Bovinocultura de Leite'),
+            (5, 'Bovinocultura de Corte'),
+            (6, 'Caprinocultura'),
+            (7, 'Ovinocultura')
+        ]
+
+        for tid, nome in tipos:
+            await conn.execute('''
+                INSERT INTO tipos_exploracao (id, nome)
+                VALUES ($1, $2)
+                ON CONFLICT (id) DO UPDATE SET nome = EXCLUDED.nome;
+            ''', tid, nome)
 
         await conn.close()
-        print("✅ Schema do PostgreSQL validado/criado com sucesso!")
+        logger.info("Schema do PostgreSQL (Novo MER) validado/criado com sucesso!")
 
     except Exception as e:
-        print(f"❌ Erro ao processar comandos SQL: {e}")
-        if conn: await conn.close()
+        logger.error("Erro ao processar comandos SQL: %s", e)
+        if conn:
+            await conn.close()
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
     asyncio.run(init_postgres())

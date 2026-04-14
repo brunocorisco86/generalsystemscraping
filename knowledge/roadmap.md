@@ -13,9 +13,10 @@
 * [x] Portabilidade total do projeto (Caminhos relativos e detecção automática de PROJECT_ROOT).
 * [x] Centralização dos volumes do PostgreSQL no repositório (`data/postgres`).
 * [ ] Testes finais de resiliência e tratamento de erros no scraping.
-
+* [ ] Implementação de Estratégia de Backup (Local + Cloudflare R2).
 
 ## Médio Prazo (Q3 2026)
+
 
 *   [ ] Adicionar testes unitários para as funções críticas (Scrape, Alerts, DB).
 *   [ ] Melhorar o gerenciamento de estado do bot (atualmente em memória).
