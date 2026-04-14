@@ -70,36 +70,37 @@ def get_bot_report():
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
         
+        # 3. CONSTRUIR MENSAGEM (FOCO SMARTWATCH)
         msg = f"📊 *Relatório {now.strftime('%H:%M')}h*\n"
 
-        for tank, tank_df in df.groupby('tanque'):
-            if tank_df.empty:
-                continue
+        # Agrupamos por tanque para iterar apenas uma vez sobre os dados
+        for tank, tank_data in df.groupby('tanque'):
+            if not tank_data.empty:
+                # Plotagem
+                plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=tank, linewidth=2)
 
-            # Plotagem
-            plt.plot(tank_df['timestamp_site'], tank_df['oxigenio'], label=tank, linewidth=2)
+                # Dados para a mensagem (últimas 4 leituras)
+                tank_last_data = tank_data.tail(4)
+                if tank_last_data.empty: continue
 
-            # Construção da Mensagem (últimos 4 pontos)
-            tank_data = tank_df.tail(4)
-            o2_atual = tank_data['oxigenio'].iloc[-1]
-            avg_4 = tank_data['oxigenio'].mean()
-            ts_site = tank_data['timestamp_site'].iloc[-1]
-            
-            # Cálculo de Confiança (CV < 0.15)
-            # Evita ZeroDivisionError
-            std_dev = statistics.stdev(tank_data['oxigenio']) if len(tank_data) > 1 else 0
-            cv = (std_dev / avg_4) if avg_4 > 0 else 0
+                o2_atual = tank_last_data['oxigenio'].iloc[-1]
+                avg_4 = tank_last_data['oxigenio'].mean()
+                ts_site = tank_last_data['timestamp_site'].iloc[-1]
 
-            conf_emoji = "🛡️" if cv < 0.15 else "⚠️"
-            trend = "📈" if o2_atual >= avg_4 else "📉"
-            status = "🟢" if o2_atual >= LIMITE_O2 else "🔴"
-            hora_f = ts_site.strftime('%H:%M')
+                # Cálculo de Confiança (CV < 0.15)
+                # Evita ZeroDivisionError
+                std_dev = statistics.stdev(tank_last_data['oxigenio']) if len(tank_last_data) > 1 else 0
+                cv = (std_dev / avg_4) if avg_4 > 0 else 0
 
-            msg += f"\n📍 *{tank}*\n"
-            msg += f"Oxigênio: `{o2_atual:.2f}` {trend} {status}\n"
-            msg += f"Md4: `{avg_4:.2f}` | ⌚{hora_f} {conf_emoji}\n"
+                conf_emoji = "🛡️" if cv < 0.15 else "⚠️"
+                trend = "📈" if o2_atual >= avg_4 else "📉"
+                status = "🟢" if o2_atual >= LIMITE_O2 else "🔴"
+                hora_f = ts_site.strftime('%H:%M')
 
-        # Finalizar Gráfico
+                msg += f"\n📍 *{tank}*\n"
+                msg += f"Oxigênio: `{o2_atual:.2f}` {trend} {status}\n"
+                msg += f"Md4: `{avg_4:.2f}` | ⌚{hora_f} {conf_emoji}\n"
+
         plt.axhline(y=LIMITE_O2, color='red', linestyle='--', alpha=0.5, label="Limite Crítico")
         plt.title('Tendencia de O2 (Ultimas 12h)')
         plt.xlabel('Hora')
@@ -107,7 +108,7 @@ def get_bot_report():
         plt.grid(True, which='both', linestyle='--', linewidth=0.5)
         plt.legend()
         plt.tight_layout()
-
+        
         plot_path = os.path.join(REPORT_DIR, 'bot_oxygen_trend.png')
         if not os.path.exists(REPORT_DIR):
             os.makedirs(REPORT_DIR)

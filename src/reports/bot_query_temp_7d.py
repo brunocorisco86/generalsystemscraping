@@ -71,12 +71,15 @@ def get_weekly_temp_report():
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
 
-        msg = "🌡️ *Resumo Semanal Temperatura*\nPeríodo: 7 dias\n"
+        msg = f"🌡️ *Resumo Semanal Temperatura*\nPeríodo: 7 dias\n"
 
-        for tank, tank_df in df.groupby('tanque'):
-            if not tank_df.empty:
+        # Agrupamos por tanque para iterar apenas uma vez sobre os dados
+        for tank, tank_data in df.groupby('tanque'):
+            if not tank_data.empty:
                 # Plotagem
-                plt.plot(tank_df['timestamp_site'], tank_df['temperatura'], label=tank, linewidth=1.5)
+                plt.plot(tank_data['timestamp_site'], tank_data['temperatura'], label=tank, linewidth=1.5)
+                # Estatísticas para a mensagem
+                msg += f"\n📍 *{tank}*\nMín: `{tank_data['temperatura'].min():.1f}ºC` | Máx: `{tank_data['temperatura'].max():.1f}ºC`"
 
                 # Mensagem
                 msg += f"\n📍 *{tank}*\nMín: `{tank_df['temperatura'].min():.1f}ºC` | Máx: `{tank_df['temperatura'].max():.1f}ºC`"

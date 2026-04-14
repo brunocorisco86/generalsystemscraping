@@ -70,12 +70,15 @@ def get_weekly_report():
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
 
-        msg = "🗓️ *Resumo Semanal Oxigênio*\nPeríodo: 7 dias\n"
+        msg = f"🗓️ *Resumo Semanal Oxigênio*\nPeríodo: 7 dias\n"
 
-        for tank, tank_df in df.groupby('tanque'):
-            if not tank_df.empty:
+        # Agrupamos por tanque para iterar apenas uma vez sobre os dados
+        for tank, tank_data in df.groupby('tanque'):
+            if not tank_data.empty:
                 # Plotagem
-                plt.plot(tank_df['timestamp_site'], tank_df['oxigenio'], label=tank, linewidth=1.5)
+                plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=tank, linewidth=1.5)
+                # Estatísticas para a mensagem
+                msg += f"\n📍 *{tank}*\nMín: `{tank_data['oxigenio'].min():.2f}` | Máx: `{tank_data['oxigenio'].max():.2f}`"
 
                 # Mensagem
                 msg += f"\n📍 *{tank}*\nMín: `{tank_df['oxigenio'].min():.2f}` | Máx: `{tank_df['oxigenio'].max():.2f}`"
