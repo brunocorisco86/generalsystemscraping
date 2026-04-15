@@ -64,18 +64,18 @@ def get_fortnightly_report():
         # 1. Trazer o limiar inferior de 2.0 mg/L
         plt.axhline(y=2.0, color='red', linestyle='--', linewidth=2, label='Limiar Crítico (2.0 mg/L)', alpha=0.7)
 
-        for tank, tank_df in df.groupby('nome_estrutura'):
+        for tank, struct_df in df.groupby('nome_estrutura'):
             if not tank: continue
-            tank_df = tank_df.copy()
-            if not tank_df.empty:
-                tank_df.set_index('timestamp_site', inplace=True)
+            struct_df = struct_df.copy()
+            if not struct_df.empty:
+                struct_df.set_index('timestamp_site', inplace=True)
                 
                 # Plot dos dados brutos (linha fina e transparente para não poluir)
-                plt.plot(tank_df.index, tank_df['oxigenio'], label=f'Bruto: {tank}', linewidth=0.8, alpha=0.5)
+                plt.plot(struct_df.index, struct_df['oxigenio'], label=f'Bruto: {tank}', linewidth=0.8, alpha=0.5)
 
                 # 2. Média móvel da máxima e mínima diária
                 # Agrupamos por dia ('D') pegando os extremos
-                daily_stats = tank_df['oxigenio'].resample('D').agg(['min', 'max'])
+                daily_stats = struct_df['oxigenio'].resample('D').agg(['min', 'max'])
                 
                 # Calculamos a média móvel (rolling) de 3 dias para suavizar
                 # center=True ajuda a alinhar a média ao meio do período no plot

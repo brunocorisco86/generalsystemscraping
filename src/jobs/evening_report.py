@@ -80,11 +80,11 @@ def generate_evening_report():
 
         for tank in sorted(df['nome_estrutura'].unique()):
             if not tank: continue
-            tank_data = df[df['nome_estrutura'] == tank]
-            if not tank_data.empty:
-                plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=f'{tank}', marker='o', markersize=3, linestyle='-')
-                o2_atual = tank_data['oxigenio'].iloc[-1]
-                temp_atual = tank_data['temperatura'].iloc[-1]
+            struct_data = df[df['nome_estrutura'] == tank]
+            if not struct_data.empty:
+                plt.plot(struct_data['timestamp_site'], struct_data['oxigenio'], label=f'{tank}', marker='o', markersize=3, linestyle='-')
+                o2_atual = struct_data['oxigenio'].iloc[-1]
+                temp_atual = struct_data['temperatura'].iloc[-1]
                 analysis_text += f"🐟 *{tank}:* `{o2_atual:.1f}` mg/L | `{temp_atual:.1f}°C`\n"
 
         plt.title(f'Fechamento de Ciclo Diário - {now.strftime("%d/%m/%Y")}')

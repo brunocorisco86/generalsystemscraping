@@ -40,14 +40,14 @@ def run_production_logic():
         
         tank_groups = df.groupby('nome_estrutura')
         status_check = {}
-        tank_results = []
+        struct_results = []
         
         for tank, tdf in tank_groups:
             if not tank: continue
             tdf['o2_smooth'] = tdf['oxigenio'].rolling(window=5, center=True).mean().fillna(tdf['oxigenio'])
             last_o2 = tdf['o2_smooth'].iloc[-1]
             status_check[tank] = last_o2
-            tank_results.append({'tank': tank, 'df': tdf, 'last_o2': last_o2})
+            struct_results.append({'tank': tank, 'df': tdf, 'last_o2': last_o2})
 
         if all(val >= LIMITE_TRATO for val in status_check.values()):
             msg = "🐟 *Aviso de Arraçoamento*\n\n"
@@ -61,7 +61,7 @@ def run_production_logic():
         best_accel_coeffs = None
         max_gain = -999
 
-        for item in tank_results:
+        for item in struct_results:
             calc_df = item['df'][item['df']['timestamp_site'] >= inicio_calc].copy()
             if len(calc_df) < 3: continue
             calc_df['t_min'] = (calc_df['timestamp_site'] - inicio_calc).dt.total_seconds() / 60
@@ -76,7 +76,7 @@ def run_production_logic():
         colors = {'Tanque 1': '#1f77b4', 'Tanque 2': '#ff7f0e'}
         analysis_text = f"📈 *Previsão do Horário de Arraçoamento*\n📅 {agora.strftime('%H:%M')}\n\n"
 
-        for item in tank_results:
+        for item in struct_results:
             tank, tdf, last_o2 = item['tank'], item['df'], item['last_o2']
             color = colors.get(tank, 'gray')
             p_model = np.poly1d(best_accel_coeffs)

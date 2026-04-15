@@ -74,23 +74,24 @@ def get_bot_report():
         msg = f"📊 *Relatório {now.strftime('%H:%M')}h*\n"
 
         # Agrupamos por tanque para iterar apenas uma vez sobre os dados
-        for tank, tank_data in df.groupby('nome_estrutura'):
-            if not tank or tank_data.empty: continue
-            
+        for tank, struct_data in df.groupby('nome_estrutura'):
+            if not tank or struct_data.empty: continue
+
             # Plotagem
-            plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=tank, linewidth=2)
+            plt.plot(struct_data['timestamp_site'], struct_data['oxigenio'], label=tank, linewidth=2)
 
             # Dados para a mensagem (últimas 4 leituras)
-                tank_last_data = tank_data.tail(4)
-                if tank_last_data.empty: continue
+            struct_last_data = struct_data.tail(4)
+            if struct_last_data.empty: continue
 
-                o2_atual = tank_last_data['oxigenio'].iloc[-1]
-                avg_4 = tank_last_data['oxigenio'].mean()
-                ts_site = tank_last_data['timestamp_site'].iloc[-1]
+            o2_atual = struct_last_data['oxigenio'].iloc[-1]
+            avg_4 = struct_last_data['oxigenio'].mean()
+            ts_site = struct_last_data['timestamp_site'].iloc[-1]
 
-                # Cálculo de Confiança (CV < 0.15)
-                # Evita ZeroDivisionError
-                std_dev = statistics.stdev(tank_last_data['oxigenio']) if len(tank_last_data) > 1 else 0
+            # Cálculo de Confiança (CV < 0.15)
+            # Evita ZeroDivisionError
+            std_dev = statistics.stdev(struct_last_data['oxigenio']) if len(struct_last_data) > 1 else 0
+
                 cv = (std_dev / avg_4) if avg_4 > 0 else 0
 
                 conf_emoji = "🛡️" if cv < 0.15 else "⚠️"

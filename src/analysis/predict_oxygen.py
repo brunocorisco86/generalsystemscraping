@@ -75,15 +75,15 @@ def generate_prediction():
 
     colors = {'Tanque 1': '#1f77b4', 'Tanque 2': '#ff7f0e'}
 
-    for tank, tank_df in df.groupby('nome_estrutura'):
+    for tank, struct_df in df.groupby('nome_estrutura'):
         if not tank: continue
-        o2_agora = tank_df['oxigenio'].iloc[-1]
-        time_agora = tank_df['timestamp_site'].iloc[-1]
+        o2_agora = struct_df['oxigenio'].iloc[-1]
+        time_agora = struct_df['timestamp_site'].iloc[-1]
         o2_mesmo_horario_ontem = get_historical_value(tank, yesterday_now)
 
         # --- LÓGICA DE FORECAST EXPONENCIAL ---
         horas_para_prever = (target_time_today - time_agora).total_seconds() / 3600
-        recent = tank_df[tank_df['timestamp_site'] >= (now - timedelta(hours=2))]
+        recent = struct_df[struct_df['timestamp_site'] >= (now - timedelta(hours=2))]
         if len(recent) > 1:
             taxa_queda = (recent['oxigenio'].iloc[0] - o2_agora) / 2
             taxa_queda = max(taxa_queda, 0.66)
@@ -96,7 +96,7 @@ def generate_prediction():
         o2_predito = future_o2[-1]
 
         color = colors.get(tank)
-        plt.plot(tank_df['timestamp_site'], tank_df['oxigenio'], label=f'{tank} (Histórico)', color=color)
+        plt.plot(struct_df['timestamp_site'], struct_df['oxigenio'], label=f'{tank} (Histórico)', color=color)
         plt.plot(future_times, future_o2, color=color, linestyle='--', label=f'Projeção {tank}')
 
         o2_ontem_22h = get_historical_value(tank, yesterday_now.replace(hour=22, minute=0))

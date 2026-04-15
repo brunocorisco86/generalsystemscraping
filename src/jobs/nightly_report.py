@@ -80,12 +80,12 @@ def generate_nightly_report():
         # Plotar uma curva para cada tanque
         for tank in sorted(df['nome_estrutura'].unique()):
             if not tank: continue
-            tank_data = df[df['nome_estrutura'] == tank]
-            plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=f'{tank}', marker='.', markersize=4)
+            struct_data = df[df['nome_estrutura'] == tank]
+            plt.plot(struct_data['timestamp_site'], struct_data['oxigenio'], label=f'{tank}', marker='.', markersize=4)
             
             # Análise estatística por tanque
-            o2_min = tank_data['oxigenio'].min()
-            temp_avg = tank_data['temperatura'].mean()
+            o2_min = struct_data['oxigenio'].min()
+            temp_avg = struct_data['temperatura'].mean()
             
             # Alerta visual se atingiu o limite crítico
             status = "🚨 *PERIGO*" if o2_min <= LIMITE_CRITICO else "✅ *OK*"

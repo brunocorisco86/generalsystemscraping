@@ -74,13 +74,13 @@ def get_weekly_temp_report():
         msg = f"🌡️ *Resumo Semanal Temperatura*\nPeríodo: 7 dias\n"
 
         # Agrupamos por tanque para iterar apenas uma vez sobre os dados
-        for tank, tank_data in df.groupby('nome_estrutura'):
-            if not tank or tank_data.empty: continue
+        for tank, struct_data in df.groupby('nome_estrutura'):
+            if not tank or struct_data.empty: continue
             
             # Plotagem
-            plt.plot(tank_data['timestamp_site'], tank_data['temperatura'], label=tank, linewidth=1.5)
+            plt.plot(struct_data['timestamp_site'], struct_data['temperatura'], label=tank, linewidth=1.5)
             # Estatísticas para a mensagem
-            msg += f"\n📍 *{tank}*\nMín: `{tank_data['temperatura'].min():.1f}ºC` | Máx: `{tank_data['temperatura'].max():.1f}ºC`"
+            msg += f"\n📍 *{tank}*\nMín: `{struct_data['temperatura'].min():.1f}ºC` | Máx: `{struct_data['temperatura'].max():.1f}ºC`"
 
         # Ajuste dinâmico para preencher a tela do smartwatch
         plt.ylim(v_min - 0.5, v_max + 0.5)
