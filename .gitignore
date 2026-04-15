@@ -1,111 +1,43 @@
-# Byte-compiled / optimized / DLL files
+# --- Python/Environment ---
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
 .venv/
-
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/version info.
-#  Hence, they are often created by the CI tool and should be ignored.
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# Caches
+.Python
 .cache/
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
+*.egg-info/
+*.egg
 
-# VSCode
-.vscode/
-
-# Local system files
-.DS_Store
-
-# Environment variables
+# --- Environment Variables ---
 .env
+.env.*
 
-# Project-specific
-/data/
-/reports/
-# *.db
+# --- Local Data & Databases ---
+data/
+*.db
 *.db-journal
+*.sqlite3
+*.sqlite3-journal
+backup.json
+backup_*.json
+
+# --- Reports & Logs ---
+reports/
+logs/
 *.log
-/piscicultura_dados_backup.db
-/planilhas/
-/grafico_semanal.png
-/ox_15d_trend.png
-/temp_7d_trend.png
-/trato_hoje.png
-/feeding_temp_context.png
-/forecast_exp.png
-/nightly_plot.png
-/evening_plot.png
+*.png
+*.csv
 
-
+# --- System/IDEs ---
+.vscode/
+.DS_Store
+.idea/
 .gemini/
+
+# --- Temporary/Others ---
 gha-creds-*.json
+planilhas/
+/piscicultura_dados_backup.db
