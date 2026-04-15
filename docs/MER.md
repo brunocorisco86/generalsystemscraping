@@ -1,6 +1,6 @@
 # Modelo de Entidade Relacionamento (MER)
 
-Este documento descreve a nova estrutura de dados do sistema de monitoramento de piscicultura e outras explorações.
+Este documento descreve a estrutura de dados atualizada do sistema de monitoramento de piscicultura, refletindo o padrão técnico C.VALE / PATEL e a arquitetura multilocação (propriedades e estruturas).
 
 ## Diagrama
 
@@ -53,9 +53,18 @@ erDiagram
     LOTES {
         serial id PK
         string estrutura_uid FK
-        string lote
+        string lote "Identificador textual (ex: 2024/01)"
         date data_alojamento
-        date data_abate
+        date data_abate "Nulo se ativo"
+        integer peixes_alojados
+        float peso_medio "Peso inicial (g)"
+        float area_acude "m²"
+        float densidade "peixes/m²"
+        integer qtd_peixes_entregues
+        float peso_entregue "kg"
+        float pct_rend_file "Rendimento %"
+        float reais_por_peixe
+        text descricao
     }
 
     LEITURAS {
@@ -64,18 +73,21 @@ erDiagram
         string nome_estrutura "Nome amigável (ex: Tanque 01)"
         float oxigenio
         float temperatura
-        timestamp timestamp_site
+        timestamp timestamp_site "Data vinda do hardware"
+        timestamp data_coleta "Data da gravação no BD"
+        integer aeradores_ativos
     }
 
     BIOMETRIA {
         integer id PK
         string estrutura_uid FK
-        string lote
+        string lote FK
         date data_biometria
-        integer quantidade
-        float peso_medio
+        integer quantidade "Estoque estimado"
+        float peso_medio "g"
         integer mortalidade
-        float consumo_racao
+        float consumo_racao "kg"
+        timestamp created_at
     }
 
     QUALIDADE_AGUA_LIMNOLOGIA {
@@ -88,6 +100,7 @@ erDiagram
         float nitrito
         float alcalinidade
         float transparencia
+        timestamp created_at
     }
 
     QUALIDADE_AGUA_CONSUMO {
@@ -99,27 +112,25 @@ erDiagram
         float sdt
         float orp
         float ppm_cloro
+        timestamp created_at
     }
 ```
 
 ## Entidades de Cadastro
 
-### Proprietário
-Armazena as informações do dono das propriedades. O UID é gerado via SHA256 concatenando Nome e CPF.
-
-### Propriedade
-Representa uma fazenda ou unidade produtiva. Vinculada a um proprietário. UID gerado via SHA256 concatenando Endereço e CADPRO.
+### Proprietário e Usuários
+Gestão de acesso e vínculo. O UID é imutável e gerado por hash para garantir privacidade e unicidade.
 
 ### Estrutura
-Unidade física onde ocorre a exploração (ex: Tanque 01, Aviário A). Vinculada a uma propriedade e a um tipo de exploração. UID gerado via SHA256 concatenando Nome e Pluscode.
+Unidade física produtiva. O campo `nome` é o que aparece no dashboard, enquanto o `uid` garante a integridade dos dados históricos mesmo se o tanque for renomeado.
 
-### Tipo de Exploração
-Catálogo de atividades suportadas (Piscicultura, Avicultura, etc).
+## Tabelas de Monitoramento (Operacional)
 
-## Tabelas de Monitoramento (Dimensionalidades)
+### Lotes (Ciclo de Vida)
+Implementa o padrão de "Ficha Verde". Registra desde a entrada (alojamento) com densidade automática até o fechamento financeiro (abate/rendimento).
 
-As tabelas de `leituras`, `biometria` e `lotes` agora referenciam `estrutura_uid` em vez de nomes de tanques genéricos, permitindo rastreabilidade entre diferentes propriedades e tipos de exploração.
+### Leituras (Telemetria)
+Armazena os dados vindos do Scraper. Inclui `nome_estrutura` para facilitar relatórios rápidos e `aeradores_ativos` para monitoramento de automação.
 
-A qualidade da água foi dividida em duas categorias:
-- **Limnologia**: Para ambientes aquáticos (peixes).
-- **Consumo**: Para água de bebida animal (aves, suínos, etc).
+### Biometria e Qualidade da Água
+Registros manuais feitos via Bots Telegram. Estão vinculados à estrutura e, no caso da biometria, ao lote vigente para cálculo de Conversão Alimentar (CA).
