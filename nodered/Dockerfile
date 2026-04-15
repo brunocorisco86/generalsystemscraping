@@ -1,26 +1,13 @@
-# Use the official Node-RED image as a base (Alpine based)
 FROM nodered/node-red:latest
 
-# Switch to root to install system dependencies
+# Voltamos para root para ajustar permissões
 USER root
 
-# Install bash and python3 (needed for your exec nodes)
-RUN apk add --no-cache bash python3
+# Garantir que o diretório de dados tenha as permissões corretas (UID 1000)
+RUN mkdir -p /data && chown -R 1000:1000 /data
 
-# Switch back to node-red user
+# Volta para o usuário padrão do Node-RED
 USER node-red
 
-# Set the working directory
-WORKDIR /usr/src/node-red
-
-# Copy Node-RED flows
-COPY --chown=node-red:node-red flows.json /data/flows.json
-
-# Install Node-RED dependencies
-RUN npm install node-red-contrib-telegrambot
-
-# Expose the Node-RED port
-EXPOSE 1880
-
-# Start Node-RED
-CMD ["npm", "start", "--", "--userDir", "/data"]
+# Opcional: Instalar pacotes extras se necessário
+# RUN npm install node-red-contrib-telegrambot

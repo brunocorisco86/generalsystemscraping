@@ -50,7 +50,7 @@ services:
     ports:
       - "1880:1880"
     volumes:
-      - ./nodered/flows.json:/data/flows.json
+      - ./nodered:/data # Mapeia o DIRTETÓRIO para evitar erro de EBUSY (rename)
       - ${PROJECT_ROOT}:/app # Monta a raiz do projeto para scripts Python
     environment:
       # PROJECT_ROOT dentro do container
