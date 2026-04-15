@@ -34,30 +34,45 @@ def generate_sha256(data_string: str) -> str:
     return hashlib.sha256(data_string.encode('utf-8')).hexdigest()
 
 def get_env_data():
-    """Recupera e valida dados de cadastro do .env."""
-    data = {
-        "owner": {
-            "name": os.environ.get("OWNER_NAME"),
-            "cpf": os.environ.get("OWNER_CPF"),
-        },
-        "property": {
-            "name": os.environ.get("PROP_NAME"),
-            "address": os.environ.get("PROP_ADDRESS"),
-            "cadpro": os.environ.get("PROP_CADPRO"),
-        },
-        "structure": {
-            "name": os.environ.get("STRUCT_NAME"),
-            "pluscode": os.environ.get("STRUCT_PLUSCODE"),
-            "type_id": os.environ.get("STRUCT_TYPE_ID"),
-        }
-    }
+    """Recupera e valida dados de cadastro do .env, suportando múltiplas estruturas."""
+    owner_name = os.environ.get("OWNER_NAME")
+    owner_cpf = os.environ.get("OWNER_CPF")
+    prop_name = os.environ.get("PROP_NAME")
+    prop_address = os.environ.get("PROP_ADDRESS")
+    prop_cadpro = os.environ.get("PROP_CADPRO")
 
-    # Validação simples
-    if not all([data["owner"]["name"], data["owner"]["cpf"], data["property"]["address"], data["structure"]["pluscode"]]):
-        logger.error("Dados de cadastro incompletos no .env. Verifique OWNER_*, PROP_* e STRUCT_*")
+    # Suporta múltiplas estruturas separadas por vírgula
+    struct_names = [s.strip() for s in os.environ.get("STRUCT_NAME", "").split(",") if s.strip()]
+    struct_pluscodes = [s.strip() for s in os.environ.get("STRUCT_PLUSCODE", "").split(",") if s.strip()]
+    struct_type_id = os.environ.get("STRUCT_TYPE_ID", "1")
+
+    # Validação básica de proprietário e propriedade
+    if not all([owner_name, owner_cpf, prop_address]):
+        logger.error("Dados de cadastro incompletos no .env. Verifique OWNER_* e PROP_*")
         return None
 
-    return data
+    # Garante que temos ao menos uma estrutura e que os nomes batem com os pluscodes
+    if not struct_names:
+        logger.error("Nenhuma estrutura (STRUCT_NAME) definida no .env")
+        return None
+
+    # Se houver apenas um pluscode mas vários nomes, repetimos o pluscode (ou vice-versa)
+    if len(struct_pluscodes) == 1 and len(struct_names) > 1:
+        struct_pluscodes = struct_pluscodes * len(struct_names)
+
+    structures = []
+    for name, code in zip(struct_names, struct_pluscodes):
+        structures.append({
+            "name": name,
+            "pluscode": code,
+            "type_id": struct_type_id
+        })
+
+    return {
+        "owner": {"name": owner_name, "cpf": owner_cpf},
+        "property": {"name": prop_name, "address": prop_address, "cadpro": prop_cadpro},
+        "structures": structures
+    }
 
 async def populate_postgres(data):
     """Popula o Postgres com os dados do .env."""
@@ -71,7 +86,6 @@ async def populate_postgres(data):
         # Gera Hashes
         owner_uid = generate_sha256(data["owner"]["name"] + data["owner"]["cpf"])
         prop_uid = generate_sha256(data["property"]["address"] + data["property"]["cadpro"])
-        struct_uid = generate_sha256(data["structure"]["name"] + data["structure"]["pluscode"])
 
         # Insere Proprietário
         await conn.execute('''
@@ -85,18 +99,20 @@ async def populate_postgres(data):
             ON CONFLICT (uid) DO UPDATE SET nome = EXCLUDED.nome, endereco = EXCLUDED.endereco;
         ''', prop_uid, owner_uid, data["property"]["name"], data["property"]["address"], data["property"]["cadpro"])
 
-        # Insere Estrutura
-        type_id = int(data["structure"]["type_id"]) if data["structure"]["type_id"] else 1
-        await conn.execute('''
-            INSERT INTO estruturas (uid, propriedade_uid, tipo_exploracao_id, nome, pluscode) VALUES ($1, $2, $3, $4, $5)
-            ON CONFLICT (uid) DO UPDATE SET
-                nome = EXCLUDED.nome,
-                pluscode = EXCLUDED.pluscode,
-                tipo_exploracao_id = EXCLUDED.tipo_exploracao_id;
-        ''', struct_uid, prop_uid, type_id, data["structure"]["name"], data["structure"]["pluscode"])
+        # Insere Múltiplas Estruturas
+        for struct in data["structures"]:
+            struct_uid = generate_sha256(struct["name"] + struct["pluscode"])
+            type_id = int(struct["type_id"]) if struct["type_id"] else 1
+            await conn.execute('''
+                INSERT INTO estruturas (uid, propriedade_uid, tipo_exploracao_id, nome, pluscode) VALUES ($1, $2, $3, $4, $5)
+                ON CONFLICT (uid) DO UPDATE SET
+                    nome = EXCLUDED.nome,
+                    pluscode = EXCLUDED.pluscode,
+                    tipo_exploracao_id = EXCLUDED.tipo_exploracao_id;
+            ''', struct_uid, prop_uid, type_id, struct["name"], struct["pluscode"])
 
         await conn.close()
-        logger.info("✅ Dados iniciais populados no Postgres com sucesso!")
+        logger.info(f"✅ {len(data['structures'])} estrutura(s) populada(s) no Postgres com sucesso!")
     except Exception as e:
         logger.error(f"❌ Erro ao popular Postgres: {e}")
 
@@ -109,7 +125,6 @@ def populate_sqlite(data):
         # Gera Hashes
         owner_uid = generate_sha256(data["owner"]["name"] + data["owner"]["cpf"])
         prop_uid = generate_sha256(data["property"]["address"] + data["property"]["cadpro"])
-        struct_uid = generate_sha256(data["structure"]["name"] + data["structure"]["pluscode"])
 
         # Insere Proprietário
         cursor.execute('''
@@ -121,14 +136,16 @@ def populate_sqlite(data):
             INSERT OR REPLACE INTO propriedades (uid, proprietario_uid, nome, endereco, cadpro) VALUES (?, ?, ?, ?, ?)
         ''', (prop_uid, owner_uid, data["property"]["name"], data["property"]["address"], data["property"]["cadpro"]))
 
-        # Insere Estrutura
-        cursor.execute('''
-            INSERT OR REPLACE INTO estruturas (uid, propriedade_uid, tipo_exploracao_id, nome, pluscode) VALUES (?, ?, ?, ?, ?)
-        ''', (struct_uid, prop_uid, int(data["structure"]["type_id"]), data["structure"]["name"], data["structure"]["pluscode"]))
+        # Insere Múltiplas Estruturas
+        for struct in data["structures"]:
+            struct_uid = generate_sha256(struct["name"] + struct["pluscode"])
+            cursor.execute('''
+                INSERT OR REPLACE INTO estruturas (uid, propriedade_uid, tipo_exploracao_id, nome, pluscode) VALUES (?, ?, ?, ?, ?)
+            ''', (struct_uid, prop_uid, int(struct["type_id"]), struct["name"], struct["pluscode"]))
 
         conn.commit()
         conn.close()
-        logger.info("✅ Dados iniciais populados no SQLite com sucesso!")
+        logger.info(f"✅ {len(data['structures'])} estrutura(s) populada(s) no SQLite com sucesso!")
     except Exception as e:
         logger.error(f"❌ Erro ao popular SQLite: {e}")
 
