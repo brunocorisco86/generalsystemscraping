@@ -119,7 +119,7 @@ def gerar_curva():
             send_telegram_message("ℹ️ Nenhum dado de biometria encontrado para gerar a curva de crescimento.")
             return
 
-        tanques = df["tanque"].unique()
+        tanques = df["nome_estrutura"].unique()
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(12, 7))
 
@@ -134,7 +134,7 @@ def gerar_curva():
 
         for i, tanque in enumerate(tanques):
             cor = cores[i % len(cores)]
-            df_t = df[df["tanque"] == tanque].copy()
+            df_t = df[df["nome_estrutura"] == tanque].copy()
             df_t["data_biometria"] = pd.to_datetime(df_t["data_biometria"])
 
             data_inicial = df_t["data_biometria"].min()
@@ -301,6 +301,11 @@ def gerar_curva():
     finally:
         if conn:
             conn.close()
+
+
+if __name__ == "__main__":
+    gerar_curva()
+          conn.close()
 
 
 if __name__ == "__main__":

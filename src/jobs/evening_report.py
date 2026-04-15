@@ -52,7 +52,7 @@ def generate_evening_report():
             return
 
         query = f"""
-            SELECT tanque, oxigenio, temperatura, timestamp_site
+            SELECT nome_estrutura, oxigenio, temperatura, timestamp_site
             FROM leituras
             WHERE timestamp_site >= '{start_time.strftime('%Y-%m-%d %H:%M:%S')}'
             ORDER BY timestamp_site ASC
@@ -78,8 +78,9 @@ def generate_evening_report():
             f"📊 *Resumo da Tarde (16h ➔ {now.strftime('%H:%M')}):*\n"
         )
 
-        for tank in sorted(df['tanque'].unique()):
-            tank_data = df[df['tanque'] == tank]
+        for tank in sorted(df['nome_estrutura'].unique()):
+            if not tank: continue
+            tank_data = df[df['nome_estrutura'] == tank]
             if not tank_data.empty:
                 plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=f'{tank}', marker='o', markersize=3, linestyle='-')
                 o2_atual = tank_data['oxigenio'].iloc[-1]

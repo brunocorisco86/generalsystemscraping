@@ -52,7 +52,7 @@ def generate_nightly_report():
             return
 
         query = f"""
-            SELECT tanque, oxigenio, temperatura, timestamp_site 
+            SELECT nome_estrutura, oxigenio, temperatura, timestamp_site 
             FROM leituras 
             WHERE timestamp_site BETWEEN '{start_time.strftime('%Y-%m-%d %H:%M:%S')}' 
             AND '{end_time.strftime('%Y-%m-%d %H:%M:%S')}'
@@ -78,8 +78,9 @@ def generate_nightly_report():
         analysis_text = f"📊 *Relatório Noturno: {start_time.strftime('%d/%m')} ➔ {end_time.strftime('%d/%m')}*\n\n"
         
         # Plotar uma curva para cada tanque
-        for tank in sorted(df['tanque'].unique()):
-            tank_data = df[df['tanque'] == tank]
+        for tank in sorted(df['nome_estrutura'].unique()):
+            if not tank: continue
+            tank_data = df[df['nome_estrutura'] == tank]
             plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=f'{tank}', marker='.', markersize=4)
             
             # Análise estatística por tanque
