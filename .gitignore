@@ -36,6 +36,7 @@ logs/
 .DS_Store
 .idea/
 .gemini/
+.github/
 
 # --- Temporary/Others ---
 gha-creds-*.json
