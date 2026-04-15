@@ -34,13 +34,9 @@ if [ ! -f "$ENV_FILE" ]; then
 fi
 
 # 4. Inicia os containers
-echo "--- Subindo containers (Postgres, Biometria, Qualidade da Água, Node-RED)... ---"
+echo "--- Subindo containers (Postgres, Biometria, Qualidade da Água)... ---"
 cd "$REPO_ROOT"
 $DOCKER_COMPOSE up -d --build
-
-# Garante que o Node-RED recarregue os fluxos se o arquivo mudou
-echo "--- Sincronizando fluxos do Node-RED ---"
-docker restart piscicultura_nodered >/dev/null 2>&1 || true
 
 echo "--- Inicializando/Validando Schema do PostgreSQL ---"
 VENV_PYTHON="$REPO_ROOT/.venv/bin/python3"
