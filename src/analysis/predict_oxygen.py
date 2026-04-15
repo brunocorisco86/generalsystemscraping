@@ -75,7 +75,8 @@ def generate_prediction():
 
     colors = {'Tanque 1': '#1f77b4', 'Tanque 2': '#ff7f0e'}
 
-    for tank, tank_df in df.groupby('tanque'):
+    for tank, tank_df in df.groupby('nome_estrutura'):
+        if not tank: continue
         o2_agora = tank_df['oxigenio'].iloc[-1]
         time_agora = tank_df['timestamp_site'].iloc[-1]
         o2_mesmo_horario_ontem = get_historical_value(tank, yesterday_now)

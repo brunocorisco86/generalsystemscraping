@@ -31,20 +31,21 @@ def check_alerts():
         # Nota: Usamos 'data_coleta' ou 'timestamp_site' dependendo da precisão desejada.
         # Aqui usamos data_coleta que é preenchido pelo nosso script de scraping.
         cursor.execute("""
-            SELECT t1.tanque, t1.oxigenio, t1.temperatura
+            SELECT t1.nome_estrutura, t1.oxigenio, t1.temperatura 
             FROM leituras t1
             INNER JOIN (
-                SELECT tanque, MAX(data_coleta) as max_data
+                SELECT nome_estrutura, MAX(data_coleta) as max_date
                 FROM leituras
-                GROUP BY tanque
-            ) t2 ON t1.tanque = t2.tanque AND t1.data_coleta = t2.max_data
+                GROUP BY nome_estrutura
+            ) t2 ON t1.nome_estrutura = t2.nome_estrutura AND t1.data_coleta = t2.max_date
         """)
-
         leituras = cursor.fetchall()
 
         if not leituras:
-            logger.info("Nenhuma leitura encontrada para verificar.")
             return
+
+        for tanque, oxigenio, temperatura in leituras:
+
 
         for tanque, oxigenio, temperatura in leituras:
             # Log de monitoramento

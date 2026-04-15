@@ -35,9 +35,9 @@ def check_last_reading():
 
         # Busca a última leitura de cada tanque em uma única consulta
         cursor.execute("""
-            SELECT tanque, MAX(timestamp_site) as last_reading
+            SELECT nome_estrutura, MAX(timestamp_site) as last_reading
             FROM leituras
-            GROUP BY tanque
+            GROUP BY nome_estrutura
         """)
         results = cursor.fetchall()
 
@@ -49,6 +49,7 @@ def check_last_reading():
         logger.info("Encontrados %d tanques para verificar.", len(results))
 
         for tank, last_reading_str in sorted(results):
+            if not tank: continue
             if last_reading_str:
                 try:
                     last_reading_time = datetime.strptime(last_reading_str, '%Y-%m-%d %H:%M:%S')

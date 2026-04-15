@@ -46,7 +46,7 @@ def migrate_data():
 
         # 2. Busca novos dados no SQLite
         query_sq = f"""
-            SELECT id, tanque, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos 
+            SELECT id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos 
             FROM {SQLITE_TABELA_ORIGEM} 
             WHERE id > ?
         """
@@ -57,8 +57,8 @@ def migrate_data():
             # 3. Insere no Postgres
             logger.info("Encontrados %d novos registros para migrar.", len(novos_dados))
             insert_query = """
-                INSERT INTO leituras (id, tanque, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO leituras (id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """
             pg_cur.executemany(insert_query, novos_dados)
             pg_conn.commit()

@@ -24,8 +24,8 @@ def get_hourly_report():
         cursor = conn.cursor()
         
         # Busca a lista de tanques únicos
-        cursor.execute("SELECT DISTINCT tanque FROM leituras")
-        tanques = [row[0] for row in cursor.fetchall()]
+        cursor.execute("SELECT DISTINCT nome_estrutura FROM leituras")
+        tanques = [row[0] for row in cursor.fetchall() if row[0]]
 
         if not tanques: 
             return "📊 *Relatório Horário*\nSem dados recentes para reportar."
@@ -36,7 +36,7 @@ def get_hourly_report():
             # Consulta as últimas 4 leituras para calcular tendência e desvio
             cursor.execute("""
                 SELECT oxigenio, temperatura, timestamp_site, aeradores_ativos
-                FROM leituras WHERE tanque = ?
+                FROM leituras WHERE nome_estrutura = ?
                 ORDER BY data_coleta DESC LIMIT 4
             """, (tanque,))
             leituras = cursor.fetchall()

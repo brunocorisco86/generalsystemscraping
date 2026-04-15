@@ -48,7 +48,7 @@ def get_fortnightly_report():
             send_telegram_message("❌ Erro ao gerar relatório de oxigênio (15 dias): falha na conexão com o BD.", chat_id=CHAT_ID_FROM_ARGS)
             return
 
-        query = f"SELECT tanque, oxigenio, timestamp_site FROM leituras WHERE timestamp_site >= '{fifteen_days_ago.strftime('%Y-%m-%d %H:%M:%S')}' ORDER BY timestamp_site ASC"
+        query = f"SELECT nome_estrutura, oxigenio, timestamp_site FROM leituras WHERE timestamp_site >= '{fifteen_days_ago.strftime('%Y-%m-%d %H:%M:%S')}' ORDER BY timestamp_site ASC"
         df = pd.read_sql_query(query, conn)
 
         if df.empty:
@@ -64,7 +64,8 @@ def get_fortnightly_report():
         # 1. Trazer o limiar inferior de 2.0 mg/L
         plt.axhline(y=2.0, color='red', linestyle='--', linewidth=2, label='Limiar Crítico (2.0 mg/L)', alpha=0.7)
 
-        for tank, tank_df in df.groupby('tanque'):
+        for tank, tank_df in df.groupby('nome_estrutura'):
+            if not tank: continue
             tank_df = tank_df.copy()
             if not tank_df.empty:
                 tank_df.set_index('timestamp_site', inplace=True)

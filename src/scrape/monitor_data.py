@@ -189,9 +189,9 @@ def scrape_and_save():
 
                     # Gravação seguindo o Novo Schema
                     cursor.execute('''
-                        INSERT INTO leituras (estrutura_uid, oxigenio, temperatura, aeradores_ativos, timestamp_site)
-                        VALUES (?, ?, ?, ?, ?)
-                    ''', (uid, oxigenio, temperatura, aeradores, ts_sql))
+                        INSERT INTO leituras (estrutura_uid, nome_estrutura, oxigenio, temperatura, aeradores_ativos, timestamp_site)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    ''', (uid, nome, oxigenio, temperatura, aeradores, ts_sql))
                     
                     logger.info("%s | O2: %s | Temp: %s | Aeradores: %s", nome, oxigenio, temperatura, aeradores)
 
@@ -212,6 +212,17 @@ def scrape_and_save():
                 driver.quit()
             if conn:
                 conn.close()
+
+if __name__ == "__main__":
+    # Configuração básica de logging para execução direta
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    # Para executar este script manualmente do root do projeto:
+    # python3 -m src.scrape.monitor_data
+    scrape_and_save()
+    conn.close()
 
 if __name__ == "__main__":
     # Configuração básica de logging para execução direta

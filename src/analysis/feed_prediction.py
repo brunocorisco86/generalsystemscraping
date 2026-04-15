@@ -31,18 +31,19 @@ def run_production_logic():
         if not conn: return
         
         inicio_view = agora - timedelta(hours=15)
-        query = f"SELECT tanque, oxigenio, timestamp_site FROM leituras WHERE timestamp_site BETWEEN '{inicio_view}' AND '{agora}' ORDER BY timestamp_site ASC"
+        query = f"SELECT nome_estrutura, oxigenio, timestamp_site FROM leituras WHERE timestamp_site BETWEEN '{inicio_view}' AND '{agora}' ORDER BY timestamp_site ASC"
         df = pd.read_sql_query(query, conn)
         conn.close()
 
         if df.empty: return
         df['timestamp_site'] = pd.to_datetime(df['timestamp_site'])
         
-        tank_groups = df.groupby('tanque')
+        tank_groups = df.groupby('nome_estrutura')
         status_check = {}
         tank_results = []
         
         for tank, tdf in tank_groups:
+            if not tank: continue
             tdf['o2_smooth'] = tdf['oxigenio'].rolling(window=5, center=True).mean().fillna(tdf['oxigenio'])
             last_o2 = tdf['o2_smooth'].iloc[-1]
             status_check[tank] = last_o2

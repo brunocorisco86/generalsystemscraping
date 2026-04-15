@@ -50,7 +50,7 @@ def get_weekly_report():
             return
 
         query = f"""
-            SELECT tanque, oxigenio, timestamp_site
+            SELECT nome_estrutura, oxigenio, timestamp_site
             FROM leituras
             WHERE timestamp_site >= '{seven_days_ago.strftime('%Y-%m-%d %H:%M:%S')}'
             ORDER BY timestamp_site ASC
@@ -73,15 +73,12 @@ def get_weekly_report():
         msg = f"🗓️ *Resumo Semanal Oxigênio*\nPeríodo: 7 dias\n"
 
         # Agrupamos por tanque para iterar apenas uma vez sobre os dados
-        for tank, tank_data in df.groupby('tanque'):
-            if not tank_data.empty:
+        for tank, tank_data in df.groupby('nome_estrutura'):
+            if not tank or tank_data.empty: continue
                 # Plotagem
                 plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=tank, linewidth=1.5)
                 # Estatísticas para a mensagem
                 msg += f"\n📍 *{tank}*\nMín: `{tank_data['oxigenio'].min():.2f}` | Máx: `{tank_data['oxigenio'].max():.2f}`"
-
-                # Mensagem
-                msg += f"\n📍 *{tank}*\nMín: `{tank_df['oxigenio'].min():.2f}` | Máx: `{tank_df['oxigenio'].max():.2f}`"
 
         plt.axhline(y=LIMITE_O2, color='red', linestyle='--', alpha=0.4, label="Limite Crítico")
         plt.ylim(max(0, v_min - 0.5), v_max + 0.5)

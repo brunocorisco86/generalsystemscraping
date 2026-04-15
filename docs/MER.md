@@ -61,6 +61,7 @@ erDiagram
     LEITURAS {
         integer id PK
         string estrutura_uid FK
+        string nome_estrutura "Nome amigável (ex: Tanque 01)"
         float oxigenio
         float temperatura
         timestamp timestamp_site

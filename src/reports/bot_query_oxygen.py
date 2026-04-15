@@ -52,7 +52,7 @@ def get_bot_report():
             return
 
         query = f"""
-            SELECT tanque, oxigenio, timestamp_site 
+            SELECT nome_estrutura, oxigenio, timestamp_site 
             FROM leituras 
             WHERE timestamp_site >= '{twelve_hours_ago.strftime('%Y-%m-%d %H:%M:%S')}' 
             ORDER BY timestamp_site ASC
@@ -74,8 +74,8 @@ def get_bot_report():
         msg = f"📊 *Relatório {now.strftime('%H:%M')}h*\n"
 
         # Agrupamos por tanque para iterar apenas uma vez sobre os dados
-        for tank, tank_data in df.groupby('tanque'):
-            if not tank_data.empty:
+        for tank, tank_data in df.groupby('nome_estrutura'):
+            if not tank or tank_data.empty: continue
                 # Plotagem
                 plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=tank, linewidth=2)
 

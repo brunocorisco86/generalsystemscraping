@@ -120,6 +120,7 @@ async def init_postgres():
             CREATE TABLE IF NOT EXISTS leituras (
                 id SERIAL PRIMARY KEY,
                 estrutura_uid VARCHAR(64) REFERENCES estruturas(uid),
+                nome_estrutura VARCHAR(255),
                 oxigenio REAL,
                 temperatura REAL,
                 timestamp_site TIMESTAMP,
@@ -127,6 +128,12 @@ async def init_postgres():
                 aeradores_ativos INTEGER DEFAULT 0
             );
         ''')
+
+        # Migração Postgres: Tenta adicionar a coluna caso não exista
+        try:
+            await conn.execute("ALTER TABLE leituras ADD COLUMN IF NOT EXISTS nome_estrutura VARCHAR(255);")
+        except:
+            pass
 
         await conn.execute('''
             CREATE TABLE IF NOT EXISTS biometria (
