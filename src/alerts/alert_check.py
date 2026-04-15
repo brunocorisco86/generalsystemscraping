@@ -45,9 +45,6 @@ def check_alerts():
             return
 
         for tanque, oxigenio, temperatura in leituras:
-
-
-        for tanque, oxigenio, temperatura in leituras:
             # Log de monitoramento
             logger.info("Verificando %s: %s Mg/L", tanque, oxigenio)
 

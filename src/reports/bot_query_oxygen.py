@@ -76,10 +76,11 @@ def get_bot_report():
         # Agrupamos por tanque para iterar apenas uma vez sobre os dados
         for tank, tank_data in df.groupby('nome_estrutura'):
             if not tank or tank_data.empty: continue
-                # Plotagem
-                plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=tank, linewidth=2)
+            
+            # Plotagem
+            plt.plot(tank_data['timestamp_site'], tank_data['oxigenio'], label=tank, linewidth=2)
 
-                # Dados para a mensagem (últimas 4 leituras)
+            # Dados para a mensagem (últimas 4 leituras)
                 tank_last_data = tank_data.tail(4)
                 if tank_last_data.empty: continue
 

@@ -93,6 +93,7 @@ def scrape_and_save():
                 CREATE TABLE IF NOT EXISTS leituras (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     estrutura_uid TEXT,
+                    nome_estrutura TEXT,
                     oxigenio REAL,
                     temperatura REAL,
                     timestamp_site TIMESTAMP,
@@ -100,6 +101,13 @@ def scrape_and_save():
                     aeradores_ativos INTEGER DEFAULT 0
                 )
             ''')
+            
+            # Migração: Garante que a coluna nome_estrutura exista em bancos antigos
+            try:
+                cursor.execute("ALTER TABLE leituras ADD COLUMN nome_estrutura TEXT")
+            except:
+                pass
+
             conn.commit()
 
             # 1. Login
