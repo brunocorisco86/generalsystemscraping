@@ -36,17 +36,17 @@ def get_vigi_report():
         cursor.execute("""
             WITH RankedLeituras AS (
                 SELECT
-                    tanque,
+                    nome_estrutura,
                     oxigenio,
                     ROW_NUMBER() OVER (
-                    PARTITION BY tanque ORDER BY data_coleta DESC
+                    PARTITION BY nome_estrutura ORDER BY data_coleta DESC
                 ) as rn
                 FROM leituras
             )
-            SELECT tanque, oxigenio
+            SELECT nome_estrutura, oxigenio
             FROM RankedLeituras
             WHERE rn <= 4
-            ORDER BY tanque ASC, rn ASC
+            ORDER BY nome_estrutura ASC, rn ASC
         """)
 
         rows = cursor.fetchall()
@@ -54,6 +54,7 @@ def get_vigi_report():
         # Agrupa leituras por tanque preservando a ordem (mais recente primeiro)
         dados_tanques = {}
         for tanque, oxigenio in rows:
+            if not tanque: continue
             if tanque not in dados_tanques:
                 dados_tanques[tanque] = []
             dados_tanques[tanque].append(oxigenio)
