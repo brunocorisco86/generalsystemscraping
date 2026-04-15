@@ -93,6 +93,7 @@ def init_sqlite():
             CREATE TABLE IF NOT EXISTS leituras (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 estrutura_uid TEXT REFERENCES estruturas(uid),
+                nome_estrutura TEXT,
                 oxigenio REAL,
                 temperatura REAL,
                 timestamp_site TIMESTAMP,

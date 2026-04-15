@@ -106,3 +106,6 @@ docs/_build/
 /nightly_plot.png
 /evening_plot.png
 
+
+.gemini/
+gha-creds-*.json

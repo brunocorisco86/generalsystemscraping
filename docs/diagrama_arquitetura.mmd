@@ -1,0 +1,56 @@
+graph TB
+    subgraph "Plataforma Externa"
+        Noctua[Noctua IoT Portal]
+    end
+
+    subgraph "Raspberry Pi 3B / VPS (Alpine Linux)"
+        subgraph "Coleta e Monitoramento (Cron Jobs)"
+            Scraper[Selenium Scraper  
+Python]
+            Alerts[Alert System  
+Python]
+            SQLite[(SQLite Cache)]
+        end
+
+        subgraph "Serviços Docker"
+            Postgres[(PostgreSQL  
+Histórico)]
+            BotBio[Bot Biometria  
+Python/Aiogram]
+            BotQual[Bot Qualidade Água  
+Python/Aiogram]
+        end
+
+        subgraph "Integração e Relatórios"
+            NodeRED[Node-RED]
+            Reports[Report Generator  
+Python/Matplotlib]
+        end
+    end
+
+    subgraph "Interface do Usuário"
+        Telegram[Telegram App]
+    end
+
+    %% Fluxos de Dados
+    Noctua -- "Scraping (15 min)" --> Scraper
+    Scraper -- "Salva dados" --> SQLite
+    Alerts -- "Monitora" --> SQLite
+    Alerts -- "Notifica" --> Telegram
+    
+    BotBio -- "Registra dados" --> Postgres
+    BotQual -- "Registra dados" --> Postgres
+    BotBio <--> Telegram
+    BotQual <--> Telegram
+
+    NodeRED -- "Comandos" --> Telegram
+    NodeRED -- "Executa" --> Reports
+    Reports -- "Consulta" --> Postgres
+    Reports -- "Envia PDF/IMG" --> Telegram
+
+    %% Estilos
+    style Noctua fill:#f9f,stroke:#333,stroke-width:2px
+    style Telegram fill:#0088cc,stroke:#fff,stroke-width:2px,color:#fff
+    style SQLite fill:#fff,stroke:#333,stroke-dasharray: 5 5
+    style Postgres fill:#336791,stroke:#fff,stroke-width:2px,color:#fff
+    style Raspberry fill:#f5f5f5,stroke:#333,stroke-width:2px
