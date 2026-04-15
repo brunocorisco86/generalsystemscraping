@@ -49,11 +49,16 @@ if [ -f "$VENV_PYTHON" ]; then
     PYTHON_CMD="$VENV_PYTHON"
 fi
 
-# 1. Cria as tabelas
+# 1. Cria as tabelas no Postgres
 "$PYTHON_CMD" -m src.database.postgres.init_db
 
-# 2. Popula dados base (Propriedades, Estruturas)
-# Importante para o novo MER funcionar imediatamente
+# 2. Cria as tabelas no SQLite local
+if [ -f "$REPO_ROOT/scripts/05-init-sqlite-db.py" ]; then
+    echo "--- Inicializando Schema do SQLite Local ---"
+    "$PYTHON_CMD" "$REPO_ROOT/scripts/05-init-sqlite-db.py"
+fi
+
+# 3. Popula dados base (Propriedades, Estruturas) em ambos
 if [ -f "$REPO_ROOT/scripts/08-populate-initial-data.py" ]; then
     echo "--- Populando dados iniciais (Propriedades/Estruturas) ---"
     "$PYTHON_CMD" "$REPO_ROOT/scripts/08-populate-initial-data.py"
