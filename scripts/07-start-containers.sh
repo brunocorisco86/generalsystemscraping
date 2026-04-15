@@ -40,10 +40,19 @@ $DOCKER_COMPOSE up -d --build
 
 echo "--- Inicializando/Validando Schema do PostgreSQL ---"
 VENV_PYTHON="$REPO_ROOT/.venv/bin/python3"
+PYTHON_CMD="python3"
 if [ -f "$VENV_PYTHON" ]; then
-    "$VENV_PYTHON" -m src.database.postgres.init_db
-else
-    python3 -m src.database.postgres.init_db
+    PYTHON_CMD="$VENV_PYTHON"
+fi
+
+# 1. Cria as tabelas
+"$PYTHON_CMD" -m src.database.postgres.init_db
+
+# 2. Popula dados base (Propriedades, Estruturas)
+# Importante para o novo MER funcionar imediatamente
+if [ -f "$REPO_ROOT/scripts/08-populate-initial-data.py" ]; then
+    echo "--- Populando dados iniciais (Propriedades/Estruturas) ---"
+    "$PYTHON_CMD" "$REPO_ROOT/scripts/08-populate-initial-data.py"
 fi
 
 echo ""
