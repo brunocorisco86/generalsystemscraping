@@ -59,6 +59,7 @@ def migrate_data():
             insert_query = """
                 INSERT INTO leituras (id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (id) DO NOTHING
             """
             pg_cur.executemany(insert_query, novos_dados)
             pg_conn.commit()
