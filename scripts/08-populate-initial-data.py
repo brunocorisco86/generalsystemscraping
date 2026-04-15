@@ -71,7 +71,11 @@ def get_env_data():
     return {
         "owner": {"name": owner_name, "cpf": owner_cpf},
         "property": {"name": prop_name, "address": prop_address, "cadpro": prop_cadpro},
-        "structures": structures
+        "structures": structures,
+        "telegram": {
+            "id": os.environ.get("TELEGRAM_CHAT_ID"),
+            "username": os.environ.get("TELEGRAM_USERNAME", "admin")
+        }
     }
 
 async def populate_postgres(data):
@@ -111,6 +115,19 @@ async def populate_postgres(data):
                     tipo_exploracao_id = EXCLUDED.tipo_exploracao_id;
             ''', struct_uid, prop_uid, type_id, struct["name"], struct["pluscode"])
 
+        # Insere Usuário Telegram
+        if data["telegram"]["id"]:
+            try:
+                tel_id = int(data["telegram"]["id"])
+                await conn.execute('''
+                    INSERT INTO usuarios_telegram (telegram_id, proprietario_uid, username)
+                    VALUES ($1, $2, $3)
+                    ON CONFLICT (telegram_id) DO UPDATE SET username = EXCLUDED.username;
+                ''', tel_id, owner_uid, data["telegram"]["username"])
+                logger.info("✅ Usuário Telegram populado no Postgres!")
+            except ValueError:
+                logger.warning("TELEGRAM_CHAT_ID inválido no .env. Pulando.")
+
         await conn.close()
         logger.info(f"✅ {len(data['structures'])} estrutura(s) populada(s) no Postgres com sucesso!")
     except Exception as e:
@@ -142,6 +159,18 @@ def populate_sqlite(data):
             cursor.execute('''
                 INSERT OR REPLACE INTO estruturas (uid, propriedade_uid, tipo_exploracao_id, nome, pluscode) VALUES (?, ?, ?, ?, ?)
             ''', (struct_uid, prop_uid, int(struct["type_id"]), struct["name"], struct["pluscode"]))
+
+        # Insere Usuário Telegram
+        if data["telegram"]["id"]:
+            try:
+                tel_id = int(data["telegram"]["id"])
+                cursor.execute('''
+                    INSERT OR REPLACE INTO usuarios_telegram (telegram_id, proprietario_uid, username)
+                    VALUES (?, ?, ?)
+                ''', (tel_id, owner_uid, data["telegram"]["username"]))
+                logger.info("✅ Usuário Telegram populado no SQLite!")
+            except ValueError:
+                pass
 
         conn.commit()
         conn.close()
