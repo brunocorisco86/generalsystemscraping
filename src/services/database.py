@@ -64,6 +64,25 @@ def get_estrutura_uid(nome: str, pluscode: str) -> str:
     """Gera o UID para uma estrutura baseado no nome e pluscode."""
     return generate_sha256(nome + pluscode)
 
+def get_all_estruturas_map() -> dict:
+    """
+    Retorna um dicionário mapeando o nome amigável da estrutura para o seu UID.
+    Útil para o scraper resolver UIDs em tempo real.
+    """
+    conn = get_sqlite_connection()
+    if not conn:
+        return {}
+    
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT nome, uid FROM estruturas")
+        return {row[0]: row[1] for row in cursor.fetchall()}
+    except Exception as e:
+        logger.error(f"Erro ao buscar mapa de estruturas: {e}")
+        return {}
+    finally:
+        conn.close()
+
 def get_default_estrutura_info():
     """Retorna as informações da estrutura configurada no .env."""
     return {

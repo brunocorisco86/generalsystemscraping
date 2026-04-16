@@ -1,4 +1,7 @@
-# Dependências mínimas para o bot de Biometria
 aiogram==3.4.1
 asyncpg==0.29.0
 python-dotenv==1.0.1
+matplotlib
+pandas
+numpy
+psycopg2-binary

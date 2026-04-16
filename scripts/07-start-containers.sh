@@ -34,7 +34,7 @@ if [ ! -f "$ENV_FILE" ]; then
 fi
 
 # 4. Inicia os containers
-echo "--- Subindo containers (Postgres, Biometria, Qualidade da Água)... ---"
+echo "--- Subindo containers (Postgres, Bot Unificado)... ---"
 cd "$REPO_ROOT"
 $DOCKER_COMPOSE up -d --build
 

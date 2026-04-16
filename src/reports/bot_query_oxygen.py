@@ -91,17 +91,16 @@ def get_bot_report():
             # Cálculo de Confiança (CV < 0.15)
             # Evita ZeroDivisionError
             std_dev = statistics.stdev(struct_last_data['oxigenio']) if len(struct_last_data) > 1 else 0
+            cv = (std_dev / avg_4) if avg_4 > 0 else 0
 
-                cv = (std_dev / avg_4) if avg_4 > 0 else 0
+            conf_emoji = "🛡️" if cv < 0.15 else "⚠️"
+            trend = "📈" if o2_atual >= avg_4 else "📉"
+            status = "🟢" if o2_atual >= LIMITE_O2 else "🔴"
+            hora_f = ts_site.strftime('%H:%M')
 
-                conf_emoji = "🛡️" if cv < 0.15 else "⚠️"
-                trend = "📈" if o2_atual >= avg_4 else "📉"
-                status = "🟢" if o2_atual >= LIMITE_O2 else "🔴"
-                hora_f = ts_site.strftime('%H:%M')
-
-                msg += f"\n📍 *{tank}*\n"
-                msg += f"Oxigênio: `{o2_atual:.2f}` {trend} {status}\n"
-                msg += f"Md4: `{avg_4:.2f}` | ⌚{hora_f} {conf_emoji}\n"
+            msg += f"\n📍 *{tank}*\n"
+            msg += f"Oxigênio: `{o2_atual:.2f}` {trend} {status}\n"
+            msg += f"Md4: `{avg_4:.2f}` | ⌚{hora_f} {conf_emoji}\n"
 
         plt.axhline(y=LIMITE_O2, color='red', linestyle='--', alpha=0.5, label="Limite Crítico")
         plt.title('Tendencia de O2 (Ultimas 12h)')

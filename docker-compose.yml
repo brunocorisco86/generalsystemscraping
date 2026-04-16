@@ -12,24 +12,11 @@ services:
       - ./data/postgres:/var/lib/postgresql/data
     restart: unless-stopped
 
-  bot_biometria:
+  telegram_bot:
     build:
       context: .
-      dockerfile: src/bots/biometria/Dockerfile
-    container_name: bot_biometria
-    env_file:
-      - .env
-    environment:
-      - PG_HOST=postgres
-    depends_on:
-      - postgres
-    restart: unless-stopped
-
-  bot_qualidade_agua:
-    build:
-      context: .
-      dockerfile: src/bots/qualidade_agua/Dockerfile
-    container_name: bot_qualidade_agua
+      dockerfile: src/bots/Dockerfile
+    container_name: telegram_bot
     env_file:
       - .env
     environment:

@@ -1,4 +1,0 @@
-# Dependências mínimas para o bot de Qualidade da Água
-aiogram==3.4.1
-asyncpg==0.29.0
-python-dotenv==1.0.1

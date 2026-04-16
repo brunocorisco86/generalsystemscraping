@@ -1,0 +1,17 @@
+# Lista de Comandos para o @BotFather
+
+Copie e cole a lista abaixo na opção /setcommands do @BotFather para configurar o menu do seu bot:
+
+biometria - Registrar biometria (Peso/Mortalidade/Ração)
+agua - Registrar qualidade da água (pH/Amônia/etc)
+novo_lote - Iniciar um novo ciclo de produção
+fechar_lote - Finalizar ciclo (Abate/Venda)
+oxigenio - Ver nível de Oxigênio atual
+temperatura - Ver Temperatura atual
+ox7d - Gráfico de Oxigênio (últimos 7 dias)
+ox15d - Gráfico de Oxigênio (últimos 15 dias)
+temp7d - Gráfico de Temperatura (últimos 7 dias)
+previsao - Ver previsão/curva de oxigênio
+backup - Sincronizar dados com o servidor
+cancel - Cancelar operação atual
+help - Mostrar ajuda e comandos

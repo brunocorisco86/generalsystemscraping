@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Acesso ao PostgreSQL com asyncpg para o bot de biometria.
-Schema atualizado: C.VALE / PATEL / GENERICO
+Acesso ao PostgreSQL com asyncpg para o bot unificado.
+Centraliza biometria, qualidade de água e gestão de lotes.
 """
 import os
 import asyncpg
@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 # Carrega variáveis de ambiente
 load_dotenv()
 
-PG_HOST = os.environ.get("PG_HOST")
+# Prioriza PG_HOST do ambiente (Docker) ou do .env
+PG_HOST = os.environ.get("PG_HOST", os.environ.get("PG_HOST_LOCAL", "localhost"))
 PG_DBNAME = os.environ.get("PG_DBNAME")
 PG_USER = os.environ.get("PG_USER")
 PG_PASSWORD = os.environ.get("PG_PASSWORD")
@@ -30,11 +31,11 @@ async def get_pool() -> asyncpg.Pool:
     return _pool
 
 async def get_estruturas_ativas() -> list[dict]:
-    """Busca estruturas com lotes em aberto."""
+    """Busca estruturas com lotes em aberto, incluindo tipo de exploração."""
     pool = await get_pool()
     async with pool.acquire() as conn:
         rows = await conn.fetch(
-            """SELECT DISTINCT e.uid, e.nome, p.nome as propriedade
+            """SELECT DISTINCT e.uid, e.nome, e.tipo_exploracao_id, p.nome as propriedade
                FROM lotes l
                JOIN estruturas e ON l.estrutura_uid = e.uid
                JOIN propriedades p ON e.propriedade_uid = p.uid
@@ -47,7 +48,7 @@ async def get_todas_estruturas() -> list[dict]:
     pool = await get_pool()
     async with pool.acquire() as conn:
         rows = await conn.fetch(
-            """SELECT e.uid, e.nome, p.nome as propriedade
+            """SELECT e.uid, e.nome, e.tipo_exploracao_id, p.nome as propriedade
                FROM estruturas e
                JOIN propriedades p ON e.propriedade_uid = p.uid
                ORDER BY e.nome"""
@@ -63,6 +64,8 @@ async def get_lote_por_estrutura(estrutura_uid: str) -> str | None:
             estrutura_uid
         )
     return row["lote"] if row else None
+
+# --- BIOMETRIA ---
 
 async def criar_lote_completo(dados: dict) -> str:
     """Insere o alojamento."""
@@ -126,4 +129,32 @@ async def inserir_biometria(
             """,
             estrutura_uid, data_biometria, quantidade,
             peso_medio, mortalidade, consumo_racao, lote
+        )
+
+# --- QUALIDADE DA ÁGUA ---
+
+async def inserir_qualidade_limnologia(dados: dict):
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        await conn.execute(
+            """
+            INSERT INTO qualidade_agua_limnologia (
+                estrutura_uid, data_coleta, hora_coleta, ph, amonia, nitrito, alcalinidade, transparencia
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            """,
+            dados['estrutura_uid'], dados['data_coleta'], dados['hora_coleta'],
+            dados['ph'], dados['amonia'], dados['nitrito'], dados['alcalinidade'], dados['transparencia']
+        )
+
+async def inserir_qualidade_consumo(dados: dict):
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        await conn.execute(
+            """
+            INSERT INTO qualidade_agua_consumo (
+                estrutura_uid, data_coleta, hora_coleta, ph, sdt, orp, ppm_cloro
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+            """,
+            dados['estrutura_uid'], dados['data_coleta'], dados['hora_coleta'],
+            dados['ph'], dados['sdt'], dados['orp'], dados['ppm_cloro']
         )

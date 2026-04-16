@@ -9,18 +9,19 @@ logger = logging.getLogger(__name__)
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
 
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+DEFAULT_CHAT_ID = os.environ.get("TELEGRAM_GROUP_ID")
 
-def send_telegram_message(text: str):
-    """Envia uma mensagem de texto simples para o chat configurado."""
-    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+def send_telegram_message(text: str, chat_id=None):
+    """Envia uma mensagem de texto simples para o chat configurado ou um chat_id específico."""
+    target_chat = chat_id or DEFAULT_CHAT_ID
+    if not TELEGRAM_TOKEN or not target_chat:
         logger.warning("Token ou Chat ID do Telegram não configurado. Mensagem não enviada.")
         return
 
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
+        "chat_id": target_chat,
         "text": text,
         "parse_mode": "Markdown"
     }
@@ -30,9 +31,10 @@ def send_telegram_message(text: str):
     except requests.RequestException as e:
         logger.error("Erro ao enviar mensagem para o Telegram: %s", e)
 
-def send_telegram_photo(caption: str, photo_path: str):
-    """Envia uma imagem com legenda para o chat configurado."""
-    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+def send_telegram_photo(caption: str, photo_path: str, chat_id=None):
+    """Envia uma imagem com legenda para o chat configurado ou um chat_id específico."""
+    target_chat = chat_id or DEFAULT_CHAT_ID
+    if not TELEGRAM_TOKEN or not target_chat:
         logger.warning("Token ou Chat ID do Telegram não configurado. Imagem não enviada.")
         return
 
@@ -41,7 +43,7 @@ def send_telegram_photo(caption: str, photo_path: str):
         with open(photo_path, 'rb') as photo:
             files = {'photo': photo}
             data = {
-                'chat_id': TELEGRAM_CHAT_ID,
+                'chat_id': target_chat,
                 'caption': caption,
                 'parse_mode': 'Markdown'
             }
