@@ -12,7 +12,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # Importar o serviço de banco de dados do projeto
-from src.services.database import get_sqlite_connection, get_estrutura_uid, get_default_estrutura_info
+from src.services.database import (
+    get_sqlite_connection, 
+    get_estrutura_uid, 
+    get_default_estrutura_info,
+    get_all_estruturas_map
+)
 
 # Configuração do logger
 logger = logging.getLogger(__name__)
@@ -87,6 +92,11 @@ def scrape_and_save():
                 raise Exception("Não foi possível conectar ao banco de dados SQLite.")
             
             cursor = conn.cursor()
+
+            # Mapa de Estruturas para resolver UIDs
+            estruturas_map = get_all_estruturas_map()
+            if not estruturas_map:
+                logger.warning("Nenhuma estrutura cadastrada no banco. UIDs podem ser gerados incorretamente.")
 
             # Garantir que a tabela exista antes de prosseguir (Novo MER)
             cursor.execute('''
@@ -190,10 +200,13 @@ def scrape_and_save():
                         except ValueError:
                             logger.warning("Erro ao formatar data: %s", time_match.group(1))
 
-                    # Recupera info da estrutura do .env para bater com o nome coletado
-                    info_env = get_default_estrutura_info()
-                    pluscode = info_env['pluscode'] if nome == info_env['nome'] else "UNKNOWN"
-                    uid = get_estrutura_uid(nome, pluscode)
+                    # Recupera o UID correto do mapa (ou gera um fallback se não existir)
+                    uid = estruturas_map.get(nome)
+                    if not uid:
+                        logger.warning("UID para %s não encontrado no mapa. Gerando fallback...", nome)
+                        info_env = get_default_estrutura_info()
+                        pluscode = info_env['pluscode'] if nome == info_env['nome'] else "UNKNOWN"
+                        uid = get_estrutura_uid(nome, pluscode)
 
                     # Gravação seguindo o Novo Schema
                     cursor.execute('''
@@ -227,17 +240,4 @@ if __name__ == "__main__":
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
-    # Para executar este script manualmente do root do projeto:
-    # python3 -m src.scrape.monitor_data
-    scrape_and_save()
-    conn.close()
-
-if __name__ == "__main__":
-    # Configuração básica de logging para execução direta
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    # Para executar este script manualmente do root do projeto:
-    # python3 -m src.scrape.monitor_data
     scrape_and_save()
