@@ -23,32 +23,52 @@ def get_hourly_report():
             
         cursor = conn.cursor()
         
-        # Busca a lista de tanques únicos
-        cursor.execute("SELECT DISTINCT nome_estrutura FROM leituras")
-        tanques = [row[0] for row in cursor.fetchall() if row[0]]
+        # Consulta otimizada: busca as últimas 4 leituras de todos os tanques em uma única query
+        # utilizando Window Functions (ROW_NUMBER) para evitar o padrão N+1.
+        cursor.execute("""
+            WITH ranked_leituras AS (
+                SELECT
+                    nome_estrutura,
+                    oxigenio,
+                    temperatura,
+                    timestamp_site,
+                    aeradores_ativos,
+                    ROW_NUMBER() OVER (PARTITION BY nome_estrutura ORDER BY data_coleta DESC) as rn
+                FROM leituras
+                WHERE nome_estrutura IS NOT NULL AND nome_estrutura != ''
+            )
+            SELECT
+                nome_estrutura,
+                oxigenio,
+                temperatura,
+                timestamp_site,
+                aeradores_ativos
+            FROM ranked_leituras
+            WHERE rn <= 4
+            ORDER BY nome_estrutura, rn ASC
+        """)
 
-        if not tanques: 
+        all_rows = cursor.fetchall()
+
+        if not all_rows:
             return "📊 *Relatório Horário*\nSem dados recentes para reportar."
+
+        # Agrupa os dados por tanque em Python
+        grouped_data = {}
+        for row in all_rows:
+            tanque = row[0]
+            if tanque not in grouped_data:
+                grouped_data[tanque] = []
+            grouped_data[tanque].append(row[1:])
 
         relatorio = f"📊 *Relatório das {datetime.now().strftime('%H')} horas*\n"
 
-        for tanque in tanques:
-            # Consulta as últimas 4 leituras para calcular tendência e desvio
-            cursor.execute("""
-                SELECT oxigenio, temperatura, timestamp_site, aeradores_ativos
-                FROM leituras WHERE nome_estrutura = ?
-                ORDER BY data_coleta DESC LIMIT 4
-            """, (tanque,))
-            leituras = cursor.fetchall()
-
-            if not leituras: 
-                continue
-
+        for tanque, leituras in grouped_data.items():
             # Extração de listas para cálculos estatísticos
             lista_ox = [r[0] for r in leituras]
             lista_temp = [r[1] for r in leituras]
 
-            # Atribuição da leitura mais recente (índice 0)
+            # Atribuição da leitura mais recente (rn=1 foi o primeiro de cada grupo devido ao ORDER BY rn ASC)
             ox_atual, temp_atual, ts_site, aeradores_atuais = leituras[0]
             
             avg_ox = statistics.mean(lista_ox)
