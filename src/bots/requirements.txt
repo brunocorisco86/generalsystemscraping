@@ -5,3 +5,4 @@ matplotlib
 pandas
 numpy
 psycopg2-binary
+requests

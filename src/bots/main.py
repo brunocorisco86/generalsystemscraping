@@ -180,7 +180,8 @@ async def cmd_agua(message: Message):
         kb = InlineKeyboardBuilder()
         for e in estruturas:
             label = f"{e['propriedade']} - {e['nome']}"
-            kb.button(text=label, callback_data=f"agua_uid:{e['uid']}:{e['tipo_exploracao_id']}")
+            # Truncamos o UID para 32 caracteres para caber no limite de 64 bytes do callback_data
+            kb.button(text=label, callback_data=f"agua_uid:{e['uid'][:32]}:{e['tipo_exploracao_id']}")
         kb.adjust(1)
         estado_chat[chat_id] = {"step": "agua_estrutura"}
         await message.answer("--- Registro de Qualidade de Água ---\nEscolha a estrutura:", reply_markup=kb.as_markup())
@@ -190,13 +191,22 @@ async def cmd_agua(message: Message):
 async def callback_agua_uid(call: CallbackQuery):
     chat_id = call.message.chat.id
     partes = call.data.split(":")
-    uid = partes[1]
+    uid_prefix = partes[1]
     tipo_id = int(partes[2])
-    lote = await get_lote_por_estrutura(uid)
+    
+    # Busca o UID completo a partir do prefixo
+    estruturas = await get_todas_estruturas()
+    full_uid = next((e['uid'] for e in estruturas if e['uid'].startswith(uid_prefix)), None)
+    
+    if not full_uid:
+        await call.message.answer("❌ Estrutura não encontrada.")
+        return
+
+    lote = await get_lote_por_estrutura(full_uid)
 
     estado_chat[chat_id] = {
         "step": "agua_data",
-        "estrutura_uid": uid,
+        "estrutura_uid": full_uid,
         "tipo_exploracao_id": tipo_id,
         "lote": lote
     }
@@ -218,16 +228,24 @@ async def cmd_biometria(message: Message):
     kb = InlineKeyboardBuilder()
     for e in estruturas:
         label = f"{e['propriedade']} - {e['nome']}"
-        kb.button(text=label, callback_data=f"bio_uid:{e['uid']}")
+        kb.button(text=label, callback_data=f"bio_uid:{e['uid'][:32]}")
     kb.adjust(1)
     estado_chat[chat_id] = {"step": "bio_estrutura"}
     await message.answer("--- Lançar Biometria ---\nEscolha a estrutura:", reply_markup=kb.as_markup())
 
 async def callback_bio_uid(call: CallbackQuery):
     chat_id = call.message.chat.id
-    uid = call.data.split(":")[1]
-    lote = await get_lote_por_estrutura(uid)
-    estado_chat[chat_id] = {"step": "bio_data", "estrutura_uid": uid, "lote": lote}
+    uid_prefix = call.data.split(":")[1]
+    
+    estruturas = await get_todas_estruturas()
+    full_uid = next((e['uid'] for e in estruturas if e['uid'].startswith(uid_prefix)), None)
+    
+    if not full_uid:
+        await call.message.answer("❌ Estrutura não encontrada.")
+        return
+
+    lote = await get_lote_por_estrutura(full_uid)
+    estado_chat[chat_id] = {"step": "bio_data", "estrutura_uid": full_uid, "lote": lote}
     await call.message.answer(f"📊 Lote {lote}\nData (DD/MM/AA) [vazio = Hoje]:")
     await call.answer()
 
@@ -241,20 +259,28 @@ async def cmd_novo_lote(message: Message):
     kb = InlineKeyboardBuilder()
     for e in estruturas:
         label = f"{e['propriedade']} - {e['nome']}"
-        kb.button(text=label, callback_data=f"nl_uid:{e['uid']}")
+        kb.button(text=label, callback_data=f"nl_uid:{e['uid'][:32]}")
     kb.adjust(1)
     estado_chat[chat_id] = {"step": "nl_estrutura"}
     await message.answer("--- Iniciar Novo Lote ---\nEscolha a estrutura:", reply_markup=kb.as_markup())
 
 async def callback_novo_lote_uid(call: CallbackQuery):
     chat_id = call.message.chat.id
-    uid = call.data.split(":")[1]
-    lote_ativo = await get_lote_por_estrutura(uid)
+    uid_prefix = call.data.split(":")[1]
+    
+    estruturas = await get_todas_estruturas()
+    full_uid = next((e['uid'] for e in estruturas if e['uid'].startswith(uid_prefix)), None)
+    
+    if not full_uid:
+        await call.message.answer("❌ Estrutura não encontrada.")
+        return
+
+    lote_ativo = await get_lote_por_estrutura(full_uid)
     if lote_ativo:
         await call.message.answer(f"⚠️ Esta estrutura já possui o Lote {lote_ativo} ativo.")
         estado_chat.pop(chat_id, None)
     else:
-        estado_chat[chat_id] = {"step": "nl_lote_nome", "estrutura_uid": uid}
+        estado_chat[chat_id] = {"step": "nl_lote_nome", "estrutura_uid": full_uid}
         await call.message.answer("Digite a Identificação do Lote (ex: 2024/01):")
     await call.answer()
 
@@ -267,16 +293,24 @@ async def cmd_fechar_lote(message: Message):
     kb = InlineKeyboardBuilder()
     for e in estruturas:
         label = f"{e['propriedade']} - {e['nome']}"
-        kb.button(text=label, callback_data=f"fl_uid:{e['uid']}")
+        kb.button(text=label, callback_data=f"fl_uid:{e['uid'][:32]}")
     kb.adjust(1)
     estado_chat[chat_id] = {"step": "fl_estrutura"}
     await message.answer("--- Fechar Lote ---\nEscolha a estrutura:", reply_markup=kb.as_markup())
 
 async def callback_fechar_lote_uid(call: CallbackQuery):
     chat_id = call.message.chat.id
-    uid = call.data.split(":")[1]
-    lote = await get_lote_por_estrutura(uid)
-    estado_chat[chat_id] = {"step": "fl_data", "estrutura_uid": uid, "lote": lote}
+    uid_prefix = call.data.split(":")[1]
+    
+    estruturas = await get_todas_estruturas()
+    full_uid = next((e['uid'] for e in estruturas if e['uid'].startswith(uid_prefix)), None)
+    
+    if not full_uid:
+        await call.message.answer("❌ Estrutura não encontrada.")
+        return
+
+    lote = await get_lote_por_estrutura(full_uid)
+    estado_chat[chat_id] = {"step": "fl_data", "estrutura_uid": full_uid, "lote": lote}
     await call.message.answer(f">> Fechar Lote {lote}\nData Final (DD/MM/AA) [vazio = Hoje]:")
     await call.answer()
 
