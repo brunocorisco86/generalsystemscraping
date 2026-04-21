@@ -305,11 +305,5 @@ def gerar_curva():
         if conn:
             conn.close()
 
-
-if __name__ == "__main__":
-    gerar_curva()
-          conn.close()
-
-
 if __name__ == "__main__":
     gerar_curva()
