@@ -18,6 +18,9 @@ from src.services.notification import send_telegram_photo, send_telegram_message
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
 
+os.makedirs('logs', exist_ok=True)
+os.makedirs('reports', exist_ok=True)
+
 # --- CONFIGURAÇÕES DE LOGGING ---
 LOG_FILE = os.path.join(os.environ.get("LOGS_DIR", "logs"), "bot_query_ox_15d.log")
 logging.basicConfig(

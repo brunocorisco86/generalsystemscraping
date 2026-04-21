@@ -157,14 +157,16 @@ async def handle_ox15d(message: Message):
 async def handle_temp7d(message: Message):
     await executar_script_python("src/reports/bot_query_temp_7d.py", message.chat.id)
 
-@Dispatcher().message(Command("previsao"))
-async def handle_previsao(message: Message):
-    await executar_script_python("src/analysis/plot_curva.py", message.chat.id)
+@Dispatcher().message(Command("temperatura"))
+async def handle_temperatura(message: Message):
+    # Usaremos o mesmo script de oxigênio que já lida com temperatura ou um específico se existir
+    await executar_script_python("src/reports/bot_query_oxygen.py", message.chat.id)
 
 @Dispatcher().message(Command("backup"))
 async def handle_backup(message: Message):
     await message.answer("🔄 Iniciando sincronização/backup...")
-    await executar_script_python("src/jobs/migrate_data.py", message.chat.id)
+    await executar_script_python("src/database/postgres/migrate_data.py", message.chat.id)
+
 
 # ==========================
 # FLUXO: QUALIDADE DA ÁGUA
