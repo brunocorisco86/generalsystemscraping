@@ -141,10 +141,6 @@ async def cmd_cancel(message: Message):
 async def handle_oxigenio(message: Message):
     await executar_script_python("src/reports/bot_query_oxygen.py", message.chat.id)
 
-@Dispatcher().message(Command("temperatura"))
-async def handle_temperatura(message: Message):
-    await executar_script_python("src/reports/bot_query_temp.py", message.chat.id)
-
 @Dispatcher().message(Command("ox7d"))
 async def handle_ox7d(message: Message):
     await executar_script_python("src/reports/bot_query_ox_7d.py", message.chat.id)
@@ -157,9 +153,13 @@ async def handle_ox15d(message: Message):
 async def handle_temp7d(message: Message):
     await executar_script_python("src/reports/bot_query_temp_7d.py", message.chat.id)
 
+@Dispatcher().message(Command("previsao"))
+async def handle_previsao(message: Message):
+    await executar_script_python("src/analysis/plot_curva.py", message.chat.id)
+
 @Dispatcher().message(Command("temperatura"))
 async def handle_temperatura(message: Message):
-    # Usaremos o mesmo script de oxigênio que já lida com temperatura ou um específico se existir
+    # Usaremos o mesmo script de oxigênio que já lida com temperatura
     await executar_script_python("src/reports/bot_query_oxygen.py", message.chat.id)
 
 @Dispatcher().message(Command("backup"))
