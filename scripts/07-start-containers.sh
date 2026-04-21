@@ -60,6 +60,12 @@ if [ -f "$REPO_ROOT/scripts/08-populate-initial-data.py" ]; then
     "$PYTHON_CMD" "$REPO_ROOT/scripts/08-populate-initial-data.py"
 fi
 
+# 4. Sincroniza dados do SQLite para o Postgres
+if [ -f "$REPO_ROOT/src/database/postgres/migrate_data.py" ]; then
+    echo "--- Sincronizando dados históricos (SQLite -> Postgres) ---"
+    "$PYTHON_CMD" "$REPO_ROOT/src/database/postgres/migrate_data.py"
+fi
+
 echo ""
 echo "✅ Serviços iniciados e Banco de Dados configurado!"
 echo "Para verificar o status: docker compose ps"
