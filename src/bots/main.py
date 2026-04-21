@@ -39,12 +39,17 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+# Tenta várias fontes para o Token
+BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN") or \
+            os.environ.get("BOT_BIOMETRIA_TOKEN") or \
+            os.environ.get("TELEGRAM_TOKEN")
+
 GROUP_ID = os.environ.get("TELEGRAM_GROUP_ID")
 ADMIN_ID = os.environ.get("TELEGRAM_ADMIN_ID")
 
 if not BOT_TOKEN:
-    raise ValueError("TELEGRAM_BOT_TOKEN não encontrado no .env")
+    logger.error("ERRO: Nenhum Token de Bot encontrado no .env (TELEGRAM_BOT_TOKEN, BOT_BIOMETRIA_TOKEN ou TELEGRAM_TOKEN)")
+    sys.exit(1)
 
 # Estado do chat (FSM simplificada)
 estado_chat: dict[int, dict] = {}

@@ -12,15 +12,16 @@ services:
       - ./data/postgres:/var/lib/postgresql/data
     restart: unless-stopped
 
-  telegram_bot:
+  bot_unificado:
     build:
       context: .
       dockerfile: src/bots/Dockerfile
-    container_name: telegram_bot
+    container_name: peixe_patel_bot
     env_file:
       - .env
     environment:
       - PG_HOST=postgres
+      - TELEGRAM_BOT_TOKEN=${BOT_BIOMETRIA_TOKEN} # Usa o token de biometria como principal
     depends_on:
       - postgres
     restart: unless-stopped
@@ -30,17 +31,4 @@ services:
 #     context: ./nodered
 #     dockerfile: Dockerfile
 #   container_name: piscicultura_nodered
-#   ports:
-#     - "1880:1880"
-#   volumes:
-#     - ./nodered:/data
-#     - ${PROJECT_ROOT}:/app
-#   environment:
-#     - PROJECT_ROOT=/app
-#     - TZ=America/Sao_Paulo
-#   restart: always
-
-# Volumes persistentes configurados via diretório local
-# volumes:
-#   postgres_data:
-#     driver: local
+#   ...
