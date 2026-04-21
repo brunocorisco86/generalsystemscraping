@@ -14,12 +14,16 @@ WORKDIR /app
 COPY src/bots/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia todo o código-fonte (necessário para os scripts de relatórios e análises)
-COPY src/ /app/src/
-COPY .env /app/.env
+# Cria diretórios necessários para logs, dados e relatórios
+RUN mkdir -p logs data reports
 
-# Define o PYTHONPATH para permitir importações do diretório /app
+# Copia todo o código-fonte
+COPY src/ /app/src/
+# O .env será montado via volume ou injetado, mas mantemos uma cópia se necessário
+# COPY .env /app/.env
+
+# Define o PYTHONPATH
 ENV PYTHONPATH=/app
 
-# Comando de inicialização apontando para o bot unificado
+# Comando de inicialização
 CMD ["python3", "-u", "src/bots/main.py"]

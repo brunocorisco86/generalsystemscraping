@@ -22,6 +22,10 @@ services:
     environment:
       - PG_HOST=postgres
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./reports:/app/reports
     depends_on:
       - postgres
     restart: unless-stopped
