@@ -399,7 +399,7 @@ async def handle_messages(message: Message):
         elif step == "bio_racao":
             await inserir_biometria(
                 estrutura_uid=estado["estrutura_uid"],
-                data_biometria=estado["bio_data"],
+                data_biometria=estado["data_bio"],
                 quantidade=estado["quantidade"],
                 peso_medio=estado["peso"],
                 mortalidade=estado["mortalidade"],
