@@ -21,7 +21,7 @@ services:
       - .env
     environment:
       - PG_HOST=postgres
-      - TELEGRAM_BOT_TOKEN=${BOT_BIOMETRIA_TOKEN} # Usa o token de biometria como principal
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
     depends_on:
       - postgres
     restart: unless-stopped
