@@ -181,7 +181,7 @@ async def cmd_agua(message: Message):
         for e in estruturas:
             label = f"{e['propriedade']} - {e['nome']}"
             # Truncamos o UID para 32 caracteres para caber no limite de 64 bytes do callback_data
-            kb.button(text=label, callback_data=f"agua_uid:{e['uid'][:32]}:{e['tipo_exploracao_id']}")
+            kb.button(text=label, callback_data=f"agua_uid:{e['uid'][:16]}:{e['tipo_exploracao_id']}")
         kb.adjust(1)
         estado_chat[chat_id] = {"step": "agua_estrutura"}
         await message.answer("--- Registro de Qualidade de Água ---\nEscolha a estrutura:", reply_markup=kb.as_markup())
@@ -228,7 +228,7 @@ async def cmd_biometria(message: Message):
     kb = InlineKeyboardBuilder()
     for e in estruturas:
         label = f"{e['propriedade']} - {e['nome']}"
-        kb.button(text=label, callback_data=f"bio_uid:{e['uid'][:32]}")
+        kb.button(text=label, callback_data=f"bio_uid:{e['uid'][:16]}")
     kb.adjust(1)
     estado_chat[chat_id] = {"step": "bio_estrutura"}
     await message.answer("--- Lançar Biometria ---\nEscolha a estrutura:", reply_markup=kb.as_markup())
@@ -259,7 +259,7 @@ async def cmd_novo_lote(message: Message):
     kb = InlineKeyboardBuilder()
     for e in estruturas:
         label = f"{e['propriedade']} - {e['nome']}"
-        kb.button(text=label, callback_data=f"nl_uid:{e['uid'][:32]}")
+        kb.button(text=label, callback_data=f"nl_uid:{e['uid'][:16]}")
     kb.adjust(1)
     estado_chat[chat_id] = {"step": "nl_estrutura"}
     await message.answer("--- Iniciar Novo Lote ---\nEscolha a estrutura:", reply_markup=kb.as_markup())
@@ -293,7 +293,7 @@ async def cmd_fechar_lote(message: Message):
     kb = InlineKeyboardBuilder()
     for e in estruturas:
         label = f"{e['propriedade']} - {e['nome']}"
-        kb.button(text=label, callback_data=f"fl_uid:{e['uid'][:32]}")
+        kb.button(text=label, callback_data=f"fl_uid:{e['uid'][:16]}")
     kb.adjust(1)
     estado_chat[chat_id] = {"step": "fl_estrutura"}
     await message.answer("--- Fechar Lote ---\nEscolha a estrutura:", reply_markup=kb.as_markup())
