@@ -131,7 +131,7 @@ def scrape_and_save():
 
             # 2. Mapeamento de Tanques Reais (Filtro MAC Address)
             logger.info("Mapeando tanques (filtrando MACs)...")
-            time.sleep(5)
+            time.sleep(10) # Tempo conservador para carregar o menu de tanques
             links_elementos = driver.find_elements(By.XPATH, "//a[contains(@href, '/tanque/')]")
             raw_urls = list(set([el.get_attribute('href') for el in links_elementos]))
             
@@ -141,8 +141,8 @@ def scrape_and_save():
 
             if not urls_validas:
                 # Tentar novamente se não encontrar tanques (pode ser tempo de carregamento)
-                logger.warning("Nenhum tanque válido encontrado. Aguardando mais 10s...")
-                time.sleep(5)
+                logger.warning("Nenhum tanque válido encontrado. Aguardando carregamento pesado (15s)...")
+                time.sleep(15)
                 links_elementos = driver.find_elements(By.XPATH, "//a[contains(@href, '/tanque/')]")
                 raw_urls = list(set([el.get_attribute('href') for el in links_elementos]))
                 urls_validas = [url for url in raw_urls if padrao_mac.search(url)]
@@ -155,7 +155,7 @@ def scrape_and_save():
                 mac_id = url.split('/')[-1]
                 logger.info("Acessando Tanque: %s", mac_id)
                 driver.get(url)
-                time.sleep(6) # Tempo para o React/Next.js carregar o estado
+                time.sleep(12) # Tempo conservador para o React/Next.js carregar o estado dos sensores
 
                 # JS Cirúrgico para extrair Nome, Texto e Aeradores
                 js_extrair = r'''
