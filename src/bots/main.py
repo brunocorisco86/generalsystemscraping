@@ -26,6 +26,7 @@ from src.bots.db import (  # noqa: E402
     get_todas_estruturas,
     get_lote_por_estrutura,
     inserir_biometria,
+    get_ultimo_estoque,
     criar_lote_completo,
     finalizar_lote_abate,
     inserir_qualidade_limnologia,
@@ -251,6 +252,35 @@ async def callback_bio_uid(call: CallbackQuery):
     await call.message.answer(f"📊 Lote {lote}\nData (DD/MM/AA) [vazio = Hoje]:")
     await call.answer()
 
+async def callback_bio_loop(call: CallbackQuery):
+    chat_id = call.message.chat.id
+    uid_prefix = call.data.split(":")[1]
+    
+    # Busca dados anteriores para manter o contexto
+    estruturas = await get_todas_estruturas()
+    full_uid = next((e['uid'] for e in estruturas if e['uid'].startswith(uid_prefix)), None)
+    
+    if not full_uid:
+        await call.message.answer("❌ Estrutura não encontrada.")
+        return
+
+    lote = await get_lote_por_estrutura(full_uid)
+    
+    # Reinicia o fluxo direto na data, mas mantendo a estrutura
+    estado_chat[chat_id] = {
+        "step": "bio_data", 
+        "estrutura_uid": full_uid, 
+        "lote": lote
+    }
+    await call.message.answer(f"🔄 Novo lançamento para Lote {lote}\nData (DD/MM/AA) [vazio = Hoje]:")
+    await call.answer()
+
+async def callback_bio_finish(call: CallbackQuery):
+    chat_id = call.message.chat.id
+    estado_chat.pop(chat_id, None)
+    await call.message.answer("✅ Processo de biometria finalizado.")
+    await call.answer()
+
 # ==========================
 # FLUXO: LOTE (NOVO / FECHAR)
 # ==========================
@@ -385,13 +415,16 @@ async def handle_messages(message: Message):
             estado["step"] = "bio_qtd"
             await message.answer("Quantidade (Estoque atual):")
         elif step == "bio_qtd":
-            estado["quantidade"] = parse_int(texto)
-            estado["step"] = "bio_mortalidade"
-            await message.answer("Mortalidade desde o último registro:")
-        elif step == "bio_mortalidade":
-            estado["mortalidade"] = parse_int(texto)
+            quantidade_atual = parse_int(texto)
+            estoque_anterior = await get_ultimo_estoque(estado["estrutura_uid"], estado["lote"])
+            mortalidade = estoque_anterior - quantidade_atual
+            
+            estado["quantidade"] = quantidade_atual
+            estado["mortalidade"] = max(0, mortalidade) # Garante que não seja negativa para fins de log, embora o cálculo possa ser flexível
+            
+            msg_mortalidade = f"📉 Mortalidade calculada: *{mortalidade}* (Anterior: {estoque_anterior} -> Atual: {quantidade_atual})"
+            await message.answer(f"{msg_mortalidade}\n\nAgora informe o Peso Médio (g):", parse_mode="Markdown")
             estado["step"] = "bio_peso"
-            await message.answer("Peso Médio (g):")
         elif step == "bio_peso":
             estado["peso"] = parse_float(texto)
             estado["step"] = "bio_racao"
@@ -406,8 +439,14 @@ async def handle_messages(message: Message):
                 consumo_racao=parse_float(texto),
                 lote=estado["lote"]
             )
-            await message.answer("✅ Biometria registrada!")
-            estado_chat.pop(chat_id, None)
+            
+            kb = InlineKeyboardBuilder()
+            kb.button(text="🔄 Novo Lançamento (Mesmo Tanque)", callback_data=f"bio_loop:{estado['estrutura_uid'][:16]}")
+            kb.button(text="✅ Finalizar", callback_data="bio_finish")
+            kb.adjust(1)
+            
+            await message.answer("✅ Biometria registrada com sucesso!\nDeseja realizar outro lançamento para esta mesma estrutura?", reply_markup=kb.as_markup())
+            # Não removemos o estado ainda, deixamos para o callback ou próximo comando
 
         # --- FLUXO: LOTE ---
         elif step == "nl_lote_nome":
@@ -493,6 +532,8 @@ async def main():
     # Registro de Callbacks
     dp.callback_query.register(callback_agua_uid, F.data.startswith("agua_uid:"))
     dp.callback_query.register(callback_bio_uid, F.data.startswith("bio_uid:"))
+    dp.callback_query.register(callback_bio_loop, F.data.startswith("bio_loop:"))
+    dp.callback_query.register(callback_bio_finish, F.data == "bio_finish")
     dp.callback_query.register(callback_novo_lote_uid, F.data.startswith("nl_uid:"))
     dp.callback_query.register(callback_fechar_lote_uid, F.data.startswith("fl_uid:"))
     

@@ -131,6 +131,25 @@ async def inserir_biometria(
             peso_medio, mortalidade, consumo_racao, lote
         )
 
+async def get_ultimo_estoque(estrutura_uid: str, lote: str) -> int:
+    """Busca o último estoque registrado para cálculo de mortalidade."""
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        # Tenta pegar da última biometria
+        ultimo_bio = await conn.fetchval(
+            "SELECT quantidade FROM biometria WHERE estrutura_uid = $1 AND lote = $2 ORDER BY data_biometria DESC, id DESC LIMIT 1",
+            estrutura_uid, lote
+        )
+        if ultimo_bio is not None:
+            return ultimo_bio
+        
+        # Se não houver biometria, pega do alojamento inicial no lote
+        alojamento = await conn.fetchval(
+            "SELECT peixes_alojados FROM lotes WHERE estrutura_uid = $1 AND lote = $2",
+            estrutura_uid, lote
+        )
+        return alojamento or 0
+
 # --- QUALIDADE DA ÁGUA ---
 
 async def inserir_qualidade_limnologia(dados: dict):
