@@ -122,7 +122,7 @@ async def cmd_start(message: Message):
         "/oxigenio - Nível atual de O2\n"
         "/temperatura - Temperatura atual\n"
         "/ox7d /ox15d - Histórico de Oxigênio\n"
-        "/temp7d - Histórico de Temperatura\n"
+        "/temp7d /temp15d - Histórico de Temperatura\n"
         "/previsao - Curva de oxigênio\n\n"
         "🛠️ *Sistema*\n"
         "/backup - Sincronizar banco de dados\n"
@@ -149,6 +149,10 @@ async def handle_ox7d(message: Message):
 @Dispatcher().message(Command("ox15d"))
 async def handle_ox15d(message: Message):
     await executar_script_python("src/reports/bot_query_ox_15d.py", message.chat.id)
+
+@Dispatcher().message(Command("temp15d"))
+async def handle_temp15d(message: Message):
+    await executar_script_python("src/reports/bot_query_temp_15d.py", message.chat.id)
 
 @Dispatcher().message(Command("temp7d"))
 async def handle_temp7d(message: Message):
@@ -525,6 +529,7 @@ async def main():
     dp.message.register(handle_ox7d, Command("ox7d"))
     dp.message.register(handle_ox15d, Command("ox15d"))
     dp.message.register(handle_temp7d, Command("temp7d"))
+    dp.message.register(handle_temp15d, Command("temp15d"))
     dp.message.register(handle_previsao, Command("previsao"))
     dp.message.register(handle_backup, Command("backup"))
 
