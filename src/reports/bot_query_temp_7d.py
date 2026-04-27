@@ -76,7 +76,7 @@ def get_weekly_temp_report():
 
         msg = f"🌡️ *Resumo Semanal Temperatura*\nPeríodo: 7 dias\n"
 
-        # Agrupamos por tanque para iterar apenas uma vez sobre os dados
+        # Agrupamos por estrutura para iterar apenas uma vez sobre os dados
         for tank, struct_data in df.groupby('nome_estrutura'):
             if not tank or struct_data.empty: continue
             

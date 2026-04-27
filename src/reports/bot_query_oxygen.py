@@ -76,7 +76,7 @@ def get_bot_report():
         # 3. CONSTRUIR MENSAGEM (FOCO SMARTWATCH)
         msg = f"📊 *Relatório {now.strftime('%H:%M')}h*\n"
 
-        # Agrupamos por tanque para iterar apenas uma vez sobre os dados
+        # Agrupamos por estrutura para iterar apenas uma vez sobre os dados
         for tank, struct_data in df.groupby('nome_estrutura'):
             if not tank or struct_data.empty: continue
 

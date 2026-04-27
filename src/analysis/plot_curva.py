@@ -194,7 +194,7 @@ def gerar_curva():
                     data_ult = df_t["data_biometria"].max()
 
                     relatorio_texto += (
-                        f"🐟 *{tanque}* (Lote {df_t['lote'].iloc[0]})\n"
+                        f"🔹 *{tanque}* (Lote {df_t['lote'].iloc[0]})\n"
                         f"├ Peso atual: {y_data[-1]:.0f} g em {data_ult:%d/%m/%Y}\n"
                         f"├ Previsão {PESO_ALVO} g (reta): *{data_str}*\n"
                         f"└ a: {a:.3f} g/dia | R²: {r2:.3f} | RMSE: {rmse:.1f} g\n\n"
@@ -202,7 +202,7 @@ def gerar_curva():
 
                     resultados_parametros.append(
                         {
-                            "tanque": tanque,
+                            "estrutura": tanque,
                             "lote": df_t["lote"].iloc[0],
                             "modelo": "linear",
                             "a_g_dia": a,
@@ -223,11 +223,11 @@ def gerar_curva():
                         color=cor,
                     )
                     relatorio_texto += (
-                        f"🐟 *{tanque}*: Dados insuficientes para projetar curva.\n\n"
+                        f"🔹 *{tanque}*: Dados insuficientes para projetar curva.\n\n"
                     )
 
             except Exception as e:
-                logger.error(f"[ERRO] Tanque {tanque}: {e}", exc_info=True)
+                logger.error(f"[ERRO] Estrutura {tanque}: {e}", exc_info=True)
                 plt.scatter(
                     df_t["data_biometria"],
                     y_data,

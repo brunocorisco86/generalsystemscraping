@@ -112,7 +112,7 @@ async def executar_script_python(script_relative_path: str, chat_id: int):
 async def cmd_start(message: Message):
     await message.answer(
         "🚀 *PeixePatelBot - Sistema Unificado*\n\n"
-        "🐟 *Manejo e Biometria*\n"
+        "📦 *Manejo e Biometria*\n"
         "/biometria - Registrar peso/mortalidade\n"
         "/novo_lote - Iniciar Ciclo\n"
         "/fechar_lote - Finalizar Ciclo\n\n"
@@ -440,7 +440,7 @@ async def handle_messages(message: Message):
             )
             
             kb = InlineKeyboardBuilder()
-            kb.button(text="🔄 Novo Lançamento (Mesmo Tanque)", callback_data=f"bio_loop:{estado['estrutura_uid'][:16]}")
+            kb.button(text="🔄 Novo Lançamento (Mesma Estrutura)", callback_data=f"bio_loop:{estado['estrutura_uid'][:16]}")
             kb.button(text="✅ Finalizar", callback_data="bio_finish")
             kb.adjust(1)
             
