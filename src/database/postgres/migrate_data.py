@@ -22,6 +22,11 @@ def migrate_data():
     Busca o último ID migrado no PostgreSQL e copia todos os registros
     mais recentes do SQLite.
     """
+    # --- CONFIGURAÇÕES DO TELEGRAM ---
+    # Se rodado pelo Bot, o primeiro argumento será o chat_id. 
+    # Caso contrário, usa o ADMIN_ID do .env.
+    chat_id_target = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("TELEGRAM_ADMIN_ID")
+
     pg_conn = None
     sq_conn = None
     status_msg = ""
@@ -83,7 +88,7 @@ def migrate_data():
         else:
             logger.info(status_msg)
 
-        send_telegram_message(status_msg)
+        send_telegram_message(status_msg, chat_id=chat_id_target)
 
 if __name__ == "__main__":
     from dotenv import load_dotenv
