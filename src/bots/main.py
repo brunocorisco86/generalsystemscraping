@@ -123,7 +123,8 @@ async def cmd_start(message: Message):
         "/temperatura - Temperatura atual\n"
         "/ox7d /ox15d - Histórico de Oxigênio\n"
         "/temp7d /temp15d - Histórico de Temperatura\n"
-        "/previsao - Curva de oxigênio\n\n"
+        "/previsao - Curva de oxigênio\n"
+        "/curvapeso - Projeção de Crescimento (Peso)\n\n"
         "🛠️ *Sistema*\n"
         "/backup - Sincronizar banco de dados\n"
         "/cancel - Cancelar operação atual",
@@ -161,6 +162,10 @@ async def handle_temp7d(message: Message):
 @Dispatcher().message(Command("previsao"))
 async def handle_previsao(message: Message):
     await executar_script_python("src/analysis/plot_curva.py", message.chat.id)
+
+@Dispatcher().message(Command("curvapeso"))
+async def handle_curvapeso(message: Message):
+    await executar_script_python("src/reports/bot_query_curva_peso.py", message.chat.id)
 
 @Dispatcher().message(Command("temperatura"))
 async def handle_temperatura(message: Message):
@@ -531,6 +536,7 @@ async def main():
     dp.message.register(handle_temp7d, Command("temp7d"))
     dp.message.register(handle_temp15d, Command("temp15d"))
     dp.message.register(handle_previsao, Command("previsao"))
+    dp.message.register(handle_curvapeso, Command("curvapeso"))
     dp.message.register(handle_backup, Command("backup"))
 
     # Registro de Callbacks

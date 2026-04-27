@@ -12,6 +12,7 @@ ox7d - Gráfico de Oxigênio (últimos 7 dias)
 ox15d - Gráfico de Oxigênio (últimos 15 dias)
 temp7d - Gráfico de Temperatura (últimos 7 dias)
 temp15d - Gráfico de Temperatura (últimos 15 dias)
+curvapeso - Ver projeção da curva de crescimento (Peso)
 previsao - Ver previsão/curva de oxigênio
 backup - Sincronizar dados com o servidor
 cancel - Cancelar operação atual
