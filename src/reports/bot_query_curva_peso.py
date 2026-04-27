@@ -165,10 +165,10 @@ def gerar_curva_peso():
                     data_ult = df_e["data_biometria"].max()
 
                     relatorio_texto += (
-                        f"🔹 *{estrutura}* (Lote {df_e['lote'].iloc[0]})\n"
+                        f"🔹 {estrutura} (Lote {df_e['lote'].iloc[0]})\n"
                         f"├ Peso atual: {y_data[-1]:.0f} g ({data_ult:%d/%m/%Y})\n"
-                        f"├ Previsão {PESO_ALVO}g: *{data_str}*\n"
-                        f"└ Ganho: {a:.2f} g/dia | $R^2$: {r2:.3f}\n\n"
+                        f"├ Previsão {PESO_ALVO}g: {data_str}\n"
+                        f"└ Ganho: {a:.2f} g/dia | R²: {r2:.3f}\n\n"
                     )
 
                     resultados_parametros.append({
