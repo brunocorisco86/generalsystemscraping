@@ -53,7 +53,7 @@ def get_bot_report():
             return
 
         query = f"""
-            SELECT tanque as nome_estrutura, temperatura, timestamp_site 
+            SELECT nome_estrutura, temperatura, timestamp_site 
             FROM leituras 
             WHERE timestamp_site >= '{twelve_hours_ago.strftime('%Y-%m-%d %H:%M:%S')}' 
             ORDER BY timestamp_site ASC

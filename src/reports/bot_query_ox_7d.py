@@ -53,7 +53,7 @@ def get_weekly_report():
             return
 
         query = f"""
-            SELECT tanque as nome_estrutura, oxigenio, timestamp_site
+            SELECT nome_estrutura, oxigenio, timestamp_site
             FROM leituras
             WHERE timestamp_site >= '{seven_days_ago.strftime('%Y-%m-%d %H:%M:%S')}'
             ORDER BY timestamp_site ASC

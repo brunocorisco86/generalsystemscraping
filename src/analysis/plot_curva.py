@@ -105,14 +105,14 @@ def gerar_curva():
             return
 
         query = """
-            SELECT tanque, lote, data_biometria, peso_medio_g 
+            SELECT nome_estrutura, lote, data_biometria, peso_medio_g 
             FROM biometria 
             WHERE lote::text IN (
                 SELECT lote::text 
                 FROM lotes 
                 WHERE data_abate IS NULL
             )
-            ORDER BY tanque, data_biometria ASC;
+            ORDER BY nome_estrutura, data_biometria ASC;
         """
 
         df = pd.read_sql(query, conn)
@@ -122,7 +122,7 @@ def gerar_curva():
             send_telegram_message("ℹ️ Nenhum dado de biometria encontrado para gerar a curva de crescimento.")
             return
 
-        tanques = df["tanque"].unique()
+        tanques = df["nome_estrutura"].unique()
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(12, 7))
 
@@ -137,7 +137,7 @@ def gerar_curva():
 
         for i, tanque in enumerate(tanques):
             cor = cores[i % len(cores)]
-            df_t = df[df["tanque"] == tanque].copy()
+            df_t = df[df["nome_estrutura"] == tanque].copy()
             df_t["data_biometria"] = pd.to_datetime(df_t["data_biometria"])
 
             data_inicial = df_t["data_biometria"].min()
