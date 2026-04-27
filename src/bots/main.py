@@ -160,8 +160,7 @@ async def handle_previsao(message: Message):
 
 @Dispatcher().message(Command("temperatura"))
 async def handle_temperatura(message: Message):
-    # Usaremos o mesmo script de oxigênio que já lida com temperatura
-    await executar_script_python("src/reports/bot_query_oxygen.py", message.chat.id)
+    await executar_script_python("src/reports/bot_query_temp.py", message.chat.id)
 
 @Dispatcher().message(Command("backup"))
 async def handle_backup(message: Message):

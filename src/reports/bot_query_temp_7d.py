@@ -53,7 +53,7 @@ def get_weekly_temp_report():
             return
 
         query = f"""
-            SELECT nome_estrutura, temperatura, timestamp_site
+            SELECT tanque as nome_estrutura, temperatura, timestamp_site
             FROM leituras
             WHERE timestamp_site >= '{seven_days_ago.strftime('%Y-%m-%d %H:%M:%S')}'
             ORDER BY timestamp_site ASC
