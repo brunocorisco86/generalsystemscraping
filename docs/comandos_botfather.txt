@@ -11,6 +11,7 @@ temperatura - Ver Temperatura atual
 ox7d - Gráfico de Oxigênio (últimos 7 dias)
 ox15d - Gráfico de Oxigênio (últimos 15 dias)
 temp7d - Gráfico de Temperatura (últimos 7 dias)
+temp15d - Gráfico de Temperatura (últimos 15 dias)
 previsao - Ver previsão/curva de oxigênio
 backup - Sincronizar dados com o servidor
 cancel - Cancelar operação atual
