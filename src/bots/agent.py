@@ -14,6 +14,15 @@ from langchain.agents import create_tool_calling_agent, AgentExecutor  # noqa: E
 from src.bots.agent_tools import AGENT_TOOLS  # noqa: E402
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+# Criar um arquivo de log específico para as interações da IA
+log_dir = os.path.join(project_root, "logs")
+os.makedirs(log_dir, exist_ok=True)
+agent_log_file = os.path.join(log_dir, "agent_interactions.log")
+file_handler = logging.FileHandler(agent_log_file, encoding='utf-8')
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+logger.addHandler(file_handler)
+
 load_dotenv(os.path.join(project_root, ".env"))
 
 # Configuração do Prompt do Agente
@@ -70,12 +79,16 @@ async def ask_agent(mensagem: str, chat_id: int) -> str:
         return "⚠️ Agente de IA não está disponível (Verifique as configurações e API Key)."
     
     try:
-        # A interface do langchain agent é sincrona por padrao, ou ainvoke se async
-        # Aqui, vamos usar ainvoke
+        logger.info("--- NOVA CHAMADA DO AGENTE: CHAT LIVRE ---")
+        logger.info(f"MENSAGEM DO USUARIO:\n{mensagem}")
+        
         response = await executor.ainvoke({"input": mensagem})
-        return response.get("output", "Sem resposta da IA.")
+        output = response.get("output", "Sem resposta da IA.")
+        
+        logger.info(f"RESPOSTA DA IA:\n{output}")
+        return output
     except Exception as e:
-        logger.error(f"Erro na execução do Agente: {e}")
+        logger.error(f"Erro na execução do Agente: {e}", exc_info=True)
         return f"⚠️ Erro ao processar sua solicitação pela IA: {str(e)}"
 
 async def analyze_alert_data(tanque: str, oxigenio: float, temperatura: float) -> Optional[str]:
@@ -102,8 +115,13 @@ async def analyze_alert_data(tanque: str, oxigenio: float, temperatura: float) -
     )
 
     try:
+        logger.info("--- NOVA CHAMADA DO AGENTE: ALERTA ---")
+        logger.info(f"PROMPT ENVIADO:\n{input_msg}")
+        
         response = await executor.ainvoke({"input": input_msg})
         output = response.get("output", "")
+        
+        logger.info(f"RESPOSTA DA IA:\n{output}")
         
         # Se a IA decidiu que é falso positivo, não enviamos notificação
         if output.strip().startswith("FALSO_POSITIVO"):
@@ -136,10 +154,17 @@ def analyze_evening_report_sync(summary_data: str, plot_data_csv: str) -> str:
         f"Lembre-se da economia de tokens: seja direto e prático."
     )
     try:
+        logger.info("--- NOVA CHAMADA DO AGENTE: RELATORIO DA TARDE ---")
+        # Log do prompt omitido para economizar espaço no log se o CSV for muito grande
+        logger.info("Prompt enviado com dados CSV.")
+        
         response = executor.invoke({"input": prompt})
-        return response.get("output", "")
+        output = response.get("output", "")
+        
+        logger.info(f"RESPOSTA DA IA:\n{output}")
+        return output
     except Exception as e:
-        logger.error(f"Erro ao gerar parecer noturno: {e}")
+        logger.error(f"Erro ao gerar parecer noturno: {e}", exc_info=True)
         return "⚠️ Parecer do Especialista Indisponível no momento."
 
 def analyze_nightly_report_sync(start_time_str: str, end_time_str: str, summary_data: str, plot_data_csv: str) -> str:
@@ -163,10 +188,16 @@ def analyze_nightly_report_sync(start_time_str: str, end_time_str: str, summary_
         f"estrutura apresentou risco contínuo ou anomalias."
     )
     try:
+        logger.info("--- NOVA CHAMADA DO AGENTE: RELATORIO DA NOITE ---")
+        logger.info("Prompt enviado com dados CSV.")
+        
         response = executor.invoke({"input": prompt})
-        return response.get("output", "")
+        output = response.get("output", "")
+        
+        logger.info(f"RESPOSTA DA IA:\n{output}")
+        return output
     except Exception as e:
-        logger.error(f"Erro ao gerar parecer da noite: {e}")
+        logger.error(f"Erro ao gerar parecer da noite: {e}", exc_info=True)
         return "⚠️ Parecer do Especialista Indisponível no momento."
 
 def analyze_custom_report_sync(report_title: str, summary_data: str, plot_data_csv: str) -> str:
@@ -190,8 +221,14 @@ def analyze_custom_report_sync(report_title: str, summary_data: str, plot_data_c
         f"Forneça um parecer MUITO conciso (máximo 4 frases) apontando sua visão especialista."
     )
     try:
+        logger.info(f"--- NOVA CHAMADA DO AGENTE: RELATORIO CUSTOM ({report_title}) ---")
+        logger.info("Prompt enviado com dados CSV.")
+        
         response = executor.invoke({"input": prompt})
-        return response.get("output", "")
+        output = response.get("output", "")
+        
+        logger.info(f"RESPOSTA DA IA:\n{output}")
+        return output
     except Exception as e:
-        logger.error(f"Erro ao gerar parecer para o relatório '{report_title}': {e}")
+        logger.error(f"Erro ao gerar parecer para o relatório '{report_title}': {e}", exc_info=True)
         return "⚠️ Parecer do Especialista Indisponível no momento."
