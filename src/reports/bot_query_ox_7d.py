@@ -14,6 +14,7 @@ sys.path.append(project_root)
 
 from src.services.database import get_sqlite_connection  # noqa: E402
 from src.services.notification import send_telegram_photo, send_telegram_message  # noqa: E402
+from src.bots.agent import analyze_custom_report_sync  # noqa: E402
 
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -100,6 +101,16 @@ def get_weekly_report():
         plt.savefig(plot_path, dpi=100)
         plt.close()
         logger.info(f"Gráfico de tendência de oxigênio (7 dias) salvo em {plot_path}")
+
+        # --- CONSULTA AO ESPECIALISTA (IA) ---
+        logger.info("Solicitando parecer do especialista...")
+        parecer_ia = analyze_custom_report_sync(
+            "Relatório Semanal de Oxigênio (7 Dias)", 
+            msg, 
+            df.to_csv(index=False)
+        )
+        if parecer_ia:
+            msg += f"\n🤖 *Parecer do Especialista:*\n{parecer_ia}\n"
 
         send_telegram_photo(msg, plot_path, chat_id=CHAT_ID_FROM_ARGS)
         logger.info("Relatório de oxigênio (7 dias) enviado para o Telegram.")

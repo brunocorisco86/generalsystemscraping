@@ -14,6 +14,7 @@ sys.path.append(project_root)
 
 from src.services.database import get_sqlite_connection  # noqa: E402
 from src.services.notification import send_telegram_photo, send_telegram_message  # noqa: E402
+from src.bots.agent import analyze_custom_report_sync  # noqa: E402
 
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -103,8 +104,19 @@ def get_fortnightly_temp_report():
         logger.info(f"Gráfico de tendência de temperatura (15 dias) salvo em {plot_path}")
 
         msg = "📅 *Histórico Quinzenal*\n📍 Análise de temperatura de 15 dias finalizada."
+
+        # --- CONSULTA AO ESPECIALISTA (IA) ---
+        logger.info("Solicitando parecer do especialista...")
+        parecer_ia = analyze_custom_report_sync(
+            "Relatório Quinzenal de Temperatura (15 Dias)", 
+            msg, 
+            df.to_csv(index=False)
+        )
+        if parecer_ia:
+            msg += f"\n🤖 *Parecer do Especialista:*\n{parecer_ia}\n"
+
         send_telegram_photo(msg, plot_path, chat_id=CHAT_ID_FROM_ARGS)
-        logger.info("Relatório de temperatura (15 dias) enviado para o Telegram.")
+        logger.info("Relatório de Temp (15 dias) enviado para o Telegram.")
 
     except Exception as e:
         logger.error(f"ERRO CRITICO ao gerar relatório de temperatura (15 dias): {e}", exc_info=True)

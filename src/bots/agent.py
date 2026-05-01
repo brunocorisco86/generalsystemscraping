@@ -168,3 +168,30 @@ def analyze_nightly_report_sync(start_time_str: str, end_time_str: str, summary_
     except Exception as e:
         logger.error(f"Erro ao gerar parecer da noite: {e}")
         return "⚠️ Parecer do Especialista Indisponível no momento."
+
+def analyze_custom_report_sync(report_title: str, summary_data: str, plot_data_csv: str) -> str:
+    """
+    Função síncrona genérica para uso nos scripts dinâmicos da pasta src/reports/.
+    Avalia a métrica de acordo com o título (O2, Temperatura, Peso, etc).
+    """
+    executor = get_agent_executor()
+    if not executor:
+        return "⚠️ Parecer do Especialista Indisponível (IA Offline)."
+    
+    prompt = (
+        f"Você é o especialista em aquicultura responsável por analisar o seguinte relatório gerado sob demanda: {report_title}\n\n"
+        f"Abaixo está o resumo estatístico pré-calculado:\n"
+        f"{summary_data}\n\n"
+        f"Para uma análise visual precisa, aqui estão os dados brutos da série temporal utilizados para o gráfico (em CSV):\n"
+        f"```csv\n{plot_data_csv}\n```\n\n"
+        f"Sua tarefa: Faça uma avaliação da série temporal. Se for relatório de oxigênio ou temperatura, avalie tendências "
+        f"de risco, constância e picos. Se for relatório de curva de peso (biometria), avalie o crescimento e sugira "
+        f"ajustes nutricionais ou de manejo se a curva real estiver se distanciando da curva teórica.\n"
+        f"Forneça um parecer MUITO conciso (máximo 4 frases) apontando sua visão especialista."
+    )
+    try:
+        response = executor.invoke({"input": prompt})
+        return response.get("output", "")
+    except Exception as e:
+        logger.error(f"Erro ao gerar parecer para o relatório '{report_title}': {e}")
+        return "⚠️ Parecer do Especialista Indisponível no momento."

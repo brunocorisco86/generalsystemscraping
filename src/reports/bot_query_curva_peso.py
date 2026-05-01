@@ -14,6 +14,7 @@ sys.path.append(project_root)
 
 from src.services.database import get_postgres_connection  # noqa: E402
 from src.services.notification import send_telegram_photo, send_telegram_message  # noqa: E402
+from src.bots.agent import analyze_custom_report_sync  # noqa: E402
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -216,6 +217,16 @@ def gerar_curva_peso():
         plt.close()
         
         logger.info(f"Gráfico de curva de peso salvo em {plot_path}")
+
+        # --- CONSULTA AO ESPECIALISTA (IA) ---
+        logger.info("Solicitando parecer do especialista...")
+        parecer_ia = analyze_custom_report_sync(
+            "Relatório de Projeção de Crescimento (Biometria)", 
+            relatorio_texto, 
+            df.to_csv(index=False)
+        )
+        if parecer_ia:
+            relatorio_texto += f"\n🤖 *Parecer do Especialista:*\n{parecer_ia}\n"
 
         # Envia para o Telegram
         send_telegram_photo(relatorio_texto, plot_path, chat_id=CHAT_ID_FROM_ARGS)
