@@ -1,6 +1,6 @@
 # Comandos do Telegram para Monitoramento
 
-Este documento lista os comandos que podem ser enviados ao bot do Telegram configurado via Node-RED para obter relatórios e informações sobre a piscicultura.
+Este documento lista os comandos que podem ser enviados ao bot do Telegram para obter relatórios e informações sobre a piscicultura.
 
 ## Comandos Disponíveis:
 

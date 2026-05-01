@@ -4,7 +4,7 @@
 - **OS**: Alpine Linux (ARM64) / Raspberry Pi 3B.
 - **Python**: 3.11+ (venv managed by `scripts/setup.sh`).
 - **Containers**: Docker Compose (PostgreSQL, Unified Telegram Bot).
-- **Automation**: Node-RED (Telegram Command Interface -> Python Scripts).
+- **Automation**: Telegram Command Interface -> Python Scripts.
 - **Database**: Hybrid SQLite (Local/Edge cache) + PostgreSQL (Long-term history).
 - **UI/UX**: Telegram Bots (Biometria, Qualidade da Água).
 

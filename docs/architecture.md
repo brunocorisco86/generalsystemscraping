@@ -17,7 +17,7 @@ O sistema é projetado para operar em um ambiente de baixo custo e baixo consumo
 - **Banco de Dados:**
     - **SQLite:** Cache local para garantir funcionamento offline e rapidez na borda.
     - **PostgreSQL:** Armazenamento de histórico de longo prazo (Docker).
-- **Interface:** Telegram API (Bots) e Node-RED (Fluxos visuais e comandos).
+- **Interface:** Telegram API (Bots).
 
 ## 3. Estrutura Modular (`src/`)
 
@@ -33,7 +33,7 @@ O sistema é projetado para operar em um ambiente de baixo custo e baixo consumo
 2.  **Monitoramento:** Scripts de alerta verificam o SQLite continuamente.
 3.  **Interação:** Usuários registram biometrias via Bot; dados vão para o Postgres.
 4.  **Consolidação:** Jobs migram dados do SQLite para o Postgres diariamente.
-5.  **Comando:** Node-RED recebe comandos do Telegram e executa scripts de relatório sob demanda.
+5.  **Comando:** Usuários solicitam relatórios sob demanda pelo Telegram.
 
 ---
 *Foco na resiliência e produtividade real no campo.*

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Bot Telegram Unificado - PeixePatelBot
-Consolida Biometria, Qualidade de Água e Comandos de Relatórios (ex-Node-RED).
+Consolida Biometria, Qualidade de Água e Comandos de Relatórios.
 """
 import os
 import sys
@@ -136,7 +136,7 @@ async def cmd_cancel(message: Message):
     await message.answer("❌ Operação cancelada.")
 
 # ==========================
-# HANDLERS: EX-NODE-RED (SUBPROCESS)
+# HANDLERS: RELATÓRIOS (SUBPROCESS)
 # ==========================
 
 @Dispatcher().message(Command("oxigenio"))
@@ -527,7 +527,7 @@ async def main():
     dp.message.register(cmd_fechar_lote, Command("fechar_lote"))
     dp.message.register(cmd_cancel, Command("cancel"))
     
-    # Comandos Legados Node-RED (usando decorators acima ou registro explícito)
+    # Comandos Legados (usando decorators acima ou registro explícito)
     # Já registrados via decorators @Dispatcher().message... mas para garantir:
     dp.message.register(handle_oxigenio, Command("oxigenio"))
     dp.message.register(handle_temperatura, Command("temperatura"))

@@ -21,8 +21,6 @@ graph TB
             BotQual[Bot Qualidade Água<br/>Python/Aiogram]
         end
 
-        subgraph "Integração e Relatórios"
-            NodeRED[Node-RED]
             Reports[Report Generator<br/>Python/Matplotlib]
         end
     end
@@ -42,8 +40,8 @@ graph TB
     BotBio <--> Telegram
     BotQual <--> Telegram
 
-    NodeRED -- "Comandos" --> Telegram
-    NodeRED -- "Executa" --> Reports
+    Telegram -- "Solicita Relatórios" --> BotBio
+    BotBio -- "Executa" --> Reports
     Reports -- "Consulta" --> Postgres
     Reports -- "Envia PDF/IMG" --> Telegram
 

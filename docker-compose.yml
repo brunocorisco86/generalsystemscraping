@@ -30,9 +30,3 @@ services:
       - postgres
     restart: unless-stopped
 
-# nodered:
-#   build:
-#     context: ./nodered
-#     dockerfile: Dockerfile
-#   container_name: piscicultura_nodered
-#   ...

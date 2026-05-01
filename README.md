@@ -24,14 +24,13 @@ Sistema completo de monitoramento para tanques de piscicultura, otimizado para R
 - `scripts/`: Utilitários de comissionamento e manutenção.
 - `docs/`: Documentação técnica e MER.
 - `knowledge/`: Estado do projeto e roadmap.
-- `nodered/`: Fluxos de integração Telegram.
 - `data/`: Bancos de dados persistentes.
 
 ## 🛠 Tech Stack
 
 - **Linguagem:** Python 3.11+ (Aiogram, Pandas, Scipy, Selenium).
 - **Infra:** Docker Compose (PostgreSQL), Alpine Linux.
-- **Integração:** Telegram Bot API, Node-RED.
+- **Integração:** Telegram Bot API.
 
 ---
 Para detalhes arquiteturais e estado atual, consulte `docs/architecture.md` e `knowledge/project_state.md`.
