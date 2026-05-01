@@ -33,6 +33,8 @@ from src.bots.db import (  # noqa: E402
     inserir_qualidade_consumo,
 )
 
+from src.bots.agent import ask_agent  # noqa: E402
+
 # ==========================
 # CONFIGURAÇÃO E LOGGING
 # ==========================
@@ -362,6 +364,11 @@ async def handle_messages(message: Message):
     chat_id = message.chat.id
     estado = estado_chat.get(chat_id)
     if not estado or not message.text:
+        if message.text and not message.text.startswith('/'):
+            msg_pendente = await message.answer("🧠 *Processando com Inteligência Artificial...*", parse_mode="Markdown")
+            resposta = await ask_agent(message.text, chat_id)
+            await msg_pendente.delete()
+            await message.answer(resposta, parse_mode="Markdown")
         return
 
     step = estado["step"]

@@ -17,6 +17,7 @@ sys.path.append(project_root)
 
 from src.services.database import get_sqlite_connection  # noqa: E402
 from src.services.notification import send_telegram_photo  # noqa: E402
+from src.bots.agent import analyze_evening_report_sync  # noqa: E402
 
 # Configuração do logger
 logger = logging.getLogger(__name__)
@@ -97,6 +98,12 @@ def generate_evening_report():
         plot_path = os.path.join(REPORT_DIR, 'evening_plot.png')
         plt.savefig(plot_path, dpi=100)
         plt.close()
+
+        # --- CONSULTA AO ESPECIALISTA (IA) ---
+        logger.info("Solicitando parecer do especialista para o relatório da tarde...")
+        parecer_ia = analyze_evening_report_sync(analysis_text)
+        if parecer_ia:
+            analysis_text += f"\n🤖 *Parecer do Especialista:*\n{parecer_ia}\n"
 
         # Envia a foto para o Telegram usando o serviço centralizado
         send_telegram_photo(analysis_text, plot_path)

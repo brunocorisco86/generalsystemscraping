@@ -4,8 +4,10 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 # Importar serviços do projeto
+import asyncio
 from src.services.database import get_sqlite_connection
 from src.services.notification import send_telegram_message
+from src.bots.agent import analyze_alert_data
 
 # Configuração do logger
 logger = logging.getLogger(__name__)
@@ -50,15 +52,15 @@ def check_alerts():
 
             # Dispara o alerta se estiver abaixo do limite
             if oxigenio < LIMITE_OXIGENIO_CRITICO:
-                mensagem = (
-                    f"🚨 *ALERTA CRÍTICO* 🚨\n\n"
-                    f"📍 Tanque: *{tanque}*\n"
-                    f"🔴 Oxigênio: *{oxigenio} Mg/L* 🔴\n"
-                    f"🌡️ Temp: {temperatura}°C\n"
-                    f"⏰ Hora: {datetime.now().strftime('%H:%M:%S')}"
-                )
-                send_telegram_message(mensagem)
-                logger.info("Alerta enviado para %s (O2: %s)", tanque, oxigenio)
+                logger.info(f"O2 baixo em {tanque} ({oxigenio}). Solicitando análise da IA...")
+                # Chama a IA para analisar o histórico recente e validar
+                mensagem_ia = asyncio.run(analyze_alert_data(tanque, oxigenio, temperatura))
+                
+                if mensagem_ia:
+                    send_telegram_message(mensagem_ia)
+                    logger.info("Alerta validado e enviado para %s", tanque)
+                else:
+                    logger.info("Alerta suprimido pela IA (falso positivo) para %s", tanque)
 
     except Exception as e:
         logger.error("Erro ao processar alertas: %s", e)

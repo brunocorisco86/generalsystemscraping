@@ -7,3 +7,7 @@ wheel
 # Telegram Bots
 aiogram==3.4.1
 asyncpg==0.29.0
+
+# Agente IA (Gemini)
+langchain
+langchain-google-genai

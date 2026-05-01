@@ -18,6 +18,24 @@ Sistema completo de monitoramento para tanques de piscicultura, otimizado para R
     - `tail -f logs/scrape.log`
     - `crontab -l`
 
+## 🧪 Ambiente de Testes (Desenvolvimento)
+
+Para garantir a estabilidade do código antes de ir para produção, possuímos um ambiente de testes isolado que utiliza variáveis e bancos *dummy* (via arquivo `.env.test`), protegendo seus dados reais.
+
+1.  **Ative o ambiente virtual (se necessário):**
+    ```bash
+    source .venv/bin/activate
+    ```
+2.  **Instale as dependências de desenvolvimento:**
+    ```bash
+    pip install -r requirements-dev.txt
+    ```
+3.  **Execute a suíte de testes:**
+    Este script garantirá que tudo seja testado de forma segura sem vazar para a produção.
+    ```bash
+    bash scripts/run_tests.sh
+    ```
+
 ## 📂 Estrutura do Projeto
 
 - `src/`: Código-fonte (Scrape, Alertas, Bots, Análise).

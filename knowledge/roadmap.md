@@ -8,6 +8,7 @@
 *   [x] Bots Telegram (Biometria e Qualidade da Água) integrados.
 *   [x] Correção de dependências críticas (`scipy`).
 *   [x] Consolidação da documentação para compressão de contexto.
+*   [x] Integração de Agente de IA (Gemini/LangChain) para filtro inteligente de falsos positivos e consulta de dados no Telegram.
 
 ## 🚀 Próximos Passos (Q3 2026)
 
@@ -18,6 +19,6 @@
 
 ## 🔮 Visão de Longo Prazo (Q4 2026+)
 
-*   [ ] Modelos de Machine Learning para detecção de anomalias.
+*   [ ] Modelos preditivos avançados (Machine Learning) focados em padrões climáticos (Fase Avançada).
 *   [ ] Integração de sensores via MQTT/LoRaWAN.
 *   [ ] Interface de configuração de limites de alerta via Telegram.
