@@ -101,7 +101,7 @@ def generate_evening_report():
 
         # --- CONSULTA AO ESPECIALISTA (IA) ---
         logger.info("Solicitando parecer do especialista para o relatório da tarde...")
-        parecer_ia = analyze_evening_report_sync(analysis_text)
+        parecer_ia = analyze_evening_report_sync(analysis_text, df.to_csv(index=False))
         if parecer_ia:
             analysis_text += f"\n🤖 *Parecer do Especialista:*\n{parecer_ia}\n"
 

@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 # Importar serviços centralizados do projeto
 from src.services.database import get_sqlite_connection
 from src.services.notification import send_telegram_photo
+from src.bots.agent import analyze_nightly_report_sync
 
 # Configuração do logger
 logger = logging.getLogger(__name__)
@@ -102,6 +103,17 @@ def generate_nightly_report():
         plot_path = os.path.join(REPORT_DIR, 'nightly_plot.png')
         plt.savefig(plot_path, dpi=100)
         plt.close()
+
+        # --- CONSULTA AO ESPECIALISTA (IA) ---
+        logger.info("Solicitando parecer do especialista para a noite...")
+        parecer_ia = analyze_nightly_report_sync(
+            start_time.strftime('%Y-%m-%d %H:%M:%S'), 
+            end_time.strftime('%Y-%m-%d %H:%M:%S'), 
+            analysis_text,
+            df.to_csv(index=False)
+        )
+        if parecer_ia:
+            analysis_text += f"\n🤖 *Parecer do Especialista:*\n{parecer_ia}\n"
 
         # Enviar para o Telegram via serviço centralizado
         send_telegram_photo(analysis_text, plot_path)

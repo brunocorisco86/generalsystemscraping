@@ -116,7 +116,7 @@ async def analyze_alert_data(tanque: str, oxigenio: float, temperatura: float) -
         # Fallback de segurança em caso de erro na LLM
         return f"🚨 *ALERTA CRÍTICO (Erro na IA)* 🚨\nTanque: {tanque} | O2: {oxigenio} Mg/L"
 
-def analyze_evening_report_sync(summary_data: str) -> str:
+def analyze_evening_report_sync(summary_data: str, plot_data_csv: str) -> str:
     """
     Função síncrona para ser chamada por jobs em background (como evening_report.py).
     Gera um parecer especialista sobre as condições da água antes do período noturno.
@@ -129,6 +129,8 @@ def analyze_evening_report_sync(summary_data: str) -> str:
         f"Você é o especialista em aquicultura responsável por analisar o fechamento do dia (relatório da tarde).\n"
         f"Abaixo está o resumo dos níveis de oxigênio e temperatura dos tanques de tilápias no fim da tarde:\n"
         f"{summary_data}\n\n"
+        f"Para uma análise mais profunda, aqui estão os dados brutos da série temporal em formato CSV:\n"
+        f"```csv\n{plot_data_csv}\n```\n\n"
         f"Por favor, escreva um BREVE parecer (máximo 3 frases) focado no risco de hipóxia para a noite e madrugada que se aproximam. "
         f"Avalie a combinação de temperatura e nível de O2 atual para recomendar ou não atenção redobrada aos aeradores.\n"
         f"Lembre-se da economia de tokens: seja direto e prático."
@@ -138,4 +140,31 @@ def analyze_evening_report_sync(summary_data: str) -> str:
         return response.get("output", "")
     except Exception as e:
         logger.error(f"Erro ao gerar parecer noturno: {e}")
+        return "⚠️ Parecer do Especialista Indisponível no momento."
+
+def analyze_nightly_report_sync(start_time_str: str, end_time_str: str, summary_data: str, plot_data_csv: str) -> str:
+    """
+    Função síncrona para o relatório da manhã (nightly_report.py).
+    O Agente recebe o resumo e os dados brutos utilizados no gráfico.
+    """
+    executor = get_agent_executor()
+    if not executor:
+        return "⚠️ Parecer do Especialista Indisponível (IA Offline)."
+    
+    prompt = (
+        f"Você é o especialista em aquicultura responsável por avaliar como os tanques passaram a noite.\n"
+        f"O período noturno avaliado foi de {start_time_str} até {end_time_str}.\n"
+        f"Aqui está um resumo estatístico pré-calculado pelo sistema:\n{summary_data}\n\n"
+        f"Aqui estão os dados brutos da série temporal utilizados para gerar o gráfico (em CSV):\n"
+        f"```csv\n{plot_data_csv}\n```\n\n"
+        f"Sua tarefa: Faça uma avaliação geral de como foi a noite observando a série temporal. "
+        f"Como você possui os dados CSV, avalie as curvas de cada tanque. "
+        f"Forneça um parecer conciso (máximo 4 frases) resumindo se a noite foi segura e se alguma "
+        f"estrutura apresentou risco contínuo ou anomalias."
+    )
+    try:
+        response = executor.invoke({"input": prompt})
+        return response.get("output", "")
+    except Exception as e:
+        logger.error(f"Erro ao gerar parecer da noite: {e}")
         return "⚠️ Parecer do Especialista Indisponível no momento."
