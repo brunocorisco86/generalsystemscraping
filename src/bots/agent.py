@@ -46,6 +46,10 @@ Nesse caso, após a palavra, você pode dar uma breve justificativa de 1 linha. 
 """
 
 def get_agent_executor() -> Optional[AgentExecutor]:
+    """
+    Inicializa o AgentExecutor com suporte a múltiplos modelos do Gemini e fallbacks.
+    Tenta contornar erros de 'Model Not Found' ou limites de quota do plano gratuito.
+    """
     # Verifica a presença da chave da API do Google
     api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
     if not api_key:
@@ -53,20 +57,57 @@ def get_agent_executor() -> Optional[AgentExecutor]:
         return None
 
     try:
-        # Instancia o LLM do Gemini (Free Tier model: gemini-1.5-flash para economia de tokens)
-        llm = ChatGoogleGenerativeAI(
-            model="gemini-1.5-flash",
-            google_api_key=api_key,
-            temperature=0.2 # Baixa temperatura para análises mais consistentes
-        )
+        # Nome do modelo primário configurável via .env
+        primary_model = os.environ.get("GEMINI_MODEL_NAME", "gemini-1.5-flash")
         
+        # Lista de modelos para tentativa em caso de erro (fallback)
+        model_options = [
+            primary_model,
+            "gemini-1.5-flash",
+            "gemini-1.5-flash-latest",
+            "gemini-1.5-pro",
+            "gemini-1.0-pro"
+        ]
+
+        # Remover duplicatas mantendo a ordem de preferência
+        unique_models = []
+        for m in model_options:
+            if m not in unique_models:
+                unique_models.append(m)
+
         prompt = ChatPromptTemplate.from_messages([
             ("system", SYSTEM_PROMPT),
             ("user", "{input}"),
             MessagesPlaceholder(variable_name="agent_scratchpad"),
         ])
-        
-        agent = create_tool_calling_agent(llm, AGENT_TOOLS, prompt)
+
+        # Criar agentes para cada modelo
+        agents = []
+        for model_name in unique_models:
+            try:
+                llm = ChatGoogleGenerativeAI(
+                    model=model_name,
+                    google_api_key=api_key,
+                    temperature=0.2
+                )
+                # O agente LangChain para o Gemini precisa suportar tool calling
+                agent_runnable = create_tool_calling_agent(llm, AGENT_TOOLS, prompt)
+                agents.append(agent_runnable)
+            except Exception as e:
+                logger.warning(f"Não foi possível preparar o agente para o modelo {model_name}: {e}")
+
+        if not agents:
+            logger.error("Nenhum modelo do Gemini pôde ser configurado.")
+            return None
+
+        # Implementa o mecanismo de fallback: se o primeiro falhar, tenta o próximo
+        # Isso resolve problemas de 404 models/gemini-1.5-flash not found
+        primary_agent = agents[0]
+        if len(agents) > 1:
+            agent = primary_agent.with_fallbacks(agents[1:])
+        else:
+            agent = primary_agent
+
         return AgentExecutor(agent=agent, tools=AGENT_TOOLS, verbose=False)
     except Exception as e:
         logger.error(f"Erro ao inicializar o Agente IA: {e}")
@@ -89,6 +130,8 @@ async def ask_agent(mensagem: str, chat_id: int) -> str:
         return output
     except Exception as e:
         logger.error(f"Erro na execução do Agente: {e}", exc_info=True)
+        if "404" in str(e) or "not found" in str(e).lower():
+            return "⚠️ Erro: O modelo de IA não foi encontrado. Por favor, verifique a variável GEMINI_MODEL_NAME ou a disponibilidade do modelo no seu plano."
         return f"⚠️ Erro ao processar sua solicitação pela IA: {str(e)}"
 
 async def analyze_alert_data(tanque: str, oxigenio: float, temperatura: float) -> Optional[str]:
@@ -231,4 +274,6 @@ def analyze_custom_report_sync(report_title: str, summary_data: str, plot_data_c
         return output
     except Exception as e:
         logger.error(f"Erro ao gerar parecer para o relatório '{report_title}': {e}", exc_info=True)
+        if "404" in str(e) or "not found" in str(e).lower():
+            return "⚠️ Parecer Indisponível: O modelo de IA configurado não foi encontrado (Erro 404)."
         return "⚠️ Parecer do Especialista Indisponível no momento."
