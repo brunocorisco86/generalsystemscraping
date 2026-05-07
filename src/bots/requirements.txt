@@ -7,3 +7,6 @@ numpy
 scipy
 psycopg2-binary
 requests
+langchain
+langchain-community
+langchain-google-genai
