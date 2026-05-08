@@ -53,13 +53,13 @@ def get_weekly_report():
             send_telegram_message("❌ Erro ao gerar relatório de oxigênio (7 dias): falha na conexão com o BD.")
             return
 
-        query = f"""
+        query = """
             SELECT nome_estrutura, oxigenio, timestamp_site
             FROM leituras
-            WHERE timestamp_site >= '{seven_days_ago.strftime('%Y-%m-%d %H:%M:%S')}'
+            WHERE timestamp_site >= ?
             ORDER BY timestamp_site ASC
         """
-        df = pd.read_sql_query(query, conn)
+        df = pd.read_sql_query(query, conn, params=(seven_days_ago.strftime('%Y-%m-%d %H:%M:%S'),))
 
         if df.empty:
             logger.info(f"Nenhum dado encontrado desde {seven_days_ago} para o relatório de oxigênio (7 dias).")
@@ -74,11 +74,12 @@ def get_weekly_report():
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
 
-        msg = f"🗓️ *Resumo Semanal Oxigênio*\nPeríodo: 7 dias\n"
+        msg = "🗓️ *Resumo Semanal Oxigênio*\nPeríodo: 7 dias\n"
 
         # Agrupamos por estrutura para iterar apenas uma vez sobre os dados
         for tank, struct_data in df.groupby('nome_estrutura'):
-            if not tank or struct_data.empty: continue
+            if not tank or struct_data.empty:
+                continue
             
             # Plotagem
             plt.plot(struct_data['timestamp_site'], struct_data['oxigenio'], label=tank, linewidth=1.5)

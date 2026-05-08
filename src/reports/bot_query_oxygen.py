@@ -55,13 +55,13 @@ def get_bot_report():
             send_telegram_message("❌ Erro ao gerar relatório de oxigênio: falha na conexão com o BD.")
             return
 
-        query = f"""
+        query = """
             SELECT nome_estrutura, oxigenio, timestamp_site 
             FROM leituras 
-            WHERE timestamp_site >= '{twelve_hours_ago.strftime('%Y-%m-%d %H:%M:%S')}' 
+            WHERE timestamp_site >= ?
             ORDER BY timestamp_site ASC
         """
-        df = pd.read_sql_query(query, conn)
+        df = pd.read_sql_query(query, conn, params=(twelve_hours_ago.strftime('%Y-%m-%d %H:%M:%S'),))
 
         if df.empty:
             logger.info(f"Nenhum dado encontrado desde {twelve_hours_ago} para o relatório de oxigênio.")
@@ -79,14 +79,16 @@ def get_bot_report():
 
         # Agrupamos por estrutura para iterar apenas uma vez sobre os dados
         for tank, struct_data in df.groupby('nome_estrutura'):
-            if not tank or struct_data.empty: continue
+            if not tank or struct_data.empty:
+                continue
 
             # Plotagem
             plt.plot(struct_data['timestamp_site'], struct_data['oxigenio'], label=tank, linewidth=2)
 
             # Dados para a mensagem (últimas 4 leituras)
             struct_last_data = struct_data.tail(4)
-            if struct_last_data.empty: continue
+            if struct_last_data.empty:
+                continue
 
             o2_atual = struct_last_data['oxigenio'].iloc[-1]
             avg_4 = struct_last_data['oxigenio'].mean()

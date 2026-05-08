@@ -52,8 +52,8 @@ def get_fortnightly_temp_report():
             send_telegram_message("❌ Erro ao gerar relatório de temperatura (15 dias): falha na conexão com o BD.", chat_id=CHAT_ID_FROM_ARGS)
             return
 
-        query = f"SELECT nome_estrutura, temperatura, timestamp_site FROM leituras WHERE timestamp_site >= '{fifteen_days_ago.strftime('%Y-%m-%d %H:%M:%S')}' ORDER BY timestamp_site ASC"
-        df = pd.read_sql_query(query, conn)
+        query = "SELECT nome_estrutura, temperatura, timestamp_site FROM leituras WHERE timestamp_site >= ? ORDER BY timestamp_site ASC"
+        df = pd.read_sql_query(query, conn, params=(fifteen_days_ago.strftime('%Y-%m-%d %H:%M:%S'),))
 
         if df.empty:
             logger.info(f"Nenhum dado encontrado desde {fifteen_days_ago} para o relatório de temperatura (15 dias).")
@@ -66,7 +66,8 @@ def get_fortnightly_temp_report():
         plt.figure(figsize=(14, 8))
         
         for tank, struct_df in df.groupby('nome_estrutura'):
-            if not tank: continue
+            if not tank:
+                continue
             struct_df = struct_df.copy()
             if not struct_df.empty:
                 struct_df.set_index('timestamp_site', inplace=True)
