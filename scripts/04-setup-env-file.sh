@@ -31,6 +31,7 @@ if [ ! -f "$ENV_FILE" ]; then
     echo "   1. Tokens do Telegram"
     echo "   2. Acessos do Noctua (Scraping)"
     echo "   3. Chaves do Cloudflare R2 (Backups)"
+    echo "   4. Chave do Google Gemini (Agente IA)"
     echo "------------------------------------------------------------"
 else
     echo "--- Arquivo '.env' já existe. Nenhuma ação necessária. ---"
