@@ -53,13 +53,13 @@ def get_weekly_temp_report():
             send_telegram_message("❌ Erro ao gerar relatório de temperatura (7 dias): falha na conexão com o BD.", chat_id=CHAT_ID_FROM_ARGS)
             return
 
-        query = f"""
+        query = """
             SELECT nome_estrutura, temperatura, timestamp_site
             FROM leituras
-            WHERE timestamp_site >= '{seven_days_ago.strftime('%Y-%m-%d %H:%M:%S')}'
+            WHERE timestamp_site >= ?
             ORDER BY timestamp_site ASC
         """
-        df = pd.read_sql_query(query, conn)
+        df = pd.read_sql_query(query, conn, params=(seven_days_ago.strftime('%Y-%m-%d %H:%M:%S'),))
 
         if df.empty:
             logger.info(f"Nenhum dado de temperatura encontrado desde {seven_days_ago} para o relatório de temperatura.")
@@ -75,11 +75,12 @@ def get_weekly_temp_report():
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(10, 5))
 
-        msg = f"🌡️ *Resumo Semanal Temperatura*\nPeríodo: 7 dias\n"
+        msg = "🌡️ *Resumo Semanal Temperatura*\nPeríodo: 7 dias\n"
 
         # Agrupamos por estrutura para iterar apenas uma vez sobre os dados
         for tank, struct_data in df.groupby('nome_estrutura'):
-            if not tank or struct_data.empty: continue
+            if not tank or struct_data.empty:
+                continue
             
             # Plotagem
             plt.plot(struct_data['timestamp_site'], struct_data['temperatura'], label=tank, linewidth=1.5)
