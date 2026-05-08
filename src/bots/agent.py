@@ -58,15 +58,15 @@ def get_agent_executor() -> Optional[AgentExecutor]:
 
     try:
         # Nome do modelo primário configurável via .env
-        primary_model = os.environ.get("GEMINI_MODEL_NAME", "gemini-1.5-flash")
+        primary_model = os.environ.get("GEMINI_MODEL_NAME", "gemini-flash-latest")
         
-        # Lista de modelos para tentativa em caso de erro (fallback)
+        # Lista de modelos para tentativa em caso de erro (fallback) - Atualizada para 2026
         model_options = [
             primary_model,
-            "gemini-1.5-flash",
-            "gemini-1.5-flash-latest",
-            "gemini-1.5-pro",
-            "gemini-1.0-pro"
+            "gemini-flash-latest",
+            "gemini-2.0-flash",
+            "gemini-pro-latest",
+            "gemini-2.5-flash"
         ]
 
         # Remover duplicatas mantendo a ordem de preferência
@@ -74,6 +74,8 @@ def get_agent_executor() -> Optional[AgentExecutor]:
         for m in model_options:
             if m not in unique_models:
                 unique_models.append(m)
+        
+        logger.info(f"Modelos configurados para o Agente: {unique_models}")
 
         prompt = ChatPromptTemplate.from_messages([
             ("system", SYSTEM_PROMPT),
@@ -101,7 +103,6 @@ def get_agent_executor() -> Optional[AgentExecutor]:
             return None
 
         # Implementa o mecanismo de fallback: se o primeiro falhar, tenta o próximo
-        # Isso resolve problemas de 404 models/gemini-1.5-flash not found
         primary_agent = agents[0]
         if len(agents) > 1:
             agent = primary_agent.with_fallbacks(agents[1:])
