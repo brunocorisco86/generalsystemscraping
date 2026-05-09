@@ -79,6 +79,12 @@ def format_morning_report(data):
             
             chuva_mm = row.get('precipitation_sum', 0)
             prob_chuva = row['precipitation_probability_max']
+            pressao = row.get('surface_pressure_mean', 1013) # Default nível do mar
+            
+            # Interpretação da pressão para Oxigênio Dissolvido (OD)
+            # Pressões altas favorecem a dissolução de gases. Baixas pressões dificultam.
+            # Referência local: Pressão acima de 978-980 hPa costuma ser positiva para a região.
+            status_od = "✅ Ótimo para O₂" if pressao >= 978 else "⚠️ O₂ mais difícil"
             
             # Escolher emoji de clima baseado na chuva
             if chuva_mm > 5:
@@ -92,6 +98,7 @@ def format_morning_report(data):
             msg += f"{clima_icon} *{dia_pt} ({data_dia})*\n"
             msg += f"🌡️ `{row['temperature_2m_min']:.0f}° / {row['temperature_2m_max']:.0f}°C`\n"
             msg += f"💧 Chuva: `{prob_chuva:.0f}%` (`{chuva_mm:.1f}mm`)\n"
+            msg += f"⏲️ Pressão: `{pressao:.1f} hPa` | {status_od}\n"
         
         msg += f"──────────────────"
 
