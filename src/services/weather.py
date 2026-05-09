@@ -102,6 +102,7 @@ def get_weather_forecast():
         "precipitation_probability": hourly.Variables(4).ValuesAsNumpy(),
     }
     hourly_df = pd.DataFrame(data=hourly_data)
+    hourly_df['date'] = pd.to_datetime(hourly_df['date']).dt.tz_convert("America/Sao_Paulo")
 
     # Processar dados diários
     daily = response.Daily()
@@ -117,6 +118,7 @@ def get_weather_forecast():
         "precipitation_probability_max": daily.Variables(2).ValuesAsNumpy(),
     }
     daily_df = pd.DataFrame(data=daily_data)
+    daily_df['date'] = pd.to_datetime(daily_df['date']).dt.tz_convert("America/Sao_Paulo")
 
     result = {
         "latitude": response.Latitude(),

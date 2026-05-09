@@ -210,8 +210,12 @@ async def handle_clima(message: Message):
             proximas = df_hourly.head(6)
 
         for _, row in proximas.iterrows():
-            # Exibe a hora convertida para o fuso de SP
-            hora = row['date'].astimezone(agora_local.tz).strftime('%H:%M')
+            # Exibe a hora convertida explicitamente para o fuso de SP
+            dt_row = pd.to_datetime(row['date'])
+            if dt_row.tzinfo is None:
+                dt_row = dt_row.tz_localize('UTC')
+            
+            hora = dt_row.tz_convert('America/Sao_Paulo').strftime('%H:%M')
             msg += f"• `{hora}`: `{row['temperature_2m']:.1f}°C` | 🌧 `{row['precipitation_probability']:.0f}%` chuva\n"
             
         await message.answer(msg, parse_mode="Markdown")
