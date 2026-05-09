@@ -62,14 +62,21 @@ def format_morning_report(data):
             
         msg += "🔭 *Próximos Dias:*\n"
         
+        # Mapeamento para tradução manual (evita dependência de locale do sistema)
+        dias_pt = {
+            'MON': 'SEG', 'TUE': 'TER', 'WED': 'QUA', 'THU': 'QUI',
+            'FRI': 'SEX', 'SAT': 'SAB', 'SUN': 'DOM'
+        }
+        
         # Pular o primeiro dia (hoje) se já mostramos acima, ou mostrar todos
         # Vamos mostrar os próximos 6 dias (fechando a semana)
         proximos_dias = df_daily[df_daily['date'].dt.date > agora.date()].head(6)
         
         for _, row in proximos_dias.iterrows():
-            dia_semana = row['date'].strftime('%a').upper() # EX: SEG, TER
+            dia_en = row['date'].strftime('%a').upper()
+            dia_pt = dias_pt.get(dia_en, dia_en)
             data_dia = row['date'].strftime('%d/%m')
-            msg += f"• *{dia_semana} ({data_dia}):* `{row['temperature_2m_min']:.0f}°/{row['temperature_2m_max']:.0f}°C` | 🌧️ `{row['precipitation_probability_max']:.0f}%` chuva\n"
+            msg += f"• *{dia_pt} ({data_dia}):* `{row['temperature_2m_min']:.0f}°/{row['temperature_2m_max']:.0f}°C` | 🌧️ `{row['precipitation_probability_max']:.0f}%` chuva\n"
 
     return msg
 
