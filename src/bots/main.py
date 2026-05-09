@@ -197,11 +197,17 @@ async def handle_clima(message: Message):
             f"📅 *Próximas Horas:*\n"
         )
         
-        # Pegar as próximas 4 horas da previsão
-        proximas = data['hourly'].head(4)
+        # Filtrar apenas previsões futuras e pegar as próximas 6 horas
+        agora_utc = datetime.now()
+        proximas = data['hourly'][data['hourly']['date'].dt.tz_localize(None) >= agora_utc].head(6)
+        
+        # Se por algum motivo o filtro retornar vazio (ex: fim do dia/dataframe), pega o head(6) padrão
+        if proximas.empty:
+            proximas = data['hourly'].head(6)
+
         for _, row in proximas.iterrows():
             hora = row['date'].strftime('%H:%M')
-            msg += f"• `{hora}`: `{row['temperature_2m']:.1f}°C` | 🌧 `{row['precipitation_probability']}%` chuva\n"
+            msg += f"• `{hora}`: `{row['temperature_2m']:.1f}°C` | 🌧 `{row['precipitation_probability']:.0f}%` chuva\n"
             
         await message.answer(msg, parse_mode="Markdown")
     except Exception as e:
