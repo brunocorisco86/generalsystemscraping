@@ -15,8 +15,12 @@ def log_weather_locally(data):
     sobrescrevendo o anterior para economizar espaço.
     """
     try:
-        log_path = os.path.join("logs", "latest_weather.json")
-        os.makedirs("logs", exist_ok=True)
+        # Tenta encontrar a raiz do projeto para garantir o caminho do log
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+        log_dir = os.path.join(base_dir, "logs")
+        log_path = os.path.join(log_dir, "latest_weather.json")
+        
+        os.makedirs(log_dir, exist_ok=True)
         
         # Converter DataFrame para dicionário para serialização JSON
         serializable_data = data.copy()
@@ -33,8 +37,10 @@ def log_weather_locally(data):
         
         with open(log_path, "w", encoding="utf-8") as f:
             json.dump(serializable_data, f, indent=4, ensure_ascii=False)
+            
     except Exception as e:
-        print(f"Erro ao salvar log local de clima: {e}")
+        # IMPORTANTE: Silenciamos o erro para não travar o bot se o disco/pasta falhar
+        print(f"AVISO: Não foi possível salvar log local de clima (permissão ou disco): {e}")
 
 def get_weather_forecast():
     """
