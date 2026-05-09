@@ -34,6 +34,7 @@ from src.bots.db import (  # noqa: E402
 )
 
 from src.bots.agent import ask_agent  # noqa: E402
+from src.services.weather import get_weather_forecast  # noqa: E402
 
 # ==========================
 # CONFIGURAÇÃO E LOGGING
@@ -125,6 +126,7 @@ async def cmd_start(message: Message):
         "/temperatura - Temperatura atual\n"
         "/ox7d /ox15d - Histórico de Oxigênio\n"
         "/temp7d /temp15d - Histórico de Temperatura\n"
+        "/clima - Previsão do tempo\n"
         "/previsao - Curva de oxigênio\n"
         "/curvapeso - Projeção de Crescimento (Peso)\n\n"
         "🛠️ *Sistema*\n"
@@ -177,6 +179,34 @@ async def handle_temperatura(message: Message):
 async def handle_backup(message: Message):
     await message.answer("🔄 Iniciando sincronização/backup...")
     await executar_script_python("src/database/postgres/migrate_data.py", message.chat.id)
+
+@Dispatcher().message(Command("clima"))
+async def handle_clima(message: Message):
+    """Handler para exibir a previsão do tempo."""
+    try:
+        data = get_weather_forecast()
+        curr = data['current']
+        
+        msg = (
+            f"🌤 *Previsão do Tempo*\n"
+            f"📍 Coordenadas: `{data['latitude']:.4f}, {data['longitude']:.4f}`\n\n"
+            f"🌡 *Agora:*\n"
+            f"• Temperatura: `{curr['temperature_2m']:.1f}°C`\n"
+            f"• Umidade: `{curr['relative_humidity_2m']:.0f}%`\n"
+            f"• Pressão: `{curr['surface_pressure']:.1f} hPa`\n\n"
+            f"📅 *Próximas Horas:*\n"
+        )
+        
+        # Pegar as próximas 4 horas da previsão
+        proximas = data['hourly'].head(4)
+        for _, row in proximas.iterrows():
+            hora = row['date'].strftime('%H:%M')
+            msg += f"• `{hora}`: `{row['temperature_2m']:.1f}°C` | 🌧 `{row['precipitation_probability']}%` chuva\n"
+            
+        await message.answer(msg, parse_mode="Markdown")
+    except Exception as e:
+        logger.error(f"Erro ao obter previsão do tempo: {e}")
+        await message.answer("❌ Não foi possível obter a previsão do tempo no momento.")
 
 
 # ==========================
@@ -542,6 +572,7 @@ async def main():
     dp.message.register(handle_ox15d, Command("ox15d"))
     dp.message.register(handle_temp7d, Command("temp7d"))
     dp.message.register(handle_temp15d, Command("temp15d"))
+    dp.message.register(handle_clima, Command("clima"))
     dp.message.register(handle_previsao, Command("previsao"))
     dp.message.register(handle_curvapeso, Command("curvapeso"))
     dp.message.register(handle_backup, Command("backup"))

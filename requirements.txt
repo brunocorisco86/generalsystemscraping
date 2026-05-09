@@ -11,3 +11,9 @@ asyncpg==0.29.0
 # Agente IA (Gemini)
 langchain
 langchain-google-genai
+
+# Previsão do Tempo
+openmeteo_requests
+requests_cache
+retry_requests
+pandas
