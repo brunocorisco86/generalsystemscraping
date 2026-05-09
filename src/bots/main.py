@@ -198,16 +198,20 @@ async def handle_clima(message: Message):
         )
         
         # Filtrar apenas previsões futuras e pegar as próximas 6 horas
-        # Usamos o pandas para pegar o "agora" no fuso correto para comparação
+        # Garantimos que 'agora' e o 'date' do dataframe estejam no mesmo fuso (America/Sao_Paulo)
         agora_local = pd.Timestamp.now(tz='America/Sao_Paulo')
-        proximas = data['hourly'][data['hourly']['date'] >= agora_local].head(6)
         
-        # Se por algum motivo o filtro retornar vazio (ex: fim do dia/dataframe), pega o head(6) padrão
+        # O DataFrame já vem com tz da API, mas garantimos a comparação correta
+        df_hourly = data['hourly'].copy()
+        proximas = df_hourly[df_hourly['date'] >= agora_local].head(6)
+        
+        # Se o filtro retornar vazio, pega as primeiras 6 como fallback
         if proximas.empty:
-            proximas = data['hourly'].head(6)
+            proximas = df_hourly.head(6)
 
         for _, row in proximas.iterrows():
-            hora = row['date'].strftime('%H:%M')
+            # Exibe a hora convertida para o fuso de SP
+            hora = row['date'].astimezone(agora_local.tz).strftime('%H:%M')
             msg += f"• `{hora}`: `{row['temperature_2m']:.1f}°C` | 🌧 `{row['precipitation_probability']:.0f}%` chuva\n"
             
         await message.answer(msg, parse_mode="Markdown")
