@@ -76,7 +76,11 @@ def format_morning_report(data):
             dia_en = row['date'].strftime('%a').upper()
             dia_pt = dias_pt.get(dia_en, dia_en)
             data_dia = row['date'].strftime('%d/%m')
-            msg += f"• *{dia_pt} ({data_dia}):* `{row['temperature_2m_min']:.0f}°/{row['temperature_2m_max']:.0f}°C` | 🌧️ `{row['precipitation_probability_max']:.0f}%` chuva\n"
+            
+            # Formata a linha com temperatura, chance de chuva e volume em mm
+            chuva_mm = row.get('precipitation_sum', 0)
+            msg += f"• *{dia_pt} ({data_dia}):* `{row['temperature_2m_min']:.0f}°/{row['temperature_2m_max']:.0f}°C` | 🌧️ `{row['precipitation_probability_max']:.0f}%` (`{chuva_mm:.1f}mm`)\n"
+
 
     return msg
 

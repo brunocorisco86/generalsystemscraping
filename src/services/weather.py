@@ -67,7 +67,7 @@ def get_weather_forecast():
         "latitude": latitude,
         "longitude": longitude,
         "hourly": ["temperature_2m", "relative_humidity_2m", "rain", "surface_pressure", "precipitation_probability"],
-        "daily": ["temperature_2m_max", "temperature_2m_min", "precipitation_probability_max"],
+        "daily": ["temperature_2m_max", "temperature_2m_min", "precipitation_probability_max", "precipitation_sum"],
         "current": ["temperature_2m", "relative_humidity_2m", "surface_pressure"],
         "timezone": "America/Sao_Paulo",
         "forecast_days": 7,
@@ -116,6 +116,7 @@ def get_weather_forecast():
         "temperature_2m_max": daily.Variables(0).ValuesAsNumpy(),
         "temperature_2m_min": daily.Variables(1).ValuesAsNumpy(),
         "precipitation_probability_max": daily.Variables(2).ValuesAsNumpy(),
+        "precipitation_sum": daily.Variables(3).ValuesAsNumpy(),
     }
     daily_df = pd.DataFrame(data=daily_data)
     daily_df['date'] = pd.to_datetime(daily_df['date']).dt.tz_convert("America/Sao_Paulo")
