@@ -63,8 +63,8 @@ def format_morning_report(data):
         msg += "🔭 *Próximos Dias:*\n"
         
         # Pular o primeiro dia (hoje) se já mostramos acima, ou mostrar todos
-        # Vamos mostrar os próximos 2 dias (amanhã e depois)
-        proximos_dias = df_daily[df_daily['date'].dt.date > agora.date()].head(2)
+        # Vamos mostrar os próximos 6 dias (fechando a semana)
+        proximos_dias = df_daily[df_daily['date'].dt.date > agora.date()].head(6)
         
         for _, row in proximos_dias.iterrows():
             dia_semana = row['date'].strftime('%a').upper() # EX: SEG, TER

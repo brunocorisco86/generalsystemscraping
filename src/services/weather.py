@@ -70,7 +70,7 @@ def get_weather_forecast():
         "daily": ["temperature_2m_max", "temperature_2m_min", "precipitation_probability_max"],
         "current": ["temperature_2m", "relative_humidity_2m", "surface_pressure"],
         "timezone": "America/Sao_Paulo",
-        "forecast_days": 3,
+        "forecast_days": 7,
         "wind_speed_unit": "ms",
     }
     
