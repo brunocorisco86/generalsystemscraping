@@ -198,8 +198,9 @@ async def handle_clima(message: Message):
         )
         
         # Filtrar apenas previsões futuras e pegar as próximas 6 horas
-        agora_utc = datetime.now()
-        proximas = data['hourly'][data['hourly']['date'].dt.tz_localize(None) >= agora_utc].head(6)
+        # Usamos o pandas para pegar o "agora" no fuso correto para comparação
+        agora_local = pd.Timestamp.now(tz='America/Sao_Paulo')
+        proximas = data['hourly'][data['hourly']['date'] >= agora_local].head(6)
         
         # Se por algum motivo o filtro retornar vazio (ex: fim do dia/dataframe), pega o head(6) padrão
         if proximas.empty:

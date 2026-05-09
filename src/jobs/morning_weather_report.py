@@ -13,7 +13,8 @@ def format_morning_report(data):
     """
     Formata o relatório de bom dia com clima detalhado.
     """
-    agora = datetime.now()
+    # Usar fuso horário de São Paulo para identificar "hoje"
+    agora = pd.Timestamp.now(tz='America/Sao_Paulo')
     hoje_str = agora.strftime("%d/%m/%Y")
     
     # 1. Cabeçalho
@@ -21,12 +22,12 @@ def format_morning_report(data):
     msg += f"📍 Localização: `{data['latitude']:.4f}, {data['longitude']:.4f}`\n\n"
     
     # 2. Resumo de Hoje por Período (Manhã, Tarde, Noite)
-    # Pegamos o DataFrame hourly e garantimos que a coluna 'date' seja datetime
     df_hourly = data['hourly']
+    # Garantir que a coluna 'date' tenha o timezone correto
     if not isinstance(df_hourly['date'].iloc[0], datetime):
         df_hourly['date'] = pd.to_datetime(df_hourly['date'])
     
-    # Filtrar para o dia de hoje
+    # Filtrar para o dia de hoje (comparando as datas no fuso local)
     hoje_mask = df_hourly['date'].dt.date == agora.date()
     df_hoje = df_hourly[hoje_mask].copy()
     
