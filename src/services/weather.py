@@ -1,4 +1,5 @@
 import os
+import json
 import openmeteo_requests
 import pandas as pd
 import requests_cache
@@ -7,6 +8,28 @@ from dotenv import load_dotenv
 
 # Carregar variáveis de ambiente
 load_dotenv()
+
+def log_weather_locally(data):
+    """
+    Salva os dados da previsão em um arquivo JSON local, 
+    sobrescrevendo o anterior para economizar espaço.
+    """
+    try:
+        log_path = os.path.join("logs", "latest_weather.json")
+        os.makedirs("logs", exist_ok=True)
+        
+        # Converter DataFrame para dicionário para serialização JSON
+        serializable_data = data.copy()
+        if isinstance(serializable_data.get("hourly"), pd.DataFrame):
+            # Converte as datas para string para o JSON
+            df = serializable_data["hourly"].copy()
+            df['date'] = df['date'].dt.strftime('%Y-%m-%d %H:%M:%S%z')
+            serializable_data["hourly"] = df.to_dict(orient="records")
+        
+        with open(log_path, "w", encoding="utf-8") as f:
+            json.dump(serializable_data, f, indent=4, ensure_ascii=False)
+    except Exception as e:
+        print(f"Erro ao salvar log local de clima: {e}")
 
 def get_weather_forecast():
     """
@@ -63,7 +86,7 @@ def get_weather_forecast():
 
     hourly_df = pd.DataFrame(data=hourly_data)
 
-    return {
+    result = {
         "latitude": response.Latitude(),
         "longitude": response.Longitude(),
         "elevation": response.Elevation(),
@@ -71,6 +94,11 @@ def get_weather_forecast():
         "current": current_data,
         "hourly": hourly_df
     }
+
+    # Salva o log localmente (sobrescrevendo o anterior)
+    log_weather_locally(result)
+
+    return result
 
 if __name__ == "__main__":
     # Teste rápido de execução direta
