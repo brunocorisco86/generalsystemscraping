@@ -77,9 +77,23 @@ def format_morning_report(data):
             dia_pt = dias_pt.get(dia_en, dia_en)
             data_dia = row['date'].strftime('%d/%m')
             
-            # Formata a linha com temperatura, chance de chuva e volume em mm
             chuva_mm = row.get('precipitation_sum', 0)
-            msg += f"• *{dia_pt} ({data_dia}):* `{row['temperature_2m_min']:.0f}°/{row['temperature_2m_max']:.0f}°C` | 🌧️ `{row['precipitation_probability_max']:.0f}%` (`{chuva_mm:.1f}mm`)\n"
+            prob_chuva = row['precipitation_probability_max']
+            
+            # Escolher emoji de clima baseado na chuva
+            if chuva_mm > 5:
+                clima_icon = "🌧️"
+            elif chuva_mm > 0:
+                clima_icon = "🌦️"
+            else:
+                clima_icon = "🌤️"
+            
+            msg += f"──────────────────\n"
+            msg += f"{clima_icon} *{dia_pt} ({data_dia})*\n"
+            msg += f"🌡️ `{row['temperature_2m_min']:.0f}° / {row['temperature_2m_max']:.0f}°C`\n"
+            msg += f"💧 Chuva: `{prob_chuva:.0f}%` (`{chuva_mm:.1f}mm`)\n"
+        
+        msg += f"──────────────────"
 
 
     return msg
