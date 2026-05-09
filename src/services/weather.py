@@ -20,6 +20,11 @@ def log_weather_locally(data):
         
         # Converter DataFrame para dicionário para serialização JSON
         serializable_data = data.copy()
+        
+        # Corrigir tipos não serializáveis (bytes, datetime no DF)
+        if isinstance(serializable_data.get("timezone"), bytes):
+            serializable_data["timezone"] = serializable_data["timezone"].decode('utf-8')
+            
         if isinstance(serializable_data.get("hourly"), pd.DataFrame):
             # Converte as datas para string para o JSON
             df = serializable_data["hourly"].copy()
