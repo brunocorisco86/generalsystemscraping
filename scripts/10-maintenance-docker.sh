@@ -18,10 +18,11 @@ fi
 cd "$REPO_ROOT"
 
 # 2. Pergunta ao usuário o nível de limpeza
-echo "Escolha o nível de limpeza:"
+echo "Escolha o nível de limpeza / manutenção:"
 echo "1) Parar e remover apenas os containers (Mantém imagens e dados)"
-echo "2) Limpeza completa (Remove containers, volumes e imagens locais)"
-echo "3) Cancelar"
+echo "2) Limpeza profunda (Remove containers, volumes e TODAS as imagens do projeto)"
+echo "3) Forçar Rebuild Total (Para, reconstrói sem cache e inicia tudo)"
+echo "4) Cancelar"
 printf "Opção: "
 read opcao
 
@@ -31,10 +32,16 @@ case $opcao in # Usando case para compatibilidade POSIX
         $DOCKER_COMPOSE down
         ;;
     2)
-        echo "--- Realizando limpeza profunda (Containers, Imagens Locais e Orfãos)... ---"
-        $DOCKER_COMPOSE down --rmi local --volumes --remove-orphans
+        echo "--- Realizando limpeza profunda (Containers, Imagens e Orfãos)... ---"
+        $DOCKER_COMPOSE down --rmi all --volumes --remove-orphans
         echo "--- Removendo imagens suspensas (prune)... ---"
         docker image prune -f
+        ;;
+    3)
+        echo "--- Reiniciando com Rebuild Total (sem cache)... ---"
+        $DOCKER_COMPOSE down
+        $DOCKER_COMPOSE build --no-cache
+        $DOCKER_COMPOSE up -d
         ;;
     *)
         echo "Operação cancelada."
