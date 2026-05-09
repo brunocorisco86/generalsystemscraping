@@ -7,6 +7,9 @@ numpy
 scipy
 psycopg2-binary
 requests
+openmeteo_requests
+requests_cache
+retry_requests
 langchain
 langchain-community
 langchain-google-genai
