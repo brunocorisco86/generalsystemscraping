@@ -34,6 +34,12 @@ def log_weather_locally(data):
             df = serializable_data["hourly"].copy()
             df['date'] = df['date'].dt.strftime('%Y-%m-%d %H:%M:%S%z')
             serializable_data["hourly"] = df.to_dict(orient="records")
+            
+        if isinstance(serializable_data.get("daily"), pd.DataFrame):
+            # Converte as datas para string para o JSON no bloco daily
+            df_daily = serializable_data["daily"].copy()
+            df_daily['date'] = df_daily['date'].dt.strftime('%Y-%m-%d')
+            serializable_data["daily"] = df_daily.to_dict(orient="records")
         
         with open(log_path, "w", encoding="utf-8") as f:
             json.dump(serializable_data, f, indent=4, ensure_ascii=False)
@@ -61,6 +67,7 @@ def get_weather_forecast():
         "latitude": latitude,
         "longitude": longitude,
         "hourly": ["temperature_2m", "relative_humidity_2m", "rain", "surface_pressure", "precipitation_probability"],
+        "daily": ["temperature_2m_max", "temperature_2m_min", "precipitation_probability_max"],
         "current": ["temperature_2m", "relative_humidity_2m", "surface_pressure"],
         "timezone": "America/Sao_Paulo",
         "forecast_days": 3,
@@ -94,8 +101,22 @@ def get_weather_forecast():
         "surface_pressure": hourly.Variables(3).ValuesAsNumpy(),
         "precipitation_probability": hourly.Variables(4).ValuesAsNumpy(),
     }
-
     hourly_df = pd.DataFrame(data=hourly_data)
+
+    # Processar dados diários
+    daily = response.Daily()
+    daily_data = {
+        "date": pd.date_range(
+            start=pd.to_datetime(daily.Time(), unit="s", utc=True),
+            end=pd.to_datetime(daily.TimeEnd(), unit="s", utc=True),
+            freq=pd.Timedelta(seconds=daily.Interval()),
+            inclusive="left"
+        ).tz_convert("America/Sao_Paulo"),
+        "temperature_2m_max": daily.Variables(0).ValuesAsNumpy(),
+        "temperature_2m_min": daily.Variables(1).ValuesAsNumpy(),
+        "precipitation_probability_max": daily.Variables(2).ValuesAsNumpy(),
+    }
+    daily_df = pd.DataFrame(data=daily_data)
 
     result = {
         "latitude": response.Latitude(),
@@ -103,7 +124,8 @@ def get_weather_forecast():
         "elevation": response.Elevation(),
         "timezone": response.Timezone(),
         "current": current_data,
-        "hourly": hourly_df
+        "hourly": hourly_df,
+        "daily": daily_df
     }
 
     # Salva o log localmente (sobrescrevendo o anterior)
