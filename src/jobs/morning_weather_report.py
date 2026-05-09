@@ -79,12 +79,21 @@ def format_morning_report(data):
             
             chuva_mm = row.get('precipitation_sum', 0)
             prob_chuva = row['precipitation_probability_max']
-            pressao = row.get('surface_pressure_mean', 1013) # Default nível do mar
+            pressao = row.get('surface_pressure_mean', 1013)
             
-            # Interpretação da pressão para Oxigênio Dissolvido (OD)
-            # Pressões altas favorecem a dissolução de gases. Baixas pressões dificultam.
-            # Referência local: Pressão acima de 978-980 hPa costuma ser positiva para a região.
-            status_od = "✅ Ótimo para O₂" if pressao >= 978 else "⚠️ O₂ mais difícil"
+            # Interpretação da pressão para Oxigênio Dissolvido (OD) em 5 patamares
+            # Baseado na Lei de Henry: Saturação cai ~1% a cada 10hPa abaixo do nível do mar.
+            # Referência local (~340m altitude): Pressão média normal é ~975-978 hPa.
+            if pressao >= 985:
+                status_od = "💎 Excelente (Saturação Alta)"
+            elif pressao >= 978:
+                status_od = "✅ Ótimo (Condição Estável)"
+            elif pressao >= 972:
+                status_od = "🆗 Regular (Atenção Padrão)"
+            elif pressao >= 965:
+                status_od = "⚠️ Alerta (Dissolução Difícil)"
+            else:
+                status_od = "🚨 Crítico (Risco de Hipóxia)"
             
             # Escolher emoji de clima baseado na chuva
             if chuva_mm > 5:
