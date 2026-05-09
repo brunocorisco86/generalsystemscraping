@@ -17,6 +17,8 @@
    - **AI Validation**: Alertas críticos são analisados pela IA (Gemini) contra os dados recentes (intervalos de confiança e aeradores_ativos) via ferramentas LangChain. Se for um falso positivo, o alerta é suprimido; caso contrário, é enviado via `src/services/notification.py`.
 - **Jobs**: `src/jobs/` handles periodic reporting and data migration (SQLite -> Postgres).
 - **Analysis/Reports**: `src/reports/` and `src/analysis/` generate visual trends. Recent addition: `/curvapeso` (Projeção Linear de Crescimento).
+- **Weather Service**: `src/services/weather.py` integrates Open-Meteo API with 1h cache. Provides `/clima` command and data for automated jobs.
+- **Morning Report**: `src/jobs/morning_weather_report.py` (07:00 via Cron) provides detailed daily forecast, 7-day outlook, and pressure-based Oxygen Dissolved (OD) interpretation.
 - **Bots**: `src/bots/main.py` (Unified Bot) handles Biometry/Water Quality input, persisting to Postgres via `src/services/database.py`.
 
 
@@ -24,6 +26,8 @@
 
 - **Dependency Fix**: Added `scipy` to `requirements.txt` and `src/bots/requirements.txt` to fix `ModuleNotFoundError` in `src/analysis/plot_curva.py` when called by the Biometry bot.
 - **Database Architecture**: PostgreSQL schema includes `PROPRIETARIO`, `PROPRIEDADE`, `ESTRUTURA`, `LOTES`, and operational tables (`LEITURAS`, `BIOMETRIA`, etc.).
+- **Weather Automation**: Automated at 06:00 (data fetch) and 07:00 (Telegram report).
+- **Timezone Enforcement**: All weather-related comparisons and displays explicitly use `America/Sao_Paulo` (GMT-3) to avoid UTC/System clock discrepancies.
 - **Environment**: All configuration resides in `.env`. Root path is dynamically detected.
 
 ## Domain Concepts
