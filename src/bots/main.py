@@ -7,6 +7,7 @@ import os
 import sys
 import asyncio
 import logging
+import pandas as pd
 from datetime import date, datetime
 from dotenv import load_dotenv
 
