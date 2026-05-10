@@ -9,6 +9,7 @@ aiogram==3.4.1
 asyncpg==0.29.0
 
 # Agente IA (Gemini)
+pydantic>=1.10.13
 langchain
 langchain-google-genai
 
