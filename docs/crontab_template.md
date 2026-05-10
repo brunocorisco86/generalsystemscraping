@@ -41,6 +41,9 @@ VENV_PYTHON=/home/bruno/generalsystemscraping/.venv/bin/python3
 # 06:00 - Coleta de Previsão do Tempo (Gera log local e cache)
 0 6 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.services.weather >> $PROJECT_ROOT/logs/cron.log 2>&1
 
+# Sincronização Horária de Clima (Salva no Banco de Dados SQLite)
+5 * * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.hourly_weather_sync >> $PROJECT_ROOT/logs/cron.log 2>&1
+
 # 07:00 - Relatório de Bom Dia com Clima Detalhado
 0 7 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.morning_weather_report >> $PROJECT_ROOT/logs/cron.log 2>&1
 

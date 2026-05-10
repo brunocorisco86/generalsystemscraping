@@ -16,6 +16,14 @@ erDiagram
     ESTRUTURA ||--o{ QUALIDADE_AGUA_LIMNOLOGIA : analisa
     ESTRUTURA ||--o{ QUALIDADE_AGUA_CONSUMO : analisa
 
+    CLIMA_HISTORICO {
+        integer id PK
+        timestamp data_coleta
+        float temperatura
+        float umidade
+        float pressao
+    }
+
     PROPRIETARIO {
         string uid PK "Hash SHA256(Nome + CPF)"
         string nome
@@ -134,3 +142,6 @@ Armazena os dados vindos do Scraper. Inclui `nome_estrutura` para facilitar rela
 
 ### Biometria e Qualidade da Água
 Registros manuais feitos via Bots Telegram. Estão vinculados à estrutura e, no caso da biometria, ao lote vigente para cálculo de Conversão Alimentar (CA).
+
+### Clima Histórico
+Armazena as condições meteorológicas coletadas via API Open-Meteo de hora em hora. Estes dados são globais para a propriedade e servem para correlação com os dados de telemetria dos sensores.

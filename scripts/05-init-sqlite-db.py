@@ -103,6 +103,16 @@ def init_sqlite():
         ''')
 
         cursor.execute('''
+            CREATE TABLE IF NOT EXISTS clima_historico (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                data_coleta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                temperatura REAL,
+                umidade REAL,
+                pressao REAL
+            )
+        ''')
+
+        cursor.execute('''
             CREATE TABLE IF NOT EXISTS biometria (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 estrutura_uid TEXT REFERENCES estruturas(uid),

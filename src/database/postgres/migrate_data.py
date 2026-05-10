@@ -44,33 +44,56 @@ def migrate_data():
         pg_cur = pg_conn.cursor()
         sq_cur = sq_conn.cursor()
 
-        # 1. Verifica último ID no PostgreSQL
+        # --- MIGRAÇÃO DE LEITURAS ---
+        # 1. Verifica último ID no PostgreSQL para leituras
         pg_cur.execute("SELECT MAX(id) FROM leituras")
         ultimo_id = pg_cur.fetchone()[0] or 0
-        logger.info("Último ID no PostgreSQL: %d", ultimo_id)
+        logger.info("Último ID de leituras no PostgreSQL: %d", ultimo_id)
 
-        # 2. Busca novos dados no SQLite
-        query_sq = f"""
+        # 2. Busca novos dados de leituras no SQLite
+        query_sq = """
             SELECT id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos 
-            FROM {SQLITE_TABELA_ORIGEM} 
+            FROM leituras 
             WHERE id > ?
         """
         sq_cur.execute(query_sq, (ultimo_id,))
-        novos_dados = sq_cur.fetchall()
+        novas_leituras = sq_cur.fetchall()
 
-        if novos_dados:
+        if novas_leituras:
             # 3. Insere no Postgres
-            logger.info("Encontrados %d novos registros para migrar.", len(novos_dados))
+            logger.info("Encontrados %d novas leituras para migrar.", len(novas_leituras) )
             insert_query = """
                 INSERT INTO leituras (id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (id) DO NOTHING
             """
-            pg_cur.executemany(insert_query, novos_dados)
+            pg_cur.executemany(insert_query, novas_leituras)
             pg_conn.commit()
-            status_msg = f"Sucesso! {len(novos_dados)} novos registros migrados."
+            status_msg += f" {len(novas_leituras)} leituras migradas."
+
+        # --- MIGRAÇÃO DE CLIMA_HISTORICO ---
+        pg_cur.execute("SELECT MAX(id) FROM clima_historico")
+        ultimo_id_clima = pg_cur.fetchone()[0] or 0
+        logger.info("Último ID de clima no PostgreSQL: %d", ultimo_id_clima)
+
+        sq_cur.execute("SELECT id, data_coleta, temperatura, umidade, pressao FROM clima_historico WHERE id > ?", (ultimo_id_clima,))
+        novos_climas = sq_cur.fetchall()
+
+        if novos_climas:
+            logger.info("Encontrados %d novos registros de clima para migrar.", len(novos_climas))
+            insert_clima = """
+                INSERT INTO clima_historico (id, data_coleta, temperatura, umidade, pressao)
+                VALUES (%s, %s, %s, %s, %s)
+                ON CONFLICT (id) DO NOTHING
+            """
+            pg_cur.executemany(insert_clima, novos_climas)
+            pg_conn.commit()
+            status_msg += f" {len(novos_climas)} registros de clima migrados."
+
+        if not novas_leituras and not novos_climas:
+            status_msg = "Migração concluída: Nenhum dado novo encontrado."
         else:
-            status_msg = "Migração concluída: Nenhum dado novo encontrado no SQLite."
+            status_msg = "Sucesso!" + status_msg
 
     except Exception as e:
         status_msg = f"Erro na migração de dados: {str(e)}"

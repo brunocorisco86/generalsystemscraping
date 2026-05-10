@@ -9,9 +9,11 @@
 *   [x] Correção de dependências críticas (`scipy`).
 *   [x] Consolidação da documentação para compressão de contexto.
 *   [x] Integração de Agente de IA (Gemini/LangChain) para filtro inteligente de falsos positivos e consulta de dados no Telegram.
+*   [x] Persistência Horária de Dados Climáticos (Open-Meteo -> SQLite -> Postgres).
 
 ## 🚀 Próximos Passos (Q3 2026)
 
+*   [ ] Correlação de Dados: Analisar impacto da pressão atmosférica e temperatura externa nos níveis de Oxigênio Dissolvido (OD).
 *   [ ] Implementação de Testes Unitários (Scrape, Alerts, DB).
 *   [ ] Estratégia de Backup (Local + Cloudflare R2).
 *   [ ] Dashboard local simples (Streamlit) para visualização rápida.

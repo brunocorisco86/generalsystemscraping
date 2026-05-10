@@ -63,6 +63,15 @@ def get_hourly_report():
 
         relatorio = f"📊 *Relatório das {datetime.now().strftime('%H')} horas*\n"
 
+        # --- SEÇÃO DE CLIMA (Novo) ---
+        cursor.execute("SELECT temperatura, umidade, pressao FROM clima_historico ORDER BY data_coleta DESC LIMIT 1")
+        clima = cursor.fetchone()
+        if clima:
+            c_temp, c_umid, c_pres = clima
+            # Interpretação rápida da pressão para o relatório horário
+            status_od = "✅" if c_pres >= 978 else "⚠️"
+            relatorio += f"🌤️ `{c_temp:.1f}°C` | 💧 `{c_umid:.0f}%` | ⏲️ `{c_pres:.1f}hPa` {status_od}\n"
+        
         for tanque, leituras in grouped_data.items():
             # Extração de listas para cálculos estatísticos
             lista_ox = [r[0] for r in leituras]

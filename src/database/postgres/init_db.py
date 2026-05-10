@@ -129,6 +129,16 @@ async def init_postgres():
             );
         ''')
 
+        await conn.execute('''
+            CREATE TABLE IF NOT EXISTS clima_historico (
+                id SERIAL PRIMARY KEY,
+                data_coleta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                temperatura REAL,
+                umidade REAL,
+                pressao REAL
+            );
+        ''')
+
         # Migração Postgres: Tenta adicionar a coluna caso não exista
         try:
             await conn.execute("ALTER TABLE leituras ADD COLUMN IF NOT EXISTS nome_estrutura VARCHAR(255);")
