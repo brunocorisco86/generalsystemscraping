@@ -44,11 +44,19 @@ Para garantir a estabilidade do código antes de ir para produção, possuímos 
 - `knowledge/`: Estado do projeto e roadmap.
 - `data/`: Bancos de dados persistentes.
 
+## 🧠 Predição de Arraçoamento com IA
+
+O sistema utiliza um modelo de predição avançado para auxiliar na decisão de alimentação (trato):
+- **Dados em Tempo Real:** Integra níveis de Oxigênio (O2), Temperatura da Água, Temperatura Ambiente, Pressão Atmosférica e Umidade.
+- **Análise Especialista:** Utiliza IA (Google Gemini) para fornecer um parecer técnico condensado sobre as condições biometeorológicas.
+- **Gráficos Preditivos:** Gera projeções de recuperação de oxigênio para identificar a janela ideal de trato.
+
 ## 🛠 Tech Stack
 
 - **Linguagem:** Python 3.11+ (Aiogram, Pandas, Scipy, Selenium).
+- **IA/LLM:** Google Gemini (via LangChain).
 - **Infra:** Docker Compose (PostgreSQL), Alpine Linux.
-- **Integração:** Telegram Bot API.
+- **Integração:** Telegram Bot API e Open-Meteo API.
 
 ---
 Para detalhes arquiteturais e estado atual, consulte `docs/architecture.md` e `knowledge/project_state.md`.

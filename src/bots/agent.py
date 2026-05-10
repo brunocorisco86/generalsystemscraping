@@ -178,6 +178,37 @@ async def analyze_alert_data(tanque: str, oxigenio: float, temperatura: float) -
         # Fallback de segurança em caso de erro na LLM
         return f"🚨 *ALERTA CRÍTICO (Erro na IA)* 🚨\nTanque: {tanque} | O2: {oxigenio} Mg/L"
 
+def analyze_feed_prediction_sync(data_summary: str) -> str:
+    """
+    Analisa os dados de predição de arraçoamento de forma síncrona.
+    Recebe um resumo dos tanques (O2, Temp Água, Previsão) e do clima.
+    Retorna uma recomendação concisa do especialista.
+    """
+    try:
+        executor = get_agent_executor()
+        if not executor:
+            return "⚠️ Agente de IA não está disponível."
+            
+        prompt = (
+            f"Como o Agente Especialista em Aquicultura, analise os seguintes dados de predição de arraçoamento "
+            f"e forneça um 'Parecer do Especialista' curto (máximo 4 linhas) focado na decisão de alimentar os peixes:\n\n"
+            f"{data_summary}\n\n"
+            f"Considere:\n"
+            f"1. Relação entre temperatura da água e metabolismo/consumo.\n"
+            f"2. Relação entre temperatura ambiente e estresse térmico.\n"
+            f"3. Níveis atuais e previstos de oxigênio.\n"
+            f"Aja de forma direta e técnica. Não inclua saudações."
+        )
+        # Usamos invoke síncrono para scripts de análise
+        response = executor.invoke(
+            {"input": prompt},
+            config={"configurable": {"session_id": "feed_prediction_sys"}}
+        )
+        return response.get("output", "Sem parecer no momento.")
+    except Exception as e:
+        logger.error(f"Erro na análise do especialista (feed_prediction): {e}")
+        return "⚠️ Não foi possível obter o parecer do especialista no momento."
+
 def analyze_evening_report_sync(summary_data: str, plot_data_csv: str) -> str:
     """
     Função síncrona para ser chamada por jobs em background (como evening_report.py).

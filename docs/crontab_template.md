@@ -38,17 +38,14 @@ VENV_PYTHON=/home/bruno/generalsystemscraping/.venv/bin/python3
 # 08:05 - Relatório Noturno (Resumo da noite anterior e Gráfico)
 5 8 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.nightly_report >> $PROJECT_ROOT/logs/cron.log 2>&1
 
-# 06:00 - Coleta de Previsão do Tempo (Gera log local e cache)
-0 6 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.services.weather >> $PROJECT_ROOT/logs/cron.log 2>&1
-
 # Sincronização Horária de Clima (Salva no Banco de Dados SQLite)
-5 * * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.hourly_weather_sync >> $PROJECT_ROOT/logs/cron.log 2>&1
+1 * * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.hourly_weather_sync >> $PROJECT_ROOT/logs/cron.log 2>&1
 
-# 07:00 - Relatório de Bom Dia com Clima Detalhado
-0 7 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.morning_weather_report >> $PROJECT_ROOT/logs/cron.log 2>&1
+# 07:05 - Relatório de Bom Dia com Clima Detalhado
+5 7 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.morning_weather_report >> $PROJECT_ROOT/logs/cron.log 2>&1
 
-# 08:00 - Predição de horário de Arraçoamento
-32 8 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.analysis.feed_prediction >> $PROJECT_ROOT/logs/cron.log 2>&1
+# 09:00 - Predição de horário de Arraçoamento
+0 9 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.analysis.feed_prediction >> $PROJECT_ROOT/logs/cron.log 2>&1
 
 # 17:06 - Análise Preditiva de Oxigênio (Forecast para a noite)
 6 17 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.analysis.predict_oxygen >> $PROJECT_ROOT/logs/cron.log 2>&1

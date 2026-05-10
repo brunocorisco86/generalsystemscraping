@@ -8,26 +8,25 @@
 - **Automation**: Telegram Command Interface -> Python Scripts.
 - **Database**: Hybrid SQLite (Local/Edge cache) + PostgreSQL (Long-term history).
 - **UI/UX**: Telegram Bots (Biometria, Qualidade da Água).
-- **AI Agent**: Google Gemini (via LangChain Tools) para chat livre e filtragem inteligente de alertas (evitar falsos positivos).
+- **AI Agent**: Google Gemini (via LangChain Tools) para chat livre, filtragem inteligente de alertas e **predição de arraçoamento (Parecer do Especialista)**.
 
 ## Core Data Flow
 
-1. **Scrape**: `src/scrape/monitor_data.py` (via Selenium/Headless Chromium) runs every 15 min via Cron. Persists to `data/piscicultura_dados.db` (SQLite).
-2. **Alerts**: `src/alerts/alert_check.py` and `offline_check.py` run via Cron. 
-   - **AI Validation**: Alertas críticos são analisados pela IA (Gemini) contra os dados recentes (intervalos de confiança e aeradores_ativos) via ferramentas LangChain. Se for um falso positivo, o alerta é suprimido; caso contrário, é enviado via `src/services/notification.py`.
-- **Jobs**: `src/jobs/` handles periodic reporting and data migration (SQLite -> Postgres).
-- **Analysis/Reports**: `src/reports/` and `src/analysis/` generate visual trends. Recent addition: `/curvapeso` (Projeção Linear de Crescimento).
-- **Weather Service**: `src/services/weather.py` integrates Open-Meteo API with 1h cache. Provides `/clima` command and data for automated jobs.
-- **Morning Report**: `src/jobs/morning_weather_report.py` (07:00 via Cron) provides detailed daily forecast, 7-day outlook, and pressure-based Oxygen Dissolved (OD) interpretation.
-- **Bots**: `src/bots/main.py` (Unified Bot) handles Biometry/Water Quality input, persisting to Postgres via `src/services/database.py`.
-
+1. **Scrape**: `src/scrape/monitor_data.py` (via Selenium/Headless Chromium) runs every 10 min (1-59/10) via Cron. Persists to `data/piscicultura_dados.db` (SQLite).
+2. **Weather Sync**: `src/jobs/hourly_weather_sync.py` runs every hour (minuto 01) to persist ambient temp, pressure, and humidity to SQLite.
+3. **Alerts**: `src/alerts/alert_check.py` and `offline_check.py` run every 15 min.
+   - **AI Validation**: Critical alerts analyzed by Gemini.
+4. **Feed Prediction**: `src/analysis/feed_prediction.py` (09:00 via Cron).
+   - **Data Integration**: Combines water O2/Temp, ambient Temp/Pressure/Humidity.
+   - **AI Specialist**: Generates a "Micro-Context" summary for Gemini, obtaining an expert recommendation on whether to feed or wait based on metabolism and environmental stress.
+5. **Jobs**: `src/jobs/` handles periodic reporting and data migration (SQLite -> Postgres).
 
 ## Critical Knowledge & Recent Fixes
 
-- **Dependency Fix**: Added `scipy` to `requirements.txt` and `src/bots/requirements.txt` to fix `ModuleNotFoundError` in `src/analysis/plot_curva.py` when called by the Biometry bot.
-- **Database Architecture**: PostgreSQL schema includes `PROPRIETARIO`, `PROPRIEDADE`, `ESTRUTURA`, `LOTES`, and operational tables (`LEITURAS`, `BIOMETRIA`, etc.).
-- **Weather Automation**: Automated at 06:00 (data fetch) and 07:00 (Telegram report).
-- **Timezone Enforcement**: All weather-related comparisons and displays explicitly use `America/Sao_Paulo` (GMT-3) to avoid UTC/System clock discrepancies.
+- **Migration Fix**: Ensured `init_db` and `migrate_data` run via `docker exec` in `07-start-containers.sh` to resolve host naming issues (`postgres`) on new Raspberry Pi deployments.
+- **Weather Automation**: Consolidated to `hourly_weather_sync` (min 01) and `morning_weather_report` (07:05). Removed redundant weather service cron calls.
+- **Feed Prediction Optimization**: Integrated water and ambient temperatures + atmospheric pressure. Added AI-driven icons (✅/⚠️) based on specialist's textual feedback (TDD verified).
+- **Timezone Enforcement**: All comparisons use `America/Sao_Paulo`.
 - **Environment**: All configuration resides in `.env`. Root path is dynamically detected.
 
 ## Domain Concepts

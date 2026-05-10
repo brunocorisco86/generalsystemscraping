@@ -38,32 +38,33 @@ echo "--- Subindo containers (Postgres, Bot Unificado)... ---"
 cd "$REPO_ROOT"
 $DOCKER_COMPOSE up -d --build
 
-echo "--- Inicializando/Validando Schema do PostgreSQL ---"
+echo "--- Inicializando/Validando Schema do PostgreSQL (Interno ao Container) ---"
+# Aguarda o container do bot estar pronto e executa a inicialização do banco por lá
+# Isso garante que o host 'postgres' seja resolvido corretamente via rede do Docker
+docker exec peixe_patel_bot python3 -m src.database.postgres.init_db
+
+echo "--- Inicializando Schema do SQLite Local ---"
 VENV_PYTHON="$REPO_ROOT/.venv/bin/python3"
 PYTHON_CMD="python3"
 if [ -f "$VENV_PYTHON" ]; then
     PYTHON_CMD="$VENV_PYTHON"
 fi
 
-# 1. Cria as tabelas no Postgres
-"$PYTHON_CMD" -m src.database.postgres.init_db
-
-# 2. Cria as tabelas no SQLite local
 if [ -f "$REPO_ROOT/scripts/05-init-sqlite-db.py" ]; then
-    echo "--- Inicializando Schema do SQLite Local ---"
     "$PYTHON_CMD" "$REPO_ROOT/scripts/05-init-sqlite-db.py"
 fi
 
 # 3. Popula dados base (Propriedades, Estruturas) em ambos
+# Popula via container para garantir acesso ao Postgres
 if [ -f "$REPO_ROOT/scripts/08-populate-initial-data.py" ]; then
     echo "--- Populando dados iniciais (Propriedades/Estruturas) ---"
-    "$PYTHON_CMD" "$REPO_ROOT/scripts/08-populate-initial-data.py"
+    docker exec peixe_patel_bot python3 scripts/08-populate-initial-data.py
 fi
 
 # 4. Sincroniza dados do SQLite para o Postgres
 if [ -f "$REPO_ROOT/src/database/postgres/migrate_data.py" ]; then
     echo "--- Sincronizando dados históricos (SQLite -> Postgres) ---"
-    "$PYTHON_CMD" "$REPO_ROOT/src/database/postgres/migrate_data.py"
+    docker exec peixe_patel_bot python3 -m src.database.postgres.migrate_data
 fi
 
 echo ""

@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 # Importar serviços do projeto
 from src.services.database import get_sqlite_connection
 from src.services.notification import send_telegram_photo, send_telegram_message
+from src.bots.agent import analyze_feed_prediction_sync
 
 # Carregar variáveis de ambiente
 load_dotenv()
@@ -20,9 +21,9 @@ LIMITE_TRATO = float(os.environ.get("FEED_LIMITE_TRATO", 3.0))
 
 def run_production_logic():
     agora = datetime.now()
-    # CONSTRAINT: Só envia mensagem entre 07h e 09h
-    if not (7 <= agora.hour < 9):
-        print(f"Fora do horário de envio (07h-09h): {agora.strftime('%H:%M')}")
+    # CONSTRAINT: Só envia mensagem entre 07h e 09:59h
+    if not (7 <= agora.hour < 10):
+        print(f"Fora do horário de envio (07h-10h): {agora.strftime('%H:%M')}")
         return
 
     conn = None
@@ -30,8 +31,22 @@ def run_production_logic():
         conn = get_sqlite_connection()
         if not conn: return
         
+        # 1. Buscar Clima Atual (Temperatura Ambiente, Pressão, Umidade)
+        cursor = conn.cursor()
+        cursor.execute("SELECT temperatura, pressao, umidade FROM clima_historico ORDER BY data_coleta DESC LIMIT 1")
+        clima_row = cursor.fetchone()
+        temp_ambiente, pressao, umidade = clima_row if clima_row else (25.0, 1013.25, 70.0)
+        
+        # Prepara resumo para o Agente (Micro-contexto otimizado)
+        status_pres = "Estável" if pressao >= 1010 else ("Baixa" if pressao < 1005 else "Normal")
+        resumo_agente = f"Clima: {temp_ambiente:.1f}C, {umidade:.0f}%, {pressao:.1f}hPa ({status_pres}). "
+        
+        # Cabeçalho do Clima para o Telegram
+        clima_header = f"🌤️ `{temp_ambiente:.1f}ºC` | ⏲️ `{pressao:.1f}hPa` | 💧 `{umidade:.0f}%`"
+
+        # 2. Buscar Leituras (O2 e Temp Água)
         inicio_view = agora - timedelta(hours=15)
-        query = f"SELECT nome_estrutura, oxigenio, timestamp_site FROM leituras WHERE timestamp_site BETWEEN '{inicio_view}' AND '{agora}' ORDER BY timestamp_site ASC"
+        query = f"SELECT nome_estrutura, oxigenio, temperatura, timestamp_site FROM leituras WHERE timestamp_site BETWEEN '{inicio_view}' AND '{agora}' ORDER BY timestamp_site ASC"
         df = pd.read_sql_query(query, conn)
         conn.close()
 
@@ -46,13 +61,32 @@ def run_production_logic():
             if not tank: continue
             tdf['o2_smooth'] = tdf['oxigenio'].rolling(window=5, center=True).mean().fillna(tdf['oxigenio'])
             last_o2 = tdf['o2_smooth'].iloc[-1]
+            last_temp_agua = tdf['temperatura'].iloc[-1] if 'temperatura' in tdf.columns else 24.0
             status_check[tank] = last_o2
-            struct_results.append({'tank': tank, 'df': tdf, 'last_o2': last_o2})
+            struct_results.append({'tank': tank, 'df': tdf, 'last_o2': last_o2, 'temp_agua': last_temp_agua})
+
+        tanks_info = []
 
         if all(val >= LIMITE_TRATO for val in status_check.values()):
-            msg = "🐟 *Aviso de Arraçoamento*\n\n"
+            # Busca o parecer PRIMEIRO para decidir o tom da mensagem
             for t, val in status_check.items():
-                msg += f"✅ *{t}:* `{val:.2f}` mg/L. Liberado para tratar!\n"
+                temp_w = next(item['temp_agua'] for item in struct_results if item['tank'] == t)
+                tanks_info.append(f"{t}: O2={val:.1f}, Temp={temp_w:.1f}C, Trato=LIBERADO_PELO_O2")
+            
+            parecer = analyze_feed_prediction_sync(resumo_agente + " | ".join(tanks_info))
+            
+            msg = f"🐟 *Aviso de Arraçoamento*\n{clima_header}\n"
+            msg += f"\n💡 *Parecer do Especialista:*\n_{parecer}_\n\n"
+            
+            for t, val in status_check.items():
+                temp_w = next(item['temp_agua'] for item in struct_results if item['tank'] == t)
+                # Se o parecer contiver palavras de cautela ou o O2 estiver baixo/temp baixa, usa ⚠️
+                if "suspender" in parecer.lower() or "reduzir" in parecer.lower() or val <= (LIMITE_TRATO + 0.5):
+                    icon = "⚠️"
+                else:
+                    icon = "✅"
+                msg += f"{icon} *{t}:* `{val:.2f}` mg/L | `{temp_w:.1f}ºC`.\n"
+            
             send_telegram_message(msg)
             return
 
@@ -74,10 +108,10 @@ def run_production_logic():
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(12, 7))
         colors = {'Tanque 1': '#1f77b4', 'Tanque 2': '#ff7f0e'}
-        analysis_text = f"📈 *Previsão do Horário de Arraçoamento*\n📅 {agora.strftime('%H:%M')}\n\n"
+        analysis_text = f"📈 *Previsão do Horário de Arraçoamento*\n📅 {agora.strftime('%H:%M')}\n{clima_header}\n\n"
 
         for item in struct_results:
-            tank, tdf, last_o2 = item['tank'], item['df'], item['last_o2']
+            tank, tdf, last_o2, temp_w = item['tank'], item['df'], item['last_o2'], item['temp_agua']
             color = colors.get(tank, 'gray')
             p_model = np.poly1d(best_accel_coeffs)
             t_start = (agora - inicio_calc).total_seconds() / 60
@@ -93,10 +127,16 @@ def run_production_logic():
                     plt.axvline(x=trato_dt, color=color, linestyle=':', alpha=0.5)
                     break
 
-            analysis_text += f"🐟 *{tank}:* `{last_o2:.2f}` mg/L -> `{hora_trato}`\n"
+            analysis_text += f"🐟 *{tank}:* `{last_o2:.2f}` mg/L | `{temp_w:.1f}ºC` -> *{hora_trato}*\n"
+            tanks_info.append(f"{tank}: O2={last_o2:.1f}, Temp={temp_w:.1f}C, Trato={hora_trato}")
+            
             plt.plot(tdf['timestamp_site'], tdf['oxigenio'], 'o', alpha=0.1, color=color)
             plt.plot(tdf['timestamp_site'], tdf['o2_smooth'], '-', color=color, label=f'{tank}')
             plt.plot(future_times, future_o2, '--', color=color, label=f'Proj. {tank}')
+
+        # Chamada ao Agente Especialista com Micro-Contexto
+        parecer = analyze_feed_prediction_sync(resumo_agente + " | ".join(tanks_info))
+        analysis_text += f"\n💡 *Parecer do Especialista:*\n_{parecer}_"
 
         plt.axhline(y=LIMITE_TRATO, color='green', linestyle='-', alpha=0.3)
         plt.title('Estimativa de Recuperação de O2')
