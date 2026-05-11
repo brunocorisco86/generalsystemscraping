@@ -25,7 +25,7 @@ backup.json
 backup_*.json
 
 # --- Reports & Logs ---
-reports/
+/reports/
 logs/
 *.log
 *.png

@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+import pytz
 from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
@@ -61,6 +62,9 @@ def metricas_reta(x, y, a, b):
 
 def gerar_curva_peso():
     logger.info("Iniciando geração de relatório de projeção de curva de peso.")
+    # Forçar fuso horário local (GMT-3)
+    tz = pytz.timezone('America/Sao_Paulo')
+    now = datetime.now(tz)
     
     conn = None
     try:
@@ -212,7 +216,7 @@ def gerar_curva_peso():
         plt.tight_layout()
 
         # Salva o arquivo de imagem
-        plot_path = os.path.join(REPORT_DIR, f"curva_peso_{datetime.now().strftime('%Y%m%d_%H%M')}.png")
+        plot_path = os.path.join(REPORT_DIR, f"curva_peso_{now.strftime('%Y%m%d_%H%M')}.png")
         plt.savefig(plot_path, dpi=120)
         plt.close()
         

@@ -43,7 +43,9 @@ LIMITE_O2 = 2.0
 
 def get_bot_report():
     logger.info("Iniciando geração de relatório de oxigênio.")
-    now = datetime.now()
+    # Forçar fuso horário local (GMT-3)
+    tz = pytz.timezone('America/Sao_Paulo')
+    now = datetime.now(tz)
     twelve_hours_ago = now - timedelta(hours=12)
     
     conn = None

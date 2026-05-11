@@ -41,7 +41,9 @@ CHAT_ID_FROM_ARGS = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("TELEGR
 
 def get_weekly_temp_report():
     logger.info("Iniciando geração de relatório semanal de temperatura (7 dias).")
-    now = datetime.now()
+    # Forçar fuso horário local (GMT-3)
+    tz = pytz.timezone('America/Sao_Paulo')
+    now = datetime.now(tz)
     seven_days_ago = now - timedelta(days=7)
 
     conn = None
