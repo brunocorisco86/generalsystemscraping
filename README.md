@@ -57,6 +57,7 @@ O sistema utiliza um modelo de predição avançado para auxiliar na decisão de
 - **IA/LLM:** Google Gemini (via LangChain).
 - **Infra:** Docker Compose (PostgreSQL), Alpine Linux.
 - **Integração:** Telegram Bot API e Open-Meteo API.
+- **Fuso Horário:** America/Sao_Paulo (GMT-3) via `pytz` em todos os relatórios.
 
 ---
 Para detalhes arquiteturais e estado atual, consulte `docs/architecture.md` e `knowledge/project_state.md`.

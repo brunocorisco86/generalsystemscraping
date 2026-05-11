@@ -26,7 +26,7 @@
 - **Migration Fix**: Ensured `init_db` and `migrate_data` run via `docker exec` in `07-start-containers.sh` to resolve host naming issues (`postgres`) on new Raspberry Pi deployments.
 - **Weather Automation**: Consolidated to `hourly_weather_sync` (min 01) and `morning_weather_report` (07:05). Removed redundant weather service cron calls.
 - **Feed Prediction Optimization**: Integrated water and ambient temperatures + atmospheric pressure. Added AI-driven icons (✅/⚠️) based on specialist's textual feedback (TDD verified).
-- **Timezone Enforcement**: All comparisons use `America/Sao_Paulo`.
+- **Timezone Enforcement**: Todos os relatórios e comparações utilizam explicitamente `America/Sao_Paulo` (GMT-3) através da biblioteca `pytz` para garantir consistência entre servidor (UTC) e usuário local.
 - **Environment**: All configuration resides in `.env`. Root path is dynamically detected.
 
 ## Domain Concepts
