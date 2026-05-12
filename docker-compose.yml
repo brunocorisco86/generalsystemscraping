@@ -24,6 +24,7 @@ services:
       - PG_PORT=5432
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
     volumes:
+      - ./src:/app/src
       - ./logs:/app/logs
       - ./data:/app/data
       - ./reports:/app/reports
