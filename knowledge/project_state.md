@@ -7,13 +7,14 @@
 - **Containers**: Docker Compose (PostgreSQL, Unified Telegram Bot).
 - **Automation**: Telegram Command Interface -> Python Scripts.
 - **Database**: Hybrid SQLite (Local/Edge cache) + PostgreSQL (Long-term history).
-- **UI/UX**: Telegram Bots (Biometria, Qualidade da Água).
+- **UI/UX**: Telegram Bots (Biometria, Qualidade da Água) + **Web Dashboard (Flask)** para controle manual.
 - **AI Agent**: Google Gemini (via LangChain Tools) para chat livre, filtragem inteligente de alertas e **predição de arraçoamento (Parecer do Especialista)**.
 
 ## Core Data Flow
 
 1. **Scrape**: `src/scrape/monitor_data.py` (via Selenium/Headless Chromium) runs every 10 min (1-59/10) via Cron. Persists to `data/piscicultura_dados.db` (SQLite).
-2. **Weather Sync**: `src/jobs/hourly_weather_sync.py` runs every hour (minuto 01) to persist ambient temp, pressure, and humidity to SQLite.
+2. **Dashboard**: `src/web/app.py` (Flask) provides local visualization and manual triggers for scraping, synchronization, and AI analysis.
+3. **Weather Sync**: `src/jobs/hourly_weather_sync.py` runs every hour (minuto 01) to persist ambient temp, pressure, and humidity to SQLite.
 3. **Alerts**: `src/alerts/alert_check.py` and `offline_check.py` run every 15 min.
    - **AI Validation**: Critical alerts analyzed by Gemini.
 4. **Feed Prediction**: `src/analysis/feed_prediction.py` (09:00 via Cron).

@@ -3,6 +3,10 @@ selenium
 scipy
 setuptools
 wheel
+psycopg2-binary
+Flask
+Flask-Login
+Werkzeug
 
 # Telegram Bots
 aiogram==3.4.1

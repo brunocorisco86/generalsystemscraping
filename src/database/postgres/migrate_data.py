@@ -16,7 +16,7 @@ SQLITE_TABELA_ORIGEM = 'leituras'
 # Configuração do logger
 logger = logging.getLogger(__name__)
 
-def migrate_data():
+def migrate_data(silent=False):
     """
     Migra dados incrementais da base SQLite para a base PostgreSQL.
     Busca o último ID migrado no PostgreSQL e copia todos os registros
@@ -111,7 +111,8 @@ def migrate_data():
         else:
             logger.info(status_msg)
 
-        send_telegram_message(status_msg, chat_id=chat_id_target)
+        if not silent:
+            send_telegram_message(status_msg, chat_id=chat_id_target)
 
 if __name__ == "__main__":
     from dotenv import load_dotenv
