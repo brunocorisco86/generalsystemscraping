@@ -127,22 +127,24 @@ def dashboard():
             # Formatar dados para os dois gráficos
             data_ox = {}
             data_temp = {}
-            labels = set()
+            labels_dict = {} # ts -> label
             for row in history:
                 struct, ox, temp, ts = row
                 time_label = ts[11:16] # HH:MM
-                labels.add(time_label)
+                if ts not in labels_dict:
+                    labels_dict[ts] = time_label
                 
                 if struct not in data_ox:
-                    data_ox[struct] = []
-                    data_temp[struct] = []
+                    data_ox[struct] = {}
+                    data_temp[struct] = {}
                 
-                data_ox[struct].append({"x": time_label, "y": ox})
-                data_temp[struct].append({"x": time_label, "y": temp})
+                data_ox[struct][ts] = ox
+                data_temp[struct][ts] = temp
             
-            # Montar chart_data_ox e chart_data_temp
-            chart_data_ox["labels"] = sorted(list(labels))
-            chart_data_temp["labels"] = sorted(list(labels))
+            # Montar chart_data_ox e chart_data_temp preservando ordem cronológica (YYYY-MM-DD HH:MM:SS)
+            sorted_ts = sorted(labels_dict.keys())
+            chart_data_ox["labels"] = [labels_dict[ts] for ts in sorted_ts]
+            chart_data_temp["labels"] = [labels_dict[ts] for ts in sorted_ts]
             
             colors_ox = ['#3b82f6', '#10b981'] # Azul e Verde para Oxigênio
             colors_temp = ['#f59e0b', '#ef4444'] # Laranja e Vermelho para Temp
@@ -150,15 +152,17 @@ def dashboard():
             for i, struct in enumerate(data_ox.keys()):
                 chart_data_ox["datasets"].append({
                     "label": struct,
-                    "data": [d["y"] for d in data_ox[struct]], 
+                    "data": [data_ox[struct].get(ts) for ts in sorted_ts], 
                     "borderColor": colors_ox[i % len(colors_ox)],
-                    "tension": 0.3
+                    "tension": 0.3,
+                    "spanGaps": True
                 })
                 chart_data_temp["datasets"].append({
                     "label": struct,
-                    "data": [d["y"] for d in data_temp[struct]], 
+                    "data": [data_temp[struct].get(ts) for ts in sorted_ts], 
                     "borderColor": colors_temp[i % len(colors_temp)],
-                    "tension": 0.3
+                    "tension": 0.3,
+                    "spanGaps": True
                 })
 
         finally:

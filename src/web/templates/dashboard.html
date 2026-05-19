@@ -39,21 +39,20 @@
                             <small class="text-muted text-uppercase fw-semibold">Temperatura</small>
                         </div>
                         <div class="col-6 col-md-3 mb-2">
-                            <h3 class="h4 mt-2 mb-0">{{ weather.current.relative_humidity_2m }}%</h3>
+                            <h3 class="h4 mt-2 mb-0">{{ "%.2f"|format(weather.current.relative_humidity_2m|float) }}%</h3>
                             <small class="text-muted text-uppercase fw-semibold">Umidade</small>
                         </div>
                         <div class="col-6 col-md-3 mb-2">
-                            <h3 class="h4 mt-2 mb-0">{{ weather.current.surface_pressure|default('--') }} hPa</h3>
+                            <h3 class="h4 mt-2 mb-0">{{ "%.2f"|format(weather.current.surface_pressure|float) if weather.current.surface_pressure else '--' }} hPa</h3>
                             <small class="text-muted text-uppercase fw-semibold">Pressão Atm.</small>
                         </div>
                         <div class="col-6 col-md-3 mb-2">
                             <h3 class="h4 mt-2 mb-0">
-                                {{ weather.hourly.precipitation_probability[0]|default('0') }}% 
-                                <span class="fs-6 text-muted">({{ weather.hourly.rain[0]|default('0') }}mm)</span>
+                                {{ "%.2f"|format(weather.hourly.precipitation_probability[0]|default(0)|float) }}%
+                                <span class="fs-6 text-muted">({{ "%.2f"|format(weather.hourly.rain[0]|default(0)|float) }}mm)</span>
                             </h3>
                             <small class="text-muted text-uppercase fw-semibold">Chuva</small>
-                        </div>
-                    </div>
+                        </div>                    </div>
                     {% else %}
                     <p class="text-muted fst-italic">Dados de clima indisponíveis.</p>
                     {% endif %}
@@ -114,6 +113,53 @@
                     <div style="height: 300px;">
                         <canvas id="tempChart"></canvas>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LINHA 4: Previsão do Tempo (Próximos Dias) -->
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-top border-4 border-info">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3"><i class="bi bi-calendar3 me-2"></i>Previsão do Tempo (Próximos Dias)</h5>
+                    {% if weather and weather.daily %}
+                    <div class="table-responsive">
+                        <table class="table table-hover text-center align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Máx (°C)</th>
+                                    <th>Mín (°C)</th>
+                                    <th>Chuva (mm)</th>
+                                    <th>Probabilidade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in range(weather.daily.date|length) %}
+                                <tr>
+                                    <td class="fw-bold text-secondary">{{ weather.daily.date[i].strftime('%d/%m') }}</td>
+                                    <td class="text-danger fw-bold">{{ "%.1f"|format(weather.daily.temperature_2m_max[i]) }}°</td>
+                                    <td class="text-primary fw-bold">{{ "%.1f"|format(weather.daily.temperature_2m_min[i]) }}°</td>
+                                    <td>{{ "%.1f"|format(weather.daily.precipitation_sum[i]) }} mm</td>
+                                    <td>
+                                        <div class="progress" style="height: 10px;">
+                                            <div class="progress-bar bg-info" role="progressbar" 
+                                                 style="width: {{ weather.daily.precipitation_probability_max[i] }}%;" 
+                                                 aria-valuenow="{{ weather.daily.precipitation_probability_max[i] }}" 
+                                                 aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <small class="text-muted">{{ weather.daily.precipitation_probability_max[i]|round(0) }}%</small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted fst-italic">Dados de previsão diária indisponíveis.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
