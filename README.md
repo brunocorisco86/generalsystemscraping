@@ -53,11 +53,14 @@ O sistema utiliza um modelo de predição avançado para auxiliar na decisão de
 
 ## 🛠 Tech Stack
 
-- **Linguagem:** Python 3.11+ (Aiogram, Pandas, Scipy, Selenium).
+- **Linguagem:** Python 3.12+ (Aiogram, Pandas, Flask, Selenium).
 - **IA/LLM:** Google Gemini (via LangChain).
+- **Web:** Dashboard responsivo (Flask + Bootstrap 5 + Chart.js).
 - **Infra:** Docker Compose (PostgreSQL), Alpine Linux.
 - **Integração:** Telegram Bot API e Open-Meteo API.
-- **Fuso Horário:** America/Sao_Paulo (GMT-3) via `pytz` em todos os relatórios.
+
+Para detalhes aprofundados sobre cada componente, consulte o documento: [Stack Tecnológica](docs/tech_stack.md).
+
 
 ---
 Para detalhes arquiteturais e estado atual, consulte `docs/architecture.md` e `knowledge/project_state.md`.
