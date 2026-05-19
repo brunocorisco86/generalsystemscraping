@@ -57,8 +57,11 @@ VENV_PYTHON=/home/bruno/generalsystemscraping/.venv/bin/python3
 7 22,23,0,1,2,3,4,5,6 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.vigi_report >> $PROJECT_ROOT/logs/cron.log 2>&1
 
 # ==============================================================================
-# 4. MANUTENÇÃO E BACKUP
+# 4. MANUTENÇÃO E INICIALIZAÇÃO
 # ==============================================================================
+# Inicia o Painel Web (Dashboard) automaticamente no boot
+@reboot sleep 40 && cd $PROJECT_ROOT && $VENV_PYTHON src/web/app.py >> $PROJECT_ROOT/logs/web.log 2>&1
+
 # Migração de dados SQLite para Postgres (Backup Incremental)
 00 07,18 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.database.postgres.migrate_data >> $PROJECT_ROOT/logs/migrate.log 2>&1
 
