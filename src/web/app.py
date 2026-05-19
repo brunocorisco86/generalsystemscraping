@@ -172,6 +172,12 @@ def dashboard():
     weather_data = None
     try:
         weather_data = get_weather_forecast()
+        if weather_data:
+            # Converter DataFrames para dicionários para evitar erros no Jinja2
+            if hasattr(weather_data.get('hourly'), 'to_dict'):
+                weather_data['hourly'] = weather_data['hourly'].to_dict(orient='list')
+            if hasattr(weather_data.get('daily'), 'to_dict'):
+                weather_data['daily'] = weather_data['daily'].to_dict(orient='list')
     except Exception as e:
         logger.error(f"Erro ao carregar previsão do tempo: {e}")
 
