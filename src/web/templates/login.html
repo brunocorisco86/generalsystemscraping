@@ -3,22 +3,26 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-white p-8 rounded shadow-md mt-10">
-    <h2 class="text-2xl font-bold mb-6 text-center text-gray-700">Acesso Restrito</h2>
-    <form action="{{ url_for('login') }}" method="POST">
-        <div class="mb-4">
-            <label for="username" class="block text-gray-600 mb-2">Usuário</label>
-            <input type="text" name="username" id="username" required 
-                   class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-5">
+                <h2 class="card-title text-center fw-bold mb-4 text-secondary">Acesso Restrito</h2>
+                <form action="{{ url_for('login') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label text-muted fw-semibold">Usuário</label>
+                        <input type="text" name="username" id="username" class="form-control" required autofocus>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label text-muted fw-semibold">Senha</label>
+                        <input type="password" name="password" id="password" class="form-control" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold">Entrar</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="mb-6">
-            <label for="password" class="block text-gray-600 mb-2">Senha</label>
-            <input type="password" name="password" id="password" required 
-                   class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition font-bold">
-            Entrar
-        </button>
-    </form>
+    </div>
 </div>
 {% endblock %}

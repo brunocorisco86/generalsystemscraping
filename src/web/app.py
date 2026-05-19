@@ -94,7 +94,10 @@ def dashboard():
     # 1. Obter últimas leituras (SQLite como fonte primária)
     conn = get_sqlite_connection()
     leituras = []
-    chart_data = {"labels": [], "datasets": []}
+    
+    # Estruturas separadas para os dois gráficos
+    chart_data_ox = {"labels": [], "datasets": []}
+    chart_data_temp = {"labels": [], "datasets": []}
     
     if conn:
         try:
@@ -111,34 +114,50 @@ def dashboard():
             ''')
             leituras = cursor.fetchall()
 
-            # 2. Obter Histórico de 24h para o Gráfico
+            # 2. Obter Histórico de 24h para os Gráficos
             yesterday = (datetime.now() - timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute('''
-                SELECT nome_estrutura, oxigenio, timestamp_site
+                SELECT nome_estrutura, oxigenio, temperatura, timestamp_site
                 FROM leituras
                 WHERE timestamp_site >= ?
                 ORDER BY timestamp_site ASC
             ''', (yesterday,))
             history = cursor.fetchall()
             
-            # Formatar dados para o Chart.js
-            temp_sets = {}
+            # Formatar dados para os dois gráficos
+            data_ox = {}
+            data_temp = {}
             labels = set()
             for row in history:
-                struct, ox, ts = row
+                struct, ox, temp, ts = row
                 time_label = ts[11:16] # HH:MM
                 labels.add(time_label)
-                if struct not in temp_sets:
-                    temp_sets[struct] = []
-                temp_sets[struct].append({"x": time_label, "y": ox})
+                
+                if struct not in data_ox:
+                    data_ox[struct] = []
+                    data_temp[struct] = []
+                
+                data_ox[struct].append({"x": time_label, "y": ox})
+                data_temp[struct].append({"x": time_label, "y": temp})
             
-            chart_data["labels"] = sorted(list(labels))
-            colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
-            for i, (struct, data) in enumerate(temp_sets.items()):
-                chart_data["datasets"].append({
+            # Montar chart_data_ox e chart_data_temp
+            chart_data_ox["labels"] = sorted(list(labels))
+            chart_data_temp["labels"] = sorted(list(labels))
+            
+            colors_ox = ['#3b82f6', '#10b981'] # Azul e Verde para Oxigênio
+            colors_temp = ['#f59e0b', '#ef4444'] # Laranja e Vermelho para Temp
+            
+            for i, struct in enumerate(data_ox.keys()):
+                chart_data_ox["datasets"].append({
                     "label": struct,
-                    "data": [d["y"] for d in data], 
-                    "borderColor": colors[i % len(colors)],
+                    "data": [d["y"] for d in data_ox[struct]], 
+                    "borderColor": colors_ox[i % len(colors_ox)],
+                    "tension": 0.3
+                })
+                chart_data_temp["datasets"].append({
+                    "label": struct,
+                    "data": [d["y"] for d in data_temp[struct]], 
+                    "borderColor": colors_temp[i % len(colors_temp)],
                     "tension": 0.3
                 })
 
@@ -155,7 +174,8 @@ def dashboard():
     return render_template('dashboard.html', 
                            leituras=leituras, 
                            weather=weather_data, 
-                           chart_data=json.dumps(chart_data))
+                           chart_data_ox=json.dumps(chart_data_ox),
+                           chart_data_temp=json.dumps(chart_data_temp))
 
 # --- ENDPOINTS DE API (AÇÕES) ---
 

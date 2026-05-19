@@ -1,105 +1,142 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard Piscicultura{% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-    <!-- Card de Ações Rápidas -->
-    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
-        <h3 class="text-lg font-bold mb-4 flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            Controle Manual
-        </h3>
-        <div class="space-y-3">
-            <button onclick="runAction('/api/scrape', 'Coleta de dados')" 
-                    class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition flex justify-between items-center">
-                <span>Forçar Coleta (Scraping)</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-            </button>
-            <button onclick="runAction('/api/sync', 'Sincronização')" 
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition flex justify-between items-center">
-                <span>Sincronizar Bancos (Sync)</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-            </button>
-            <button onclick="runAiAnalysis()" 
-                    class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition flex justify-between items-center">
-                <span>Consultar IA (Especialista)</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-            </button>
+<div class="container-fluid py-4">
+    
+    <!-- LINHA 1: Controle e Clima -->
+    <div class="row g-4 mb-4">
+        <!-- Controle Manual (3 Colunas) -->
+        <div class="col-md-3">
+            <div class="card shadow-sm border-top border-primary border-4 h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">Controle Manual</h5>
+                    <div class="d-grid gap-2">
+                        <button onclick="runAction('/api/scrape', 'Coleta de dados')" class="btn btn-success text-start d-flex justify-content-between align-items-center">
+                            <span>⟳ Forçar Coleta</span>
+                        </button>
+                        <button onclick="runAction('/api/sync', 'Sincronização')" class="btn btn-primary text-start d-flex justify-content-between align-items-center">
+                            <span>⇄ Sincronizar DB</span>
+                        </button>
+                        <button onclick="runAiAnalysis()" class="btn btn-purple text-start d-flex justify-content-between align-items-center">
+                            <span>✨ Consultar IA</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clima Local (9 Colunas) -->
+        <div class="col-md-9">
+            <div class="card shadow-sm border-top border-warning border-4 h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">Clima Local</h5>
+                    {% if weather %}
+                    <div class="row text-center h-100 align-items-center">
+                        <div class="col-6 col-md-3 mb-2">
+                            <h2 class="display-6 fw-bold mb-0 text-primary">{{ weather.current.temperature_2m|round(1) }}°C</h2>
+                            <small class="text-muted text-uppercase fw-semibold">Temperatura</small>
+                        </div>
+                        <div class="col-6 col-md-3 mb-2">
+                            <h3 class="h4 mt-2 mb-0">{{ weather.current.relative_humidity_2m }}%</h3>
+                            <small class="text-muted text-uppercase fw-semibold">Umidade</small>
+                        </div>
+                        <div class="col-6 col-md-3 mb-2">
+                            <h3 class="h4 mt-2 mb-0">{{ weather.current.surface_pressure|default('--') }} hPa</h3>
+                            <small class="text-muted text-uppercase fw-semibold">Pressão Atm.</small>
+                        </div>
+                        <div class="col-6 col-md-3 mb-2">
+                            <h3 class="h4 mt-2 mb-0">
+                                {{ weather.hourly.precipitation_probability[0]|default('0') }}% 
+                                <span class="fs-6 text-muted">({{ weather.hourly.rain[0]|default('0') }}mm)</span>
+                            </h3>
+                            <small class="text-muted text-uppercase fw-semibold">Chuva</small>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-muted fst-italic">Dados de clima indisponíveis.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Card de Clima -->
-    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-yellow-500">
-        <h3 class="text-lg font-bold mb-4 flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
-            Clima Local
-        </h3>
-        {% if weather %}
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-3xl font-bold">{{ weather.current.temperature_2m|round(1) }}°C</p>
-                <p class="text-gray-500 text-sm">Umidade: {{ weather.current.relative_humidity_2m }}%</p>
-            </div>
-            <div class="text-right">
-                <p class="text-sm font-semibold">Chuva: {{ weather.hourly.precipitation_probability[0] }}%</p>
-                <p class="text-xs text-gray-400">Coordenadas: {{ weather.latitude|round(2) }}, {{ weather.longitude|round(2) }}</p>
+    <!-- LINHA 2: Tanques em Tempo Real -->
+    <div class="row g-4 mb-4">
+        {% if leituras %}
+        {% for l in leituras %}
+        <div class="col-md-6">
+            <div class="card shadow-sm border-top border-4 {% if l[1] < 2.0 %}border-danger{% else %}border-success{% endif %}">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-secondary border-bottom pb-2">{{ l[0] }}</h5>
+                    <div class="d-flex justify-content-between align-items-end mt-3">
+                        <div>
+                            <h2 class="display-5 fw-bold {% if l[1] < 2.0 %}text-danger{% else %}text-success{% endif %} mb-0">
+                                {{ l[1]|round(2) }} <span class="fs-5 text-muted">mg/L</span>
+                            </h2>
+                            <p class="text-muted mb-0 fw-semibold">Temperatura: {{ l[2]|round(1) }}°C</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1 fw-bold">⌚ {{ l[3] }}</small>
+                            <span class="badge {% if l[4] > 0 %}bg-primary{% else %}bg-secondary{% endif %} px-3 py-2">
+                                Aeradores: {{ l[4] }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        {% endfor %}
         {% else %}
-        <p class="text-gray-400 italic">Dados de clima indisponíveis.</p>
+        <div class="col-12">
+            <div class="alert alert-info text-center">Nenhuma leitura recente encontrada.</div>
+        </div>
         {% endif %}
     </div>
 
-    <!-- Última Leitura (Destaque) -->
-    {% if leituras %}
-    {% for l in leituras %}
-    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 {% if l[1] < 2.0 %}border-red-500{% else %}border-green-500{% endif %}">
-        <h3 class="font-bold text-gray-600 mb-1">{{ l[0] }}</h3>
-        <div class="flex justify-between items-end">
-            <div>
-                <p class="text-3xl font-bold {% if l[1] < 2.0 %}text-red-600{% else %}text-green-600{% endif %}">{{ l[1]|round(2) }} mg/L</p>
-                <p class="text-sm text-gray-500">Temp: {{ l[2]|round(1) }}°C</p>
+    <!-- LINHA 3: Gráficos -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold border-bottom pb-2">Histórico de Oxigênio (24h)</h5>
+                    <div style="height: 300px;">
+                        <canvas id="oxChart"></canvas>
+                    </div>
+                </div>
             </div>
-            <div class="text-right">
-                <span class="text-xs text-gray-400 block">⌚ {{ l[3] }}</span>
-                <span class="text-xs font-semibold px-2 py-1 rounded {% if l[4] > 0 %}bg-blue-100 text-blue-700{% else %}bg-gray-100 text-gray-500{% endif %}">
-                    Aeradores: {{ l[4] }}
-                </span>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold border-bottom pb-2">Histórico de Temperatura (24h)</h5>
+                    <div style="height: 300px;">
+                        <canvas id="tempChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    {% endfor %}
-    {% else %}
-    <div class="bg-white p-6 rounded-lg shadow-md text-center text-gray-400 italic">
-        Nenhuma leitura recente encontrada.
-    </div>
-    {% endif %}
-</div>
 
-<!-- Área de Gráfico -->
-<div class="bg-white p-6 rounded-lg shadow-md mb-8">
-    <h3 class="text-lg font-bold mb-4">Histórico de Oxigênio (24h)</h3>
-    <div class="h-64">
-        <canvas id="mainChart"></canvas>
-    </div>
 </div>
 
 <!-- Modal para Parecer da IA -->
-<div id="aiModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-2xl w-full p-6 shadow-2xl">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-bold text-purple-700 flex items-center">
-                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-                Parecer do Especialista (IA)
-            </h3>
-            <button onclick="closeAiModal()" class="text-gray-400 hover:text-gray-600 font-bold text-2xl">&times;</button>
-        </div>
-        <div id="aiContent" class="prose max-w-none text-gray-700 overflow-y-auto max-h-96 whitespace-pre-line bg-gray-50 p-4 rounded border">
-            Processando análise...
-        </div>
-        <div class="mt-6 text-right">
-            <button onclick="closeAiModal()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded text-gray-700 font-semibold transition">Fechar</button>
+<div class="modal fade" id="aiModal" tabindex="-1" aria-labelledby="aiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header bg-light border-bottom">
+                <h5 class="modal-title fw-bold text-primary" id="aiModalLabel">✨ Parecer do Especialista (IA)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <div id="aiContent" class="p-3 bg-white border rounded shadow-sm overflow-auto" style="max-height: 400px; white-space: pre-line;">
+                    Processando análise...
+                </div>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
         </div>
     </div>
 </div>
@@ -125,7 +162,8 @@
 
     async function runAiAnalysis() {
         showLoading();
-        document.getElementById('aiModal').classList.remove('hidden');
+        const modal = new bootstrap.Modal(document.getElementById('aiModal'));
+        modal.show();
         document.getElementById('aiContent').innerText = "Analisando dados das últimas 24h... por favor aguarde.";
         
         try {
@@ -143,32 +181,31 @@
         }
     }
 
-    function closeAiModal() {
-        document.getElementById('aiModal').classList.add('hidden');
-    }
-
-    // Inicialização do Gráfico com Dados do Backend
-    const chartData = JSON.parse('{{ chart_data | safe }}');
-    const ctx = document.getElementById('mainChart').getContext('2d');
-    const mainChart = new Chart(ctx, {
-        type: 'line',
-        data: chartData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: { 
-                    beginAtZero: false,
-                    title: { display: true, text: 'Oxigênio (mg/L)' }
-                },
-                x: {
-                    title: { display: true, text: 'Hora (24h)' }
-                }
-            },
-            plugins: {
-                legend: { position: 'bottom' }
-            }
+    // Inicialização dos Gráficos
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { position: 'bottom' }
+        },
+        scales: {
+            x: { grid: { display: false } },
+            y: { beginAtZero: false }
         }
+    };
+
+    const oxData = JSON.parse('{{ chart_data_ox | safe }}');
+    new Chart(document.getElementById('oxChart'), {
+        type: 'line',
+        data: oxData,
+        options: commonOptions
+    });
+
+    const tempData = JSON.parse('{{ chart_data_temp | safe }}');
+    new Chart(document.getElementById('tempChart'), {
+        type: 'line',
+        data: tempData,
+        options: commonOptions
     });
 </script>
 {% endblock %}
