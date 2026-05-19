@@ -21,3 +21,16 @@ def test_environment_is_isolated():
     sqlite_path = os.environ.get("SQLITE_DB_PATH")
     assert sqlite_path == "data/test_dummy_db.sqlite", \
         f"Alerta de vazamento de banco! Banco apontado: {sqlite_path}"
+
+    # Verifica o web dashboard credentials para isolamento
+    web_user = os.environ.get("WEB_ADMIN_USER")
+    if web_user:
+        assert web_user == "test_admin", \
+            f"Alerta de vazamento! Usuário admin de produção detectado: {web_user}"
+
+    # Verifica chaves de Flask para evitar conflito com produção
+    flask_key = os.environ.get("FLASK_SECRET_KEY")
+    if flask_key:
+        assert flask_key == "test_secret_key_123", \
+            "Alerta de vazamento! Chave Flask do ambiente de produção detectada!"
+
