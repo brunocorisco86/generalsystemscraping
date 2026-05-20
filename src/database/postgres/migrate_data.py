@@ -15,8 +15,13 @@ from src.services.database import get_sqlite_connection, get_postgres_connection
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def migrate_data():
+def migrate_data(silent=False):
     """Migra dados do SQLite para o PostgreSQL."""
+    if silent:
+        # Se for silencioso, podemos ajustar o nível de log localmente se necessário
+        # ou apenas aceitar o parâmetro para compatibilidade.
+        pass
+        
     sq_conn = get_sqlite_connection()
     pg_conn = get_postgres_connection()
 
