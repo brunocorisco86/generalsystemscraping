@@ -32,6 +32,7 @@ BACKUP_DIR="${ACTUAL_PROJECT_ROOT}/data/backups"
 BACKUP_FILE="piscicultura_backup_$TIMESTAMP.sql.gz"
 CONTAINER_NAME="piscicultura_postgres"
 RETENCAO_LOCAL=30
+RETENCAO_R2=5
 
 # Criar diretório de backup se não existir
 mkdir -p "$BACKUP_DIR"
@@ -65,6 +66,22 @@ if command -v rclone &> /dev/null; then
     
     if [ $? -eq 0 ]; then
         echo "[$(date)] Sincronização com R2 concluída com sucesso."
+
+        # 5. Limpeza de backups antigos no R2 (Mantém as últimas N versões)
+        echo "[$(date)] Verificando retenção no R2 (Mantendo as últimas $RETENCAO_R2 versões)..."
+        # Lista arquivos, ordena do mais novo para o mais antigo, e pega a partir do N+1
+        BACKUPS_R2=$(rclone lsf "R2:$R2_BUCKET_NAME/" | grep "piscicultura_backup_" | sort -r)
+        COUNT_R2=$(echo "$BACKUPS_R2" | grep -v '^$' | wc -l)
+
+        if [ "$COUNT_R2" -gt "$RETENCAO_R2" ]; then
+            TO_DELETE=$(echo "$BACKUPS_R2" | tail -n +$((RETENCAO_R2 + 1)))
+            for file in $TO_DELETE; do
+                if [ -n "$file" ]; then
+                    echo "Deletando backup antigo no R2: $file"
+                    rclone deletefile "R2:$R2_BUCKET_NAME/$file"
+                fi
+            done
+        fi
     else
         echo "[$(date)] AVISO: Falha na sincronização com R2. Verifique as credenciais no .env."
     fi
@@ -72,7 +89,7 @@ else
     echo "[$(date)] AVISO: rclone não encontrado. Backup mantido apenas localmente em $BACKUP_DIR."
 fi
 
-# 5. Limpeza de backups antigos (Local)
+# 6. Limpeza de backups antigos (Local)
 echo "[$(date)] Limpando backups locais com mais de $RETENCAO_LOCAL dias..."
 find "$BACKUP_DIR" -name "piscicultura_backup_*.sql.gz" -mtime +$RETENCAO_LOCAL -delete
 
