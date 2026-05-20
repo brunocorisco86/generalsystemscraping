@@ -31,18 +31,19 @@ def run_production_logic():
         conn = get_sqlite_connection()
         if not conn: return
         
-        # 1. Buscar Clima Atual (Temperatura Ambiente, Pressão, Umidade)
+        # 1. Buscar Clima Atual (Temperatura Ambiente, Pressão, Umidade, Nuvens)
         cursor = conn.cursor()
-        cursor.execute("SELECT temperatura, pressao, umidade FROM clima_historico ORDER BY data_coleta DESC LIMIT 1")
+        cursor.execute("SELECT temperatura, pressao, umidade, cloud_cover FROM clima_historico ORDER BY data_coleta DESC LIMIT 1")
         clima_row = cursor.fetchone()
-        temp_ambiente, pressao, umidade = clima_row if clima_row else (25.0, 1013.25, 70.0)
+        temp_ambiente, pressao, umidade, cloud_cover = clima_row if (clima_row and len(clima_row) == 4) else (clima_row[0], clima_row[1], clima_row[2], 0.0) if clima_row else (25.0, 1013.25, 70.0, 0.0)
         
         # Prepara resumo para o Agente (Micro-contexto otimizado)
         status_pres = "Estável" if pressao >= 1010 else ("Baixa" if pressao < 1005 else "Normal")
-        resumo_agente = f"Clima: {temp_ambiente:.1f}C, {umidade:.0f}%, {pressao:.1f}hPa ({status_pres}). "
+        status_cloud = f"{cloud_cover:.0f}% nublado"
+        resumo_agente = f"Clima: {temp_ambiente:.1f}C, {umidade:.0f}%, {pressao:.1f}hPa ({status_pres}), {status_cloud}. "
         
         # Cabeçalho do Clima para o Telegram
-        clima_header = f"🌤️ `{temp_ambiente:.1f}ºC` | ⏲️ `{pressao:.1f}hPa` | 💧 `{umidade:.0f}%`"
+        clima_header = f"🌤️ `{temp_ambiente:.1f}ºC` | ⏲️ `{pressao:.1f}hPa` | ☁️ `{cloud_cover:.0f}%`"
 
         # 2. Buscar Leituras (O2 e Temp Água)
         inicio_view = agora - timedelta(hours=15)

@@ -66,9 +66,9 @@ def get_weather_forecast():
     params = {
         "latitude": latitude,
         "longitude": longitude,
-        "hourly": ["temperature_2m", "relative_humidity_2m", "rain", "surface_pressure", "precipitation_probability"],
+        "hourly": ["temperature_2m", "relative_humidity_2m", "rain", "surface_pressure", "precipitation_probability", "cloud_cover"],
         "daily": ["temperature_2m_max", "temperature_2m_min", "precipitation_probability_max", "precipitation_sum", "surface_pressure_mean"],
-        "current": ["temperature_2m", "relative_humidity_2m", "surface_pressure"],
+        "current": ["temperature_2m", "relative_humidity_2m", "surface_pressure", "cloud_cover"],
         "timezone": "America/Sao_Paulo",
         "forecast_days": 7,
         "wind_speed_unit": "ms",
@@ -84,6 +84,7 @@ def get_weather_forecast():
         "temperature_2m": current.Variables(0).Value(),
         "relative_humidity_2m": current.Variables(1).Value(),
         "surface_pressure": current.Variables(2).Value(),
+        "cloud_cover": current.Variables(3).Value(),
     }
 
     # Processar dados horários
@@ -100,6 +101,7 @@ def get_weather_forecast():
         "rain": hourly.Variables(2).ValuesAsNumpy(),
         "surface_pressure": hourly.Variables(3).ValuesAsNumpy(),
         "precipitation_probability": hourly.Variables(4).ValuesAsNumpy(),
+        "cloud_cover": hourly.Variables(5).ValuesAsNumpy(),
     }
     hourly_df = pd.DataFrame(data=hourly_data)
     hourly_df['date'] = pd.to_datetime(hourly_df['date']).dt.tz_convert("America/Sao_Paulo")

@@ -38,6 +38,7 @@ def sync_hourly_weather():
         temp = current.get("temperature_2m")
         umid = current.get("relative_humidity_2m")
         pres = current.get("surface_pressure")
+        cloud = current.get("cloud_cover")
         
         # 2. Persistir no SQLite
         conn = get_sqlite_connection()
@@ -55,12 +56,12 @@ def sync_hourly_weather():
             now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             
             cursor.execute('''
-                INSERT INTO clima_historico (data_coleta, temperatura, umidade, pressao)
-                VALUES (?, ?, ?, ?)
-            ''', (now_str, temp, umid, pres))
+                INSERT INTO clima_historico (data_coleta, temperatura, umidade, pressao, cloud_cover)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (now_str, temp, umid, pres, cloud))
             
             conn.commit()
-            logger.info(f"✅ Dados climáticos persistidos: {temp}°C, {umid}%, {pres}hPa")
+            logger.info(f"✅ Dados climáticos persistidos: {temp}°C, {umid}%, {pres}hPa, Cloud: {cloud}%")
             
         except Exception as e:
             logger.error(f"Erro ao inserir dados no SQLite: {e}")

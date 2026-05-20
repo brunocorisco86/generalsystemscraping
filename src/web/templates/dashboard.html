@@ -34,17 +34,29 @@
                     <h5 class="card-title fw-bold mb-3">Clima Local</h5>
                     {% if weather %}
                     <div class="row text-center h-100 align-items-center">
-                        <div class="col-6 col-md-3 mb-2">
+                        <div class="col-6 col-md-2 mb-2">
                             <h2 class="display-6 fw-bold mb-0 text-primary">{{ weather.current.temperature_2m|round(1) }}°C</h2>
                             <small class="text-muted text-uppercase fw-semibold">Temperatura</small>
                         </div>
-                        <div class="col-6 col-md-3 mb-2">
+                        <div class="col-6 col-md-2 mb-2 border-start border-end">
                             <h3 class="h4 mt-2 mb-0">{{ "%.2f"|format(weather.current.relative_humidity_2m|float) }}%</h3>
                             <small class="text-muted text-uppercase fw-semibold">Umidade</small>
                         </div>
                         <div class="col-6 col-md-3 mb-2">
                             <h3 class="h4 mt-2 mb-0">{{ "%.2f"|format(weather.current.surface_pressure|float) if weather.current.surface_pressure else '--' }} hPa</h3>
                             <small class="text-muted text-uppercase fw-semibold">Pressão Atm.</small>
+                        </div>
+                        <div class="col-6 col-md-2 mb-2 border-start border-end">
+                            <h3 class="h4 mt-2 mb-0">
+                                {% set cloud = weather.current.cloud_cover|float %}
+                                {% if cloud < 10 %}☀️
+                                {% elif cloud < 30 %}🌤️
+                                {% elif cloud < 60 %}⛅
+                                {% elif cloud < 85 %}🌥️
+                                {% else %}☁️{% endif %}
+                                {{ cloud|round(0) }}%
+                            </h3>
+                            <small class="text-muted text-uppercase fw-semibold">Nuvens</small>
                         </div>
                         <div class="col-6 col-md-3 mb-2">
                             <h3 class="h4 mt-2 mb-0">

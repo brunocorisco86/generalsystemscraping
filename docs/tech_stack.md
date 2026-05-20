@@ -31,7 +31,7 @@ Este documento detalha as tecnologias, ferramentas e linguagens utilizadas no de
 - **Sistema Operacional:** Alpine Linux (Hardware: Raspberry Pi 3B).
 - **Gerenciamento de Processos:** Cron (Agendamentos e execução automática via `@reboot`).
 - **Containerização:** [Docker Compose](https://docs.docker.com/compose/) - Para o banco de dados Postgres e PGAdmin.
-- **Previsão do Tempo:** [Open-Meteo API](https://open-meteo.com/) - Integração de dados climáticos locais.
+- **Previsão do Tempo:** [Open-Meteo API](https://open-meteo.com/) - Integração de dados climáticos locais (Temperatura, Umidade, Pressão, Probabilidade de Chuva e Cobertura de Nuvens).
 
 ## 7. Qualidade de Código e Testes
 - **Testes Unitários/Integração:** [Pytest](https://docs.pytest.org/)

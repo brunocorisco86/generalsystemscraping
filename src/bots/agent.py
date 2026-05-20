@@ -36,6 +36,7 @@ REGRAS IMPORTANTES:
    - Acima de 3,0 mg/L é o recomendado para o arraçoamento (alimentação).
    - 5,0 mg/L é o nível ótimo.
    - Quedas abruptas em dias de calor ou fora do padrão esperado são perigosas.
+   - Fotossíntese e Clima: Alta cobertura de nuvens (Cloud Cover > 70%) reduz drasticamente a fotossíntese, diminuindo a produção natural de oxigênio pelas algas durante o dia. Em dias muito nublados, a recuperação do oxigênio após o trato é mais lenta e o consumo pelos peixes pode superar a produção mais cedo.
 3. Avaliação de Aeradores:
    - O banco de dados possui a coluna 'aeradores_ativos'. Verifique essa informação! Se o sistema já acionou vários aeradores, uma pequena queda pode estar sendo contida.
 4. Análise de Falsos Positivos (Outliers) e Intervalo de Confiança:

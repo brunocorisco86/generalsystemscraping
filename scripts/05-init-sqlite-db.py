@@ -108,7 +108,8 @@ def init_sqlite():
                 data_coleta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 temperatura REAL,
                 umidade REAL,
-                pressao REAL
+                pressao REAL,
+                cloud_cover REAL
             )
         ''')
 

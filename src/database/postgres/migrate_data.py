@@ -1,71 +1,48 @@
 import os
-import logging
 import sys
+import logging
+import psycopg2
+import sqlite3
+from datetime import datetime
+from dotenv import load_dotenv
 
-# Adicionar o caminho do projeto ao sys.path para permitir importações do src
-# Agora que o script está em src/database/postgres/, subimos 3 níveis.
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-if project_root not in sys.path:
-    sys.path.append(project_root)
+# Adicionar a raiz do projeto ao sys.path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.append(project_root)
 
-from src.services.database import get_sqlite_connection, get_postgres_connection  # noqa: E402
-from src.services.notification import send_telegram_message  # noqa: E402
+from src.services.database import get_sqlite_connection, get_postgres_connection
 
-SQLITE_TABELA_ORIGEM = 'leituras' 
-
-# Configuração do logger
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def migrate_data(silent=False):
-    """
-    Migra dados incrementais da base SQLite para a base PostgreSQL.
-    Busca o último ID migrado no PostgreSQL e copia todos os registros
-    mais recentes do SQLite.
-    """
-    # --- CONFIGURAÇÕES DO TELEGRAM ---
-    # Se rodado pelo Bot, o primeiro argumento será o chat_id. 
-    # Caso contrário, usa o ADMIN_ID do .env.
-    chat_id_target = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("TELEGRAM_ADMIN_ID")
+def migrate_data():
+    """Migra dados do SQLite para o PostgreSQL."""
+    sq_conn = get_sqlite_connection()
+    pg_conn = get_postgres_connection()
 
-    pg_conn = None
-    sq_conn = None
-    status_msg = ""
-    
+    if not sq_conn or not pg_conn:
+        logger.error("Falha ao conectar aos bancos de dados.")
+        return
+
     try:
-        logger.info("Iniciando migração de dados...")
-        
-        # Conectar aos bancos de dados usando o serviço
-        pg_conn = get_postgres_connection()
-        sq_conn = get_sqlite_connection()
-
-        if not pg_conn or not sq_conn:
-            raise Exception("Falha ao conectar a um dos bancos de dados.")
-
-        pg_cur = pg_conn.cursor()
         sq_cur = sq_conn.cursor()
+        pg_cur = pg_conn.cursor()
+
+        status_msg = ""
 
         # --- MIGRAÇÃO DE LEITURAS ---
-        # 1. Verifica último ID no PostgreSQL para leituras
         pg_cur.execute("SELECT MAX(id) FROM leituras")
         ultimo_id = pg_cur.fetchone()[0] or 0
         logger.info("Último ID de leituras no PostgreSQL: %d", ultimo_id)
 
-        # 2. Busca novos dados de leituras no SQLite
-        query_sq = """
-            SELECT id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos 
-            FROM leituras 
-            WHERE id > ?
-        """
-        sq_cur.execute(query_sq, (ultimo_id,))
+        sq_cur.execute("SELECT id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos FROM leituras WHERE id > ?", (ultimo_id,))
         novas_leituras = sq_cur.fetchall()
 
         if novas_leituras:
-            # 3. Insere no Postgres
-            logger.info("Encontrados %d novas leituras para migrar.", len(novas_leituras) )
+            logger.info("Encontrados %d novas leituras para migrar.", len(novas_leituras))
             insert_query = """
-                INSERT INTO leituras (id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos) 
+                INSERT INTO leituras (id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT (id) DO NOTHING
             """
             pg_cur.executemany(insert_query, novas_leituras)
             pg_conn.commit()
@@ -76,15 +53,14 @@ def migrate_data(silent=False):
         ultimo_id_clima = pg_cur.fetchone()[0] or 0
         logger.info("Último ID de clima no PostgreSQL: %d", ultimo_id_clima)
 
-        sq_cur.execute("SELECT id, data_coleta, temperatura, umidade, pressao FROM clima_historico WHERE id > ?", (ultimo_id_clima,))
+        sq_cur.execute("SELECT id, data_coleta, temperatura, umidade, pressao, cloud_cover FROM clima_historico WHERE id > ?", (ultimo_id_clima,))
         novos_climas = sq_cur.fetchall()
 
         if novos_climas:
             logger.info("Encontrados %d novos registros de clima para migrar.", len(novos_climas))
             insert_clima = """
-                INSERT INTO clima_historico (id, data_coleta, temperatura, umidade, pressao)
-                VALUES (%s, %s, %s, %s, %s)
-                ON CONFLICT (id) DO NOTHING
+                INSERT INTO clima_historico (id, data_coleta, temperatura, umidade, pressao, cloud_cover)
+                VALUES (%s, %s, %s, %s, %s, %s)
             """
             pg_cur.executemany(insert_clima, novos_climas)
             pg_conn.commit()
@@ -94,33 +70,16 @@ def migrate_data(silent=False):
             status_msg = "Migração concluída: Nenhum dado novo encontrado."
         else:
             status_msg = "Sucesso!" + status_msg
+        
+        logger.info(status_msg)
 
     except Exception as e:
-        status_msg = f"Erro na migração de dados: {str(e)}"
+        logger.error(f"Erro na migração de dados: {str(e)}")
         if pg_conn:
             pg_conn.rollback()
-    
     finally:
-        if pg_conn:
-            pg_conn.close()
-        if sq_conn:
-            sq_conn.close()
-        
-        if "Erro" in status_msg:
-            logger.error(status_msg)
-        else:
-            logger.info(status_msg)
-
-        if not silent:
-            send_telegram_message(status_msg, chat_id=chat_id_target)
+        if sq_conn: sq_conn.close()
+        if pg_conn: pg_conn.close()
 
 if __name__ == "__main__":
-    from dotenv import load_dotenv
-    # Carrega .env do root
-    load_dotenv(os.path.join(project_root, '.env'))
-    # Configuração básica de logging para execução direta
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
     migrate_data()
