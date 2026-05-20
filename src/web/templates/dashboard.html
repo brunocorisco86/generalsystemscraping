@@ -144,6 +144,7 @@
                                     <th>Data</th>
                                     <th>Máx (°C)</th>
                                     <th>Mín (°C)</th>
+                                    <th>Nuvens</th>
                                     <th>Chuva (mm)</th>
                                     <th>Probabilidade</th>
                                 </tr>
@@ -154,6 +155,17 @@
                                     <td class="fw-bold text-secondary">{{ weather.daily.date[i].strftime('%d/%m') }}</td>
                                     <td class="text-danger fw-bold">{{ "%.1f"|format(weather.daily.temperature_2m_max[i]) }}°</td>
                                     <td class="text-primary fw-bold">{{ "%.1f"|format(weather.daily.temperature_2m_min[i]) }}°</td>
+                                    <td>
+                                        {% set d_cloud = weather.daily.cloud_cover_mean[i]|float %}
+                                        <span title="{{ d_cloud|round(0) }}% de cobertura">
+                                            {% if d_cloud < 10 %}☀️
+                                            {% elif d_cloud < 30 %}🌤️
+                                            {% elif d_cloud < 60 %}⛅
+                                            {% elif d_cloud < 85 %}🌥️
+                                            {% else %}☁️{% endif %}
+                                            {{ d_cloud|round(0) }}%
+                                        </span>
+                                    </td>
                                     <td>{{ "%.1f"|format(weather.daily.precipitation_sum[i]) }} mm</td>
                                     <td>
                                         <div class="progress" style="height: 10px;">
