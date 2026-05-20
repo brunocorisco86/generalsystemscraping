@@ -12,7 +12,15 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 ENV_FILE="$REPO_ROOT/.env"
 
 if [ -f "$ENV_FILE" ]; then
-    export $(grep -v '^#' "$ENV_FILE" | xargs)
+    # Carrega variáveis de forma robusta, ignorando comentários e linhas inválidas
+    while read -r line || [ -n "$line" ]; do
+        case "$line" in
+            # Ignora linhas vazias e comentários que começam com #
+            "" | [[:space:]]*#*) continue ;;
+            # Exporta apenas se tiver o formato CHAVE=VALOR
+            [A-Za-z0-9_]*=*) export "$line" ;;
+        esac
+    done < "$ENV_FILE"
 else
     echo "[$(date)] ERRO: Arquivo .env não encontrado em $ENV_FILE"
     exit 1
