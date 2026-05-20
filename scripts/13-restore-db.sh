@@ -6,15 +6,20 @@
 
 set -e
 
-# 1. Carregar variáveis de ambiente
-if [ -f .env ]; then
-    export $(grep -v '^#' .env | xargs)
+# 1. Resolver caminhos e carregar variáveis de ambiente
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+ENV_FILE="$REPO_ROOT/.env"
+
+if [ -f "$ENV_FILE" ]; then
+    export $(grep -v '^#' "$ENV_FILE" | xargs)
 else
-    echo "[$(date)] ERRO: Arquivo .env não encontrado na raiz do projeto."
+    echo "[$(date)] ERRO: Arquivo .env não encontrado em $ENV_FILE"
     exit 1
 fi
 
-BACKUP_DIR="${PROJECT_ROOT}/data/backups"
+ACTUAL_PROJECT_ROOT="${PROJECT_ROOT:-$REPO_ROOT}"
+BACKUP_DIR="${ACTUAL_PROJECT_ROOT}/data/backups"
 CONTAINER_NAME="piscicultura_postgres"
 
 # Criar diretório se não existir

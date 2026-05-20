@@ -4,18 +4,24 @@
 # Autor: Manus (AI Architect)
 # Data: 2026-04-12
 
-# 1. Carregar variáveis de ambiente
-# O script assume que está sendo executado a partir da raiz do projeto
-if [ -f .env ]; then
-    export $(grep -v '^#' .env | xargs)
+# 1. Resolver caminhos e carregar variáveis de ambiente
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+ENV_FILE="$REPO_ROOT/.env"
+
+if [ -f "$ENV_FILE" ]; then
+    # Exporta variáveis cuidando de possíveis aspas
+    export $(grep -v '^#' "$ENV_FILE" | xargs)
 else
-    echo "[$(date)] ERRO: Arquivo .env não encontrado na raiz do projeto."
+    echo "[$(date)] ERRO: Arquivo .env não encontrado em $ENV_FILE"
     exit 1
 fi
 
-# 2. Configurações baseadas no .env
+# 2. Configurações baseadas no .env ou calculadas
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-BACKUP_DIR="${PROJECT_ROOT}/data/backups"
+# Se PROJECT_ROOT não estiver no .env, usa o REPO_ROOT detectado
+ACTUAL_PROJECT_ROOT="${PROJECT_ROOT:-$REPO_ROOT}"
+BACKUP_DIR="${ACTUAL_PROJECT_ROOT}/data/backups"
 BACKUP_FILE="piscicultura_backup_$TIMESTAMP.sql.gz"
 CONTAINER_NAME="piscicultura_postgres"
 RETENCAO_LOCAL=30
