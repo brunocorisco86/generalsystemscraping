@@ -11,12 +11,12 @@
 *   [x] Integração de Agente de IA (Gemini/LangChain) para filtro inteligente de falsos positivos e consulta de dados no Telegram.
 *   [x] Persistência Horária de Dados Climáticos (Open-Meteo -> SQLite -> Postgres).
 *   [x] Painel Web Local (Flask Dashboard) para controle manual e monitoramento silencioso.
+*   [x] Estratégia de Backup (Local + Cloudflare R2).
 
 ## 🚀 Próximos Passos (Q3 2026)
 
 *   [ ] Correlação de Dados: Analisar impacto da pressão atmosférica e temperatura externa nos níveis de Oxigênio Dissolvido (OD).
 *   [ ] Implementação de Testes Unitários (Scrape, Alerts, DB).
-*   [ ] Estratégia de Backup (Local + Cloudflare R2).
 *   [ ] Refinamento do tratamento de erros no scraping.
 
 ## 🔮 Visão de Longo Prazo (Q4 2026+)
