@@ -65,6 +65,9 @@ VENV_PYTHON=/home/bruno/generalsystemscraping/.venv/bin/python3
 # Migração de dados SQLite para Postgres (Backup Incremental)
 00 07,18 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.database.postgres.migrate_data >> $PROJECT_ROOT/logs/migrate.log 2>&1
 
+# Backup Semanal para Cloudflare R2 (Domingo às 03:00)
+0 3 * * 0 cd $PROJECT_ROOT && sh scripts/11-backup-db.sh >> $PROJECT_ROOT/logs/backup.log 2>&1
+
 # Limpeza automática de logs (Diária: mantém 7 dias | Mensal: limpeza profunda)
 0 1 * * * sh $PROJECT_ROOT/scripts/09-cleanup-logs.sh 7 >> $PROJECT_ROOT/logs/cron.log 2>&1
 0 4 1 * * sh $PROJECT_ROOT/scripts/09-cleanup-logs.sh 30 >> $PROJECT_ROOT/logs/cron.log 2>&1

@@ -44,9 +44,9 @@ sh scripts/11-backup-db.sh
 ```
 
 ### Agendamento (Cron)
-Para garantir o backup diário automático às 03:00 da manhã, adicione ao seu crontab (`crontab -e`):
+Para garantir o backup **semanal** automático (ex: todo domingo às 03:00 da manhã), adicione ao seu crontab (`crontab -e`):
 ```cron
-0 3 * * * cd /home/bruno/generalsystemscraping && sh scripts/11-backup-db.sh >> /home/bruno/generalsystemscraping/logs/backup.log 2>&1
+0 3 * * 0 cd /home/bruno/generalsystemscraping && sh scripts/11-backup-db.sh >> /home/bruno/generalsystemscraping/logs/backup.log 2>&1
 ```
 
 ## 5. Código de Contingência: Restauração em Novo Comissionamento
