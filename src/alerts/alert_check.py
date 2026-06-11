@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 # Importar serviços do projeto
 import asyncio
-from src.services.database import get_sqlite_connection
+from src.services.database import get_sqlite_connection, get_postgres_connection, get_all_estruturas_map
 from src.services.notification import send_telegram_message
 from src.bots.agent import analyze_alert_data
 
@@ -30,8 +30,6 @@ def check_alerts():
         cursor = conn.cursor()
 
         # Busca a última leitura de cada tanque usando subquery
-        # Nota: Usamos 'data_coleta' ou 'timestamp_site' dependendo da precisão desejada.
-        # Aqui usamos data_coleta que é preenchido pelo nosso script de scraping.
         cursor.execute("""
             SELECT t1.nome_estrutura, t1.oxigenio, t1.temperatura 
             FROM leituras t1
@@ -46,7 +44,28 @@ def check_alerts():
         if not leituras:
             return
 
+        # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
+        estruturas_ativas = set()
+        pg_conn = get_postgres_connection()
+        if pg_conn:
+            try:
+                pg_cur = pg_conn.cursor()
+                pg_cur.execute("SELECT estrutura_uid FROM lotes WHERE data_abate IS NULL")
+                estruturas_ativas = {r[0] for r in pg_cur.fetchall()}
+            except Exception as e:
+                logger.error(f"Erro ao buscar estruturas ativas no Postgres para alert_check: {e}")
+            finally:
+                pg_conn.close()
+
+        estruturas_map = get_all_estruturas_map()
+
         for tanque, oxigenio, temperatura in leituras:
+            # Filtra apenas se houver conexão bem-sucedida e o tanque não estiver ativo
+            uid = estruturas_map.get(tanque)
+            if estruturas_ativas and (not uid or uid not in estruturas_ativas):
+                logger.info("Ignorando verificação para %s (Lote inativo)", tanque)
+                continue
+
             # Log de monitoramento
             logger.info("Verificando %s: %s Mg/L", tanque, oxigenio)
 

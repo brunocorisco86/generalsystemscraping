@@ -4,7 +4,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 # Importar serviços do projeto
-from src.services.database import get_sqlite_connection
+from src.services.database import get_sqlite_connection, get_postgres_connection, get_all_estruturas_map
 from src.services.notification import send_telegram_message
 
 # Configuração do logger
@@ -42,14 +42,36 @@ def check_last_reading():
         results = cursor.fetchall()
 
         if not results:
-            logger.warning("Nenhum dado de tanque encontrado na tabela 'leituras'.")
+            logger.warning("Nenhum data de tanque encontrado na tabela 'leituras'.")
             send_telegram_message("🚫 *Atenção:* Nenhum dado de tanque encontrado para monitoramento offline.")
             return
+
+        # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
+        estruturas_ativas = set()
+        pg_conn = get_postgres_connection()
+        if pg_conn:
+            try:
+                pg_cur = pg_conn.cursor()
+                pg_cur.execute("SELECT estrutura_uid FROM lotes WHERE data_abate IS NULL")
+                estruturas_ativas = {r[0] for r in pg_cur.fetchall()}
+            except Exception as e:
+                logger.error(f"Erro ao buscar estruturas ativas no Postgres para offline_check: {e}")
+            finally:
+                pg_conn.close()
+
+        estruturas_map = get_all_estruturas_map()
 
         logger.info("Encontrados %d tanques para verificar.", len(results))
 
         for tank, last_reading_str in sorted(results):
             if not tank: continue
+
+            # Filtra apenas se houver conexão bem-sucedida e o tanque não estiver ativo
+            uid = estruturas_map.get(tank)
+            if estruturas_ativas and (not uid or uid not in estruturas_ativas):
+                logger.info("Ignorando verificação offline para %s (Lote inativo)", tank)
+                continue
+
             if last_reading_str:
                 try:
                     last_reading_time = datetime.strptime(last_reading_str, '%Y-%m-%d %H:%M:%S')
