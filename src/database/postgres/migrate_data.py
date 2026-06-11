@@ -35,23 +35,65 @@ def migrate_data(silent=False):
 
         status_msg = ""
 
+        # --- CONTROLE DE MIGRAÇÃO (Tabela de Controle) ---
+        pg_cur.execute("""
+            CREATE TABLE IF NOT EXISTS controle_migracao (
+                chave VARCHAR(50) PRIMARY KEY,
+                valor_int INTEGER
+            )
+        """)
+        pg_conn.commit()
+
         # --- MIGRAÇÃO DE LEITURAS ---
-        pg_cur.execute("SELECT MAX(id) FROM leituras")
-        ultimo_id = pg_cur.fetchone()[0] or 0
-        logger.info("Último ID de leituras no PostgreSQL: %d", ultimo_id)
+        pg_cur.execute("SELECT valor_int FROM controle_migracao WHERE chave = 'ultimo_id_leituras'")
+        row = pg_cur.fetchone()
+        if row is not None:
+            ultimo_id = row[0]
+        else:
+            pg_cur.execute("SELECT MAX(id) FROM leituras")
+            ultimo_id = pg_cur.fetchone()[0] or 0
+        
+        logger.info("Último ID de leituras processado no SQLite: %d", ultimo_id)
 
+        # Buscar UIDs das estruturas que têm lotes ativos no PostgreSQL
+        pg_cur.execute("SELECT estrutura_uid FROM lotes WHERE data_abate IS NULL")
+        estruturas_ativas = {r[0] for r in pg_cur.fetchall()}
+
+        # Buscar novas leituras no SQLite
         sq_cur.execute("SELECT id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos FROM leituras WHERE id > ?", (ultimo_id,))
-        novas_leituras = sq_cur.fetchall()
+        novas_leituras_sqlite = sq_cur.fetchall()
 
-        if novas_leituras:
-            logger.info("Encontrados %d novas leituras para migrar.", len(novas_leituras))
-            insert_query = """
-                INSERT INTO leituras (id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """
-            pg_cur.executemany(insert_query, novas_leituras)
+        if novas_leituras_sqlite:
+            max_sqlite_id = max(r[0] for r in novas_leituras_sqlite)
+            
+            # Filtrar leituras mantendo apenas as que pertencem a estruturas ativas
+            leituras_filtradas = [
+                r for r in novas_leituras_sqlite if r[1] in estruturas_ativas
+            ]
+
+            if leituras_filtradas:
+                logger.info("Encontradas %d novas leituras para migrar (de %d totais no SQLite).", len(leituras_filtradas), len(novas_leituras_sqlite))
+                insert_query = """
+                    INSERT INTO leituras (id, estrutura_uid, nome_estrutura, oxigenio, temperatura, timestamp_site, data_coleta, aeradores_ativos)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                """
+                pg_cur.executemany(insert_query, leituras_filtradas)
+                status_msg += f" {len(leituras_filtradas)} leituras migradas."
+            else:
+                logger.info("Nenhuma leitura nova de lote ativo encontrada entre as %d novas do SQLite.", len(novas_leituras_sqlite))
+                status_msg += " Nenhuma leitura nova de lote ativo."
+
+            # Atualiza a tabela de controle com o maior ID lido do SQLite
+            pg_cur.execute("""
+                INSERT INTO controle_migracao (chave, valor_int)
+                VALUES ('ultimo_id_leituras', %s)
+                ON CONFLICT (chave) DO UPDATE SET valor_int = EXCLUDED.valor_int
+            """, (max_sqlite_id,))
+            
             pg_conn.commit()
-            status_msg += f" {len(novas_leituras)} leituras migradas."
+        else:
+            # Garante que novas_leituras seja definido para as verificações posteriores
+            leituras_filtradas = []
 
         # --- MIGRAÇÃO DE CLIMA_HISTORICO ---
         pg_cur.execute("SELECT MAX(id) FROM clima_historico")
@@ -71,7 +113,7 @@ def migrate_data(silent=False):
             pg_conn.commit()
             status_msg += f" {len(novos_climas)} registros de clima migrados."
 
-        if not novas_leituras and not novos_climas:
+        if not novas_leituras_sqlite and not novos_climas:
             status_msg = "Migração concluída: Nenhum dado novo encontrado."
         else:
             status_msg = "Sucesso!" + status_msg
