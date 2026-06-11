@@ -108,6 +108,15 @@ async def finalizar_lote_abate(dados: dict) -> bool:
             dados['reais_por_peixe'], dados['estrutura_uid']
         )
     return result == "UPDATE 1"
+    
+async def verificar_lote_ativo(conn, estrutura_uid: str) -> None:
+    """Verifica se a estrutura tem um lote ativo (data_abate IS NULL)."""
+    ativo = await conn.fetchval(
+        "SELECT COUNT(*) FROM lotes WHERE estrutura_uid = $1 AND data_abate IS NULL",
+        estrutura_uid
+    )
+    if not ativo or ativo == 0:
+        raise ValueError("Operação bloqueada: A estrutura de produção selecionada não possui um lote ativo.")
 
 async def inserir_biometria(
     estrutura_uid: str,
@@ -120,6 +129,7 @@ async def inserir_biometria(
 ) -> None:
     pool = await get_pool()
     async with pool.acquire() as conn:
+        await verificar_lote_ativo(conn, estrutura_uid)
         await conn.execute(
             """
             INSERT INTO biometria
@@ -155,6 +165,7 @@ async def get_ultimo_estoque(estrutura_uid: str, lote: str) -> int:
 async def inserir_qualidade_limnologia(dados: dict):
     pool = await get_pool()
     async with pool.acquire() as conn:
+        await verificar_lote_ativo(conn, dados['estrutura_uid'])
         await conn.execute(
             """
             INSERT INTO qualidade_agua_limnologia (
@@ -168,6 +179,7 @@ async def inserir_qualidade_limnologia(dados: dict):
 async def inserir_qualidade_consumo(dados: dict):
     pool = await get_pool()
     async with pool.acquire() as conn:
+        await verificar_lote_ativo(conn, dados['estrutura_uid'])
         await conn.execute(
             """
             INSERT INTO qualidade_agua_consumo (

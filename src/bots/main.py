@@ -262,6 +262,10 @@ async def callback_agua_uid(call: CallbackQuery):
         return
 
     lote = await get_lote_por_estrutura(full_uid)
+    if not lote:
+        await call.message.answer("⚠️ Esta estrutura não possui um lote ativo no momento. A operação foi cancelada.")
+        await call.answer()
+        return
 
     estado_chat[chat_id] = {
         "step": "agua_data",
@@ -304,6 +308,11 @@ async def callback_bio_uid(call: CallbackQuery):
         return
 
     lote = await get_lote_por_estrutura(full_uid)
+    if not lote:
+        await call.message.answer("⚠️ Esta estrutura não possui um lote ativo no momento. A operação foi cancelada.")
+        await call.answer()
+        return
+
     estado_chat[chat_id] = {"step": "bio_data", "estrutura_uid": full_uid, "lote": lote}
     await call.message.answer(f"📊 Lote {lote}\nData (DD/MM/AA) [vazio = Hoje]:")
     await call.answer()
@@ -321,6 +330,10 @@ async def callback_bio_loop(call: CallbackQuery):
         return
 
     lote = await get_lote_por_estrutura(full_uid)
+    if not lote:
+        await call.message.answer("⚠️ Esta estrutura não possui um lote ativo no momento. A operação foi cancelada.")
+        await call.answer()
+        return
     
     # Reinicia o fluxo direto na data, mas mantendo a estrutura
     estado_chat[chat_id] = {
@@ -453,9 +466,13 @@ async def handle_messages(message: Message):
             await message.answer("Transparência (cm):")
         elif step == "limno_transparencia":
             estado["transparencia"] = parse_float(texto)
-            await inserir_qualidade_limnologia(estado)
-            await message.answer("✅ Dados de Limnologia salvos com sucesso!")
-            estado_chat.pop(chat_id, None)
+            try:
+                await inserir_qualidade_limnologia(estado)
+                await message.answer("✅ Dados de Limnologia salvos com sucesso!")
+            except ValueError as e:
+                await message.answer(f"❌ Erro ao salvar: {str(e)}")
+            finally:
+                estado_chat.pop(chat_id, None)
         elif step == "cons_sdt":
             estado["sdt"] = parse_float(texto)
             estado["step"] = "cons_orp"
@@ -466,9 +483,13 @@ async def handle_messages(message: Message):
             await message.answer("Cloro (ppm):")
         elif step == "cons_cloro":
             estado["ppm_cloro"] = parse_float(texto)
-            await inserir_qualidade_consumo(estado)
-            await message.answer("✅ Dados de Qualidade de Bebida salvos!")
-            estado_chat.pop(chat_id, None)
+            try:
+                await inserir_qualidade_consumo(estado)
+                await message.answer("✅ Dados de Qualidade de Bebida salvos!")
+            except ValueError as e:
+                await message.answer(f"❌ Erro ao salvar: {str(e)}")
+            finally:
+                estado_chat.pop(chat_id, None)
 
         # --- FLUXO: BIOMETRIA ---
         elif step == "bio_data":
@@ -491,23 +512,26 @@ async def handle_messages(message: Message):
             estado["step"] = "bio_racao"
             await message.answer("Consumo de Ração (kg):")
         elif step == "bio_racao":
-            await inserir_biometria(
-                estrutura_uid=estado["estrutura_uid"],
-                data_biometria=estado["data_bio"],
-                quantidade=estado["quantidade"],
-                peso_medio=estado["peso"],
-                mortalidade=estado["mortalidade"],
-                consumo_racao=parse_float(texto),
-                lote=estado["lote"]
-            )
-            
-            kb = InlineKeyboardBuilder()
-            kb.button(text="🔄 Novo Lançamento (Mesma Estrutura)", callback_data=f"bio_loop:{estado['estrutura_uid'][:16]}")
-            kb.button(text="✅ Finalizar", callback_data="bio_finish")
-            kb.adjust(1)
-            
-            await message.answer("✅ Biometria registrada com sucesso!\nDeseja realizar outro lançamento para esta mesma estrutura?", reply_markup=kb.as_markup())
-            # Não removemos o estado ainda, deixamos para o callback ou próximo comando
+            try:
+                await inserir_biometria(
+                    estrutura_uid=estado["estrutura_uid"],
+                    data_biometria=estado["data_bio"],
+                    quantidade=estado["quantidade"],
+                    peso_medio=estado["peso"],
+                    mortalidade=estado["mortalidade"],
+                    consumo_racao=parse_float(texto),
+                    lote=estado["lote"]
+                )
+                
+                kb = InlineKeyboardBuilder()
+                kb.button(text="🔄 Novo Lançamento (Mesma Estrutura)", callback_data=f"bio_loop:{estado['estrutura_uid'][:16]}")
+                kb.button(text="✅ Finalizar", callback_data="bio_finish")
+                kb.adjust(1)
+                
+                await message.answer("✅ Biometria registrada com sucesso!\nDeseja realizar outro lançamento para esta mesma estrutura?", reply_markup=kb.as_markup())
+            except ValueError as e:
+                await message.answer(f"❌ Erro ao salvar: {str(e)}")
+                estado_chat.pop(chat_id, None)
 
         # --- FLUXO: LOTE ---
         elif step == "nl_lote_nome":
