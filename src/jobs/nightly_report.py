@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 
 # Importar serviços centralizados do projeto
-from src.services.database import get_sqlite_connection
+from src.services.database import get_sqlite_connection, get_postgres_connection, get_all_estruturas_map
 from src.services.notification import send_telegram_photo
 from src.bots.agent import analyze_nightly_report_sync
 
@@ -69,6 +69,21 @@ def generate_nightly_report():
         # Converter para datetime e garantir ordenação
         df['timestamp_site'] = pd.to_datetime(df['timestamp_site'])
 
+        # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
+        estruturas_ativas = set()
+        pg_conn = get_postgres_connection()
+        if pg_conn:
+            try:
+                pg_cur = pg_conn.cursor()
+                pg_cur.execute("SELECT estrutura_uid FROM lotes WHERE data_abate IS NULL")
+                estruturas_ativas = {r[0] for r in pg_cur.fetchall()}
+            except Exception as e:
+                logger.error(f"Erro ao buscar estruturas ativas no Postgres para relatório noturno: {e}")
+            finally:
+                pg_conn.close()
+
+        estruturas_map = get_all_estruturas_map()
+
         # --- GERAÇÃO DO GRÁFICO ---
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(12, 6))
@@ -79,18 +94,30 @@ def generate_nightly_report():
         analysis_text = f"📊 *Relatório Noturno: {start_time.strftime('%d/%m')} ➔ {end_time.strftime('%d/%m')}*\n\n"
         
         # Plotar uma curva para cada tanque
+        plotou_algum = False
         for tank in sorted(df['nome_estrutura'].unique()):
             if not tank: continue
+
+            # Filtra se houver conexão bem-sucedida e o tanque não estiver nos lotes ativos
+            uid = estruturas_map.get(tank)
+            if estruturas_ativas and (not uid or uid not in estruturas_ativas):
+                continue
+
             struct_data = df[df['nome_estrutura'] == tank]
-            plt.plot(struct_data['timestamp_site'], struct_data['oxigenio'], label=f'{tank}', marker='.', markersize=4)
-            
-            # Análise estatística por tanque
-            o2_min = struct_data['oxigenio'].min()
-            temp_avg = struct_data['temperatura'].mean()
-            
-            # Alerta visual se atingiu o limite crítico
-            status = "🚨 *PERIGO*" if o2_min <= LIMITE_CRITICO else "✅ *OK*"
-            analysis_text += f"{status} - {tank}:\n   • O2 Mínimo: `{o2_min:.2f} mg/L`\n   • Temp Média: `{temp_avg:.1f}°C`\n\n"
+            if not struct_data.empty:
+                plt.plot(struct_data['timestamp_site'], struct_data['oxigenio'], label=f'{tank}', marker='.', markersize=4)
+                
+                # Análise estatística por tanque
+                o2_min = struct_data['oxigenio'].min()
+                temp_avg = struct_data['temperatura'].mean()
+                
+                # Alerta visual se atingiu o limite crítico
+                status = "🚨 *PERIGO*" if o2_min <= LIMITE_CRITICO else "✅ *OK*"
+                analysis_text += f"{status} - {tank}:\n   • O2 Mínimo: `{o2_min:.2f} mg/L`\n   • Temp Média: `{temp_avg:.1f}°C`\n\n"
+                plotou_algum = True
+
+        if not plotou_algum:
+            analysis_text += "⚠️ Nenhuma estrutura com lote ativo monitorada no período.\n\n"
 
         plt.title(f'Curva de Oxigênio - Período Noturno ({start_time.strftime("%H:%M")} às {end_time.strftime("%H:%M")})')
         plt.xlabel('Horário da Leitura')

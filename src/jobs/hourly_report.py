@@ -1,11 +1,15 @@
 import os
 import statistics
+import logging
 from datetime import datetime
 from dotenv import load_dotenv
 
 # Importar serviços centralizados do projeto
-from src.services.database import get_sqlite_connection
+from src.services.database import get_sqlite_connection, get_postgres_connection, get_all_estruturas_map
 from src.services.notification import send_telegram_message
+
+# Configuração de logging básico
+logger = logging.getLogger(__name__)
 
 # Carregar variáveis de ambiente
 load_dotenv()
@@ -61,6 +65,21 @@ def get_hourly_report():
                 grouped_data[tanque] = []
             grouped_data[tanque].append(row[1:])
 
+        # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
+        estruturas_ativas = set()
+        pg_conn = get_postgres_connection()
+        if pg_conn:
+            try:
+                pg_cur = pg_conn.cursor()
+                pg_cur.execute("SELECT estrutura_uid FROM lotes WHERE data_abate IS NULL")
+                estruturas_ativas = {r[0] for r in pg_cur.fetchall()}
+            except Exception as e:
+                logger.error(f"Erro ao buscar estruturas ativas no Postgres para relatório horário: {e}")
+            finally:
+                pg_conn.close()
+
+        estruturas_map = get_all_estruturas_map()
+
         relatorio = f"📊 *Relatório das {datetime.now().strftime('%H')} horas*\n"
 
         # --- SEÇÃO DE CLIMA (Novo) ---
@@ -72,7 +91,15 @@ def get_hourly_report():
             status_od = "✅" if c_pres >= 978 else "⚠️"
             relatorio += f"🌤️ `{c_temp:.1f}°C` | 💧 `{c_umid:.0f}%` | ⏲️ `{c_pres:.1f}hPa` {status_od}\n"
         
-        for tanque, leituras in grouped_data.items():
+        exibiu_algum_tanque = False
+        for tanque, leituras in sorted(grouped_data.items()):
+            # Filtra apenas se houver conexão bem-sucedida e estruturas ativas mapeadas
+            uid = estruturas_map.get(tanque)
+            if estruturas_ativas and (not uid or uid not in estruturas_ativas):
+                continue
+
+            exibiu_algum_tanque = True
+
             # Extração de listas para cálculos estatísticos
             lista_ox = [r[0] for r in leituras]
             lista_temp = [r[1] for r in leituras]
@@ -106,6 +133,9 @@ def get_hourly_report():
             relatorio += f"Temperatura: `{temp_atual:.1f}ºC` {trend_temp}\n"
             relatorio += f"Aeradores: `{aeradores_atuais}` 🌀\n"
             relatorio += f"⌚ {hora_ts} {confianca_emoji}\n"
+
+        if not exibiu_algum_tanque:
+            relatorio += "\n⚠️ Nenhuma estrutura com lote ativo monitorada no momento."
 
         return relatorio
 

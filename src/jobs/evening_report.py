@@ -15,7 +15,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..
 sys.path.append(project_root)
 
 
-from src.services.database import get_sqlite_connection  # noqa: E402
+from src.services.database import get_sqlite_connection, get_postgres_connection, get_all_estruturas_map  # noqa: E402
 from src.services.notification import send_telegram_photo  # noqa: E402
 from src.bots.agent import analyze_evening_report_sync  # noqa: E402
 
@@ -66,6 +66,21 @@ def generate_evening_report():
 
         df['timestamp_site'] = pd.to_datetime(df['timestamp_site'])
 
+        # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
+        estruturas_ativas = set()
+        pg_conn = get_postgres_connection()
+        if pg_conn:
+            try:
+                pg_cur = pg_conn.cursor()
+                pg_cur.execute("SELECT estrutura_uid FROM lotes WHERE data_abate IS NULL")
+                estruturas_ativas = {r[0] for r in pg_cur.fetchall()}
+            except Exception as e:
+                logger.error(f"Erro ao buscar estruturas ativas no Postgres para relatório da tarde: {e}")
+            finally:
+                pg_conn.close()
+
+        estruturas_map = get_all_estruturas_map()
+
         # --- GERAÇÃO DO PLOT ---
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(12, 6))
@@ -79,14 +94,25 @@ def generate_evening_report():
             f"📊 *Resumo da Tarde (16h ➔ {now.strftime('%H:%M')}):*\n"
         )
 
+        plotou_algum = False
         for tank in sorted(df['nome_estrutura'].unique()):
             if not tank: continue
+            
+            # Filtra se houver conexão bem-sucedida e o tanque não estiver nos lotes ativos
+            uid = estruturas_map.get(tank)
+            if estruturas_ativas and (not uid or uid not in estruturas_ativas):
+                continue
+
             struct_data = df[df['nome_estrutura'] == tank]
             if not struct_data.empty:
                 plt.plot(struct_data['timestamp_site'], struct_data['oxigenio'], label=f'{tank}', marker='o', markersize=3, linestyle='-')
                 o2_atual = struct_data['oxigenio'].iloc[-1]
                 temp_atual = struct_data['temperatura'].iloc[-1]
                 analysis_text += f"🐟 *{tank}:* `{o2_atual:.1f}` mg/L | `{temp_atual:.1f}°C`\n"
+                plotou_algum = True
+
+        if not plotou_algum:
+            analysis_text += "\n⚠️ Nenhuma estrutura com lote ativo monitorada no período."
 
         plt.title(f'Fechamento de Ciclo Diário - {now.strftime("%d/%m/%Y")}')
         plt.xlabel('Hora')

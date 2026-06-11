@@ -1,10 +1,14 @@
 import os
 import statistics
+import logging
 from dotenv import load_dotenv
 
 # Importar serviços centralizados do projeto
-from src.services.database import get_sqlite_connection
+from src.services.database import get_sqlite_connection, get_postgres_connection, get_all_estruturas_map
 from src.services.notification import send_telegram_message
+
+# Configuração de logger
+logger = logging.getLogger(__name__)
 
 # Carregar variáveis de ambiente
 load_dotenv()
@@ -59,8 +63,28 @@ def get_vigi_report():
                 dados_tanques[tanque] = []
             dados_tanques[tanque].append(oxigenio)
 
+        # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
+        estruturas_ativas = set()
+        pg_conn = get_postgres_connection()
+        if pg_conn:
+            try:
+                pg_cur = pg_conn.cursor()
+                pg_cur.execute("SELECT estrutura_uid FROM lotes WHERE data_abate IS NULL")
+                estruturas_ativas = {r[0] for r in pg_cur.fetchall()}
+            except Exception as e:
+                logger.error(f"Erro ao buscar estruturas ativas no Postgres para relatório de vigília: {e}")
+            finally:
+                pg_conn.close()
+
+        estruturas_map = get_all_estruturas_map()
+
         relatorio_lista = []
         for tanque in sorted(dados_tanques.keys()):
+            # Filtra apenas se houver conexão bem-sucedida e estruturas ativas mapeadas
+            uid = estruturas_map.get(tanque)
+            if estruturas_ativas and (not uid or uid not in estruturas_ativas):
+                continue
+
             leituras = dados_tanques[tanque]
 
             ox_atual = leituras[0]
@@ -85,7 +109,7 @@ def get_vigi_report():
             relatorio_lista.append(f"{t_visual}:{ox_atual:.1f}{trend}{status}{confianca}")
 
         if not relatorio_lista:
-            return "🌙 *Vigília:* Sem dados recentes."
+            return "🌙 *Vigília:* Sem dados recentes de lotes ativos."
 
         # Retorna os tanques separados por um pipe visual
         return " | ".join(relatorio_lista)
