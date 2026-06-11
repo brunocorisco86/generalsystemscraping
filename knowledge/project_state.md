@@ -28,6 +28,10 @@
 - **Weather Automation**: Consolidated to `hourly_weather_sync` (min 01) and `morning_weather_report` (07:05). Removed redundant weather service cron calls.
 - **Feed Prediction Optimization**: Integrated water and ambient temperatures + atmospheric pressure. Added AI-driven icons (✅/⚠️) based on specialist's textual feedback (TDD verified).
 - **Timezone Enforcement**: Todos os relatórios e comparações utilizam explicitamente `America/Sao_Paulo` (GMT-3) através da biblioteca `pytz` para garantir consistência entre servidor (UTC) e usuário local.
+- **Active Batch Isolation & Control**: 
+  - **Migração Seletiva**: O script `migrate_data.py` filtra as leituras, enviando ao PostgreSQL apenas telemetrias de estruturas com lotes ativos (`data_abate IS NULL`).
+  - **Tabela de Controle**: Progresso do SQLite rastreado por `controle_migracao` (campo `ultimo_id_leituras`), impedindo o processamento repetitivo de telemetrias inativas.
+  - **Telegram Bot e Relatórios**: O bot bloqueia lançamentos de biometria e qualidade de água para tanques sem lote ativo. Relatórios e alertas (`alert_check.py` e `offline_check.py`) ignoram dados de estruturas inativas para evitar falsos positivos.
 - **Environment**: All configuration resides in `.env`. Root path is dynamically detected.
 
 ## Domain Concepts
