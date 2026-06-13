@@ -34,6 +34,11 @@ O sistema é projetado para operar em um ambiente de baixo custo e baixo consumo
 3.  **Interação via Bot**: O Bot do Telegram grava biometrias e dados de qualidade da água diretamente no PostgreSQL de produção, validando previamente se a estrutura tem um lote ativo para impedir lançamentos incorretos.
 4.  **Consolidação (Migração)**: O script `migrate_data.py` transfere novas leituras do SQLite para o PostgreSQL seletivamente (apenas de estruturas ativas). Ele utiliza a tabela `controle_migracao` no PostgreSQL para registrar o progresso de IDs lidos do SQLite e evitar retrabalho com registros inativos.
 5.  **Relatórios**: Relatórios horários e consolidados periódicos filtram os dados lidos do SQLite exibindo no Telegram apenas as telemetrias dos tanques com lotes ativos no PostgreSQL.
+6.  **Auto-recuperação & Resiliência (Watchdog)**: Um script watchdog (`scripts/14-watchdog-resilience.sh`) executa periodicamente para resolver falhas de infraestrutura comum em dispositivos de borda (ex: Raspberry Pi):
+    - **Falta de Memória (Swap)**: Garante que o arquivo de swap local (/swapfile) esteja ativo para evitar travamentos de OOM pelo Chromium/Selenium.
+    - **Sincronização de Data/Hora Circular**: Se a data do relógio cair no passado (impedindo validações TLS/SSL), o watchdog busca a hora atual via HTTP puro do Google e ajusta o sistema operacional, restaurando a comunicação HTTPS do Tailscale e do Bot do Telegram.
+    - **Serviços Críticos**: Reinicia a resolução DNS via resolvconf, e reinicia o Flask e o container Docker do bot Telegram se inativos.
 
 ---
 *Foco na resiliência e produtividade real no campo.*
+

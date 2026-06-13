@@ -33,6 +33,10 @@
   - **Tabela de Controle**: Progresso do SQLite rastreado por `controle_migracao` (campo `ultimo_id_leituras`), impedindo o processamento repetitivo de telemetrias inativas.
   - **Telegram Bot e Relatórios**: O bot bloqueia lançamentos de biometria e qualidade de água para tanques sem lote ativo. Relatórios e alertas (`alert_check.py` e `offline_check.py`) ignoram dados de estruturas inativas para evitar falsos positivos.
 - **Environment**: All configuration resides in `.env`. Root path is dynamically detected.
+- **Resilience and Hardware Troubleshooting (Jun 2026)**:
+  - **Memory Limits (OOM)**: A ativação do Selenium/Chromedriver em servidores com pouca RAM (ex: ~1GB de RAM) pode causar travamento dos processos do Chrome e erros de timeout. Foi ativado e configurado um **Swapfile de 1GB** persistente no `/etc/fstab` (`/swapfile swap swap defaults 0 0`).
+  - **DNS & Time Sync Loop (Tailscale)**: Falhas na control plane do Tailscale ou no DNS local (`100.100.100.100`) podem impedir o NTP de sincronizar o relógio. Com o relógio atrasado, conexões HTTPS com a control plane falham por expiração de certificado SSL, gerando um travamento circular.
+  - **Watchdog Auto-Recuperação**: Implementado o script [14-watchdog-resilience.sh](file:///media/brunoconter/DOCUMENTOS2/9_ALPINE_GENERAL/scripts/14-watchdog-resilience.sh) (executado a cada 5 minutos pelo cron). Ele valida a resolução DNS (faz fallback temporário para `8.8.8.8` no `/etc/resolv.conf`), corrige o relógio do sistema buscando o Date Header via HTTP puro (Google) se o ano for menor que 2026, garante a ativação de swap e auto-reinicia o Web App Flask e o container Docker `peixe_patel_bot` se caírem.
 
 ## Domain Concepts
 
