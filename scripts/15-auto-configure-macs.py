@@ -98,8 +98,9 @@ def main():
                         if name_match:
                             name = name_match.group(1)
                 
-                if "Tanque" in name:
-                    tanques_site.append((name, mac_addr))
+                name_upper = name.strip().upper() if name else ""
+                if name_upper and "TANQUE" in name_upper and "N/A" not in name_upper and "DESCONHECIDO" not in name_upper:
+                    tanques_site.append((name.strip(), mac_addr))
                     
         # Remove duplicados
         seen = set()

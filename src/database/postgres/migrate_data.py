@@ -66,9 +66,14 @@ def migrate_data(silent=False):
         if novas_leituras_sqlite:
             max_sqlite_id = max(r[0] for r in novas_leituras_sqlite)
             
-            # Filtrar leituras mantendo apenas as que pertencem a estruturas ativas
+            # Filtrar leituras mantendo apenas as que pertencem a estruturas ativas e que possuem nomes válidos (não N/A/Desconhecido)
             leituras_filtradas = [
-                r for r in novas_leituras_sqlite if r[1] in estruturas_ativas
+                r for r in novas_leituras_sqlite 
+                if r[1] in estruturas_ativas 
+                and r[2] is not None 
+                and r[2].strip().upper() != 'N/A' 
+                and 'N/A' not in r[2].strip().upper()
+                and 'DESCONHECIDO' not in r[2].strip().upper()
             ]
 
             if leituras_filtradas:

@@ -191,9 +191,10 @@ def scrape_and_save():
                                 if name_match:
                                     name = name_match.group(1)
                         
-                        # Filtra apenas o que parece ser Tanque (exclui o Gateway)
-                        if "Tanque" in name:
-                            tanques_site.append((name, mac_addr))
+                        # Filtra apenas o que parece ser Tanque (exclui o Gateway e nomes inválidos como N/A)
+                        name_upper = name.strip().upper() if name else ""
+                        if name_upper and "TANQUE" in name_upper and "N/A" not in name_upper and "DESCONHECIDO" not in name_upper:
+                            tanques_site.append((name.strip(), mac_addr))
                 
                 # Remove duplicados
                 seen_macs = set()
@@ -310,6 +311,11 @@ def scrape_and_save():
                         info_env = get_default_estrutura_info()
                         pluscode = info_env['pluscode'] if nome == info_env['nome'] else "UNKNOWN"
                         uid = get_estrutura_uid(nome, pluscode)
+
+                    nome_upper = nome.strip().upper() if nome else ""
+                    if not nome_upper or "N/A" in nome_upper or "DESCONHECIDO" in nome_upper:
+                        logger.warning("Ignorando inserção de leitura para tanque com nome inválido/N/A: %s", nome)
+                        continue
 
                     # Gravação seguindo o Novo Schema
                     cursor.execute('''
