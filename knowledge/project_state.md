@@ -38,6 +38,7 @@
   - **DNS & Time Sync Loop (Tailscale)**: Falhas na control plane do Tailscale ou no DNS local (`100.100.100.100`) podem impedir o NTP de sincronizar o relógio. Com o relógio atrasado, conexões HTTPS com a control plane falham por expiração de certificado SSL, gerando um travamento circular.
   - **Watchdog Auto-Recuperação**: Implementado o script [14-watchdog-resilience.sh](file:///media/brunoconter/DOCUMENTOS2/9_ALPINE_GENERAL/scripts/14-watchdog-resilience.sh) (executado a cada 5 minutos pelo cron). Ele valida a resolução DNS (faz fallback temporário para `8.8.8.8` no `/etc/resolv.conf`), corrige o relógio do sistema buscando o Date Header via HTTP puro (Google) se o ano for menor que 2026, garante a ativação de swap e auto-reinicia o Web App Flask e o container Docker `peixe_patel_bot` se caírem.
   - **Mapeamento e Conferência de MAC Addresses**: Para evitar timeouts e quebras causadas pelo escaneamento dinâmico do menu lateral, o scraper agora lê os MACs estáticos configurados via `STRUCT_MACS` no `.env`. Ele realiza uma auditoria comparativa inicial no endpoint `/produtor` do site usando BeautifulSoup, emitindo alertas caso novos tanques sejam adicionados ao painel do Noctua IoT ou se tanques locais forem removidos no site, e navega diretamente para as URLs dos tanques.
+  - **Autocomissionamento de MACs (scripts/15-*)**: Criada ferramenta interativa de setup integrada ao `setup.sh` que faz login no Noctua-IoT, extrai os MACs dos tanques e preenche automaticamente o campo `STRUCT_MACS` no `.env`.
 
 ## Domain Concepts
 
