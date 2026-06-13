@@ -49,6 +49,7 @@ echo "6 17 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.analysis.predict_oxygen
 echo "6 22 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.evening_report >> $PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_NEW"
 echo "7 22-23,0-6 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.jobs.vigi_report >> $PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_NEW"
 echo "0 7,18 * * * cd $PROJECT_ROOT && $VENV_PYTHON -m src.database.postgres.migrate_data >> $PROJECT_ROOT/logs/migrate.log 2>&1" >> "$TMP_NEW"
+echo "0 3 * * 0 sh $PROJECT_ROOT/scripts/weekly_maintenance.sh >> $PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_NEW"
 echo "0 1 * * * sh $PROJECT_ROOT/scripts/09-cleanup-logs.sh 7 >> $PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_NEW"
 echo "0 4 1 * * sh $PROJECT_ROOT/scripts/09-cleanup-logs.sh 30 >> $PROJECT_ROOT/logs/cron.log 2>&1" >> "$TMP_NEW"
 echo "@reboot sleep 30 && sh $PROJECT_ROOT/scripts/08-fix-permissions.sh" >> "$TMP_NEW"

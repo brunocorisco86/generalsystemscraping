@@ -18,8 +18,8 @@ sys.path.append(str(project_root))
 
 from src.scrape.monitor_data import get_driver, URL_LOGIN, EMAIL, PASSWORD
 
-def update_env_file(mac_string: str):
-    """Atualiza ou insere a variável STRUCT_MACS no arquivo .env."""
+def update_env_file(mac_string: str, names_list: list):
+    """Atualiza as variáveis STRUCT_MACS, STRUCT_NAME e STRUCT_PLUSCODE no arquivo .env."""
     env_path = project_root / ".env"
     if not env_path.exists():
         print(f"ERRO: Arquivo .env não encontrado em {env_path}")
@@ -28,22 +28,55 @@ def update_env_file(mac_string: str):
     with open(env_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
         
-    replaced = False
-    new_lines = []
+    # Primeiro descobre o STRUCT_PLUSCODE atual para poder replicar
+    current_pluscodes = []
     for line in lines:
-        if line.strip().startswith("STRUCT_MACS="):
+        if line.strip().startswith("STRUCT_PLUSCODE="):
+            val = line.split("=", 1)[1].strip().strip('"').strip("'")
+            current_pluscodes = [p.strip() for p in val.split(",") if p.strip()]
+            break
+            
+    base_pluscode = current_pluscodes[0] if current_pluscodes else "5878P533+R3"
+    
+    # Gera a nova lista de pluscodes estendendo/replicando o base_pluscode
+    new_pluscodes = []
+    for i in range(len(names_list)):
+        if i < len(current_pluscodes):
+            new_pluscodes.append(current_pluscodes[i])
+        else:
+            new_pluscodes.append(base_pluscode)
+            
+    name_string = ", ".join(names_list)
+    pluscode_string = ", ".join(new_pluscodes)
+    
+    new_lines = []
+    flags = {"STRUCT_MACS": False, "STRUCT_NAME": False, "STRUCT_PLUSCODE": False}
+    
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("STRUCT_MACS="):
             new_lines.append(f'STRUCT_MACS="{mac_string}"\n')
-            replaced = True
+            flags["STRUCT_MACS"] = True
+        elif stripped.startswith("STRUCT_NAME="):
+            new_lines.append(f'STRUCT_NAME="{name_string}"\n')
+            flags["STRUCT_NAME"] = True
+        elif stripped.startswith("STRUCT_PLUSCODE="):
+            new_lines.append(f'STRUCT_PLUSCODE="{pluscode_string}"\n')
+            flags["STRUCT_PLUSCODE"] = True
         else:
             new_lines.append(line)
             
-    if not replaced:
-        new_lines.append(f'\n# Adicionado automaticamente pelo configurador de MACs:\nSTRUCT_MACS="{mac_string}"\n')
+    if not flags["STRUCT_MACS"]:
+        new_lines.append(f'STRUCT_MACS="{mac_string}"\n')
+    if not flags["STRUCT_NAME"]:
+        new_lines.append(f'STRUCT_NAME="{name_string}"\n')
+    if not flags["STRUCT_PLUSCODE"]:
+        new_lines.append(f'STRUCT_PLUSCODE="{pluscode_string}"\n')
         
     with open(env_path, 'w', encoding='utf-8') as f:
         f.writelines(new_lines)
         
-    print(f"✅ Arquivo .env atualizado com sucesso com STRUCT_MACS!")
+    print(f"✅ Arquivo .env atualizado com sucesso (STRUCT_MACS, STRUCT_NAME, STRUCT_PLUSCODE)!")
     return True
 
 def main():
@@ -124,8 +157,10 @@ def main():
         mac_string = ", ".join(macs_list)
         print(f"String gerada: STRUCT_MACS=\"{mac_string}\"")
         
+        # Lista apenas os nomes
+        names_list = [name for name, _ in tanques_unicos]
         # Atualiza o arquivo .env
-        update_env_file(mac_string)
+        update_env_file(mac_string, names_list)
         
     except Exception as e:
         print(f"❌ Erro ao comissionar MACs: {e}")

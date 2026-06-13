@@ -163,73 +163,60 @@ def scrape_and_save():
             urls_validas = []
             tanques_site_unicos = []
             
-            try:
-                # Navega para a página de perfil para auditar e extrair os MACs ativos
-                logger.info("Acessando página /produtor para realizar a conferência de MACs...")
-                driver.get("https://general-system.noctua-iot.com/produtor")
-                time.sleep(6) # Tempo para renderização dinâmica
-                
-                soup = BeautifulSoup(driver.page_source, 'html.parser')
-                
-                # Procura por MAC addresses no texto da página
-                tanques_site = []
-                for p_el in soup.find_all(string=re.compile(r'MAC:\s*[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}')):
-                    mac_match = re.search(r'([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}', p_el)
-                    if mac_match:
-                        mac_addr = mac_match.group(0)
-                        
-                        # Tenta encontrar o nome do tanque correspondente
-                        parent = p_el.parent
-                        name = "Desconhecido"
-                        if parent:
-                            sibling = parent.find_previous_sibling() or parent.parent.find('p', class_='text-gray-800')
-                            if sibling:
-                                name = sibling.get_text(strip=True)
-                            else:
-                                parent_text = parent.parent.get_text()
-                                name_match = re.search(r'(Tanque\s*\d+)', parent_text)
-                                if name_match:
-                                    name = name_match.group(1)
-                        
-                        # Filtra apenas o que parece ser Tanque (exclui o Gateway e nomes inválidos como N/A)
-                        name_upper = name.strip().upper() if name else ""
-                        if name_upper and "TANQUE" in name_upper and "N/A" not in name_upper and "DESCONHECIDO" not in name_upper:
-                            tanques_site.append((name.strip(), mac_addr))
-                
-                # Remove duplicados
-                seen_macs = set()
-                for name, mac_addr in tanques_site:
-                    if mac_addr not in seen_macs:
-                        seen_macs.add(mac_addr)
-                        tanques_site_unicos.append((name, mac_addr))
-                
-                # Executa a conferência comparando com as configurações locais
-                logger.info("--- [Relatório de Conferência de MAC Addresses] ---")
-                local_mac_vals = list(local_macs.values())
-                
-                for name, mac_addr in tanques_site_unicos:
-                    if mac_addr not in local_mac_vals:
-                        logger.warning("[CONFERENCIA] Novo tanque detectado no site mas ausente no .env: %s (MAC: %s)", name, mac_addr)
-                    else:
-                        logger.info("[CONFERENCIA] Tanque validado: %s (MAC: %s)", name, mac_addr)
-                    urls_validas.append(f"https://general-system.noctua-iot.com/tanque/{mac_addr}")
-                
-                # Avisa caso tanques do .env não estejam no site
-                site_mac_vals = [m for _, m in tanques_site_unicos]
+            # Se já temos MACs configurados localmente, usamos eles diretamente sem ir à página /produtor
+            if local_macs:
+                logger.info("Usando MACs configurados estaticamente no .env: %s", local_macs)
                 for name, mac_addr in local_macs.items():
-                    if mac_addr not in site_mac_vals:
-                        logger.warning("[CONFERENCIA] Tanque configurado localmente (%s, MAC: %s) não foi exibido na página do site!", name, mac_addr)
-                        urls_validas.append(f"https://general-system.noctua-iot.com/tanque/{mac_addr}")
-                
-                if not urls_validas:
-                    logger.warning("Nenhum tanque listado no site. Usando fallbacks do .env...")
-                    for mac_addr in local_macs.values():
+                    urls_validas.append(f"https://general-system.noctua-iot.com/tanque/{mac_addr}")
+                    tanques_site_unicos.append((name, mac_addr))
+            else:
+                logger.info("Nenhum MAC configurado localmente. Realizando autodescoberta via /produtor...")
+                try:
+                    # Navega para a página de perfil para auditar e extrair os MACs ativos
+                    logger.info("Acessando página /produtor para realizar a conferência de MACs...")
+                    driver.get("https://general-system.noctua-iot.com/produtor")
+                    time.sleep(6) # Tempo para renderização dinâmica
+                    
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    
+                    # Procura por MAC addresses no texto da página
+                    tanques_site = []
+                    for p_el in soup.find_all(string=re.compile(r'MAC:\s*[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}')):
+                        mac_match = re.search(r'([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}', p_el)
+                        if mac_match:
+                            mac_addr = mac_match.group(0)
+                            
+                            # Tenta encontrar o nome do tanque correspondente
+                            parent = p_el.parent
+                            name = "Desconhecido"
+                            if parent:
+                                sibling = parent.find_previous_sibling() or parent.parent.find('p', class_='text-gray-800')
+                                if sibling:
+                                    name = sibling.get_text(strip=True)
+                                else:
+                                    parent_text = parent.parent.get_text()
+                                    name_match = re.search(r'(Tanque\s*\d+)', parent_text)
+                                    if name_match:
+                                        name = name_match.group(1)
+                            
+                            # Filtra apenas o que parece ser Tanque (exclui o Gateway e nomes inválidos como N/A)
+                            name_upper = name.strip().upper() if name else ""
+                            if name_upper and "TANQUE" in name_upper and "N/A" not in name_upper and "DESCONHECIDO" not in name_upper:
+                                tanques_site.append((name.strip(), mac_addr))
+                    
+                    # Remove duplicados
+                    seen_macs = set()
+                    for name, mac_addr in tanques_site:
+                        if mac_addr not in seen_macs:
+                            seen_macs.add(mac_addr)
+                            tanques_site_unicos.append((name, mac_addr))
+                    
+                    for name, mac_addr in tanques_site_unicos:
                         urls_validas.append(f"https://general-system.noctua-iot.com/tanque/{mac_addr}")
                         
-            except Exception as audit_err:
-                logger.error("Erro na rotina de conferência de MACs: %s. Utilizando chaves locais como fallback...", audit_err)
-                for mac_addr in local_macs.values():
-                    urls_validas.append(f"https://general-system.noctua-iot.com/tanque/{mac_addr}")
+                except Exception as audit_err:
+                    logger.error("Erro na rotina de autodescoberta de MACs: %s.", audit_err)
+                    raise Exception("Falha ao inicializar URLs de tanques (sem configuração no .env e falha no fallback).")
             
             # Garante que não temos duplicatas de URLs
             urls_validas = list(dict.fromkeys(urls_validas))
@@ -237,8 +224,8 @@ def scrape_and_save():
             if not urls_validas:
                 raise Exception("Nenhum endereço de tanque disponível para scraping.")
             
-            logger.info("Mapeamento concluído com sucesso. URLs a serem monitoradas diretamente: %s", urls_validas)
-
+            logger.info("URLs a serem monitoradas diretamente: %s", urls_validas)
+            
             # Construir mapa de MAC para Nome para resolução estática
             mac_to_name = {}
             for name, mac in local_macs.items():

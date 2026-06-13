@@ -28,6 +28,7 @@ services:
       - ./logs:/app/logs
       - ./data:/app/data
       - ./reports:/app/reports
+      - ./scripts:/app/scripts
     depends_on:
       - postgres
     restart: unless-stopped
