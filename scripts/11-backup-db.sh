@@ -15,8 +15,12 @@ if [ -f "$ENV_FILE" ]; then
         case "$line" in
             # Ignora linhas vazias e comentários que começam com #
             "" | [[:space:]]*#*) continue ;;
-            # Exporta apenas se tiver o formato CHAVE=VALOR
-            [A-Za-z0-9_]*=*) export "$line" ;;
+            # Exporta e limpa aspas se tiver o formato CHAVE=VALOR
+            [A-Za-z0-9_]*=*) 
+                key=$(echo "$line" | cut -d'=' -f1)
+                val=$(echo "$line" | cut -d'=' -f2- | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")
+                export "$key=$val"
+                ;;
         esac
     done < "$ENV_FILE"
 else
