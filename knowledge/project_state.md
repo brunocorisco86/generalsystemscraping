@@ -12,7 +12,7 @@
 
 ## Core Data Flow
 
-1. **Scrape**: `src/scrape/monitor_data.py` (via Selenium/Headless Chromium) runs every 10 min (1-59/10) via Cron. Persists to `data/piscicultura_dados.db` (SQLite).
+1. **Scrape**: `src/scrape/monitor_data.py` (via Selenium/Headless Chromium + BeautifulSoup) roda a cada 10 min via Cron. Realiza login, audita e confere os MACs do site (/produtor) contra o .env (detectando novos tanques) e raspa as telemetrias acessando diretamente as URLs dos tanques (eliminando o escaneamento do menu lateral). Persiste no SQLite local.
 2. **Dashboard**: `src/web/app.py` (Flask) provides local visualization and manual triggers for scraping, synchronization, and AI analysis.
 3. **Weather Sync**: `src/jobs/hourly_weather_sync.py` runs every hour (minuto 01) to persist ambient temp, pressure, and humidity to SQLite.
 3. **Alerts**: `src/alerts/alert_check.py` and `offline_check.py` run every 15 min.
@@ -37,6 +37,7 @@
   - **Memory Limits (OOM)**: A ativação do Selenium/Chromedriver em servidores com pouca RAM (ex: ~1GB de RAM) pode causar travamento dos processos do Chrome e erros de timeout. Foi ativado e configurado um **Swapfile de 1GB** persistente no `/etc/fstab` (`/swapfile swap swap defaults 0 0`).
   - **DNS & Time Sync Loop (Tailscale)**: Falhas na control plane do Tailscale ou no DNS local (`100.100.100.100`) podem impedir o NTP de sincronizar o relógio. Com o relógio atrasado, conexões HTTPS com a control plane falham por expiração de certificado SSL, gerando um travamento circular.
   - **Watchdog Auto-Recuperação**: Implementado o script [14-watchdog-resilience.sh](file:///media/brunoconter/DOCUMENTOS2/9_ALPINE_GENERAL/scripts/14-watchdog-resilience.sh) (executado a cada 5 minutos pelo cron). Ele valida a resolução DNS (faz fallback temporário para `8.8.8.8` no `/etc/resolv.conf`), corrige o relógio do sistema buscando o Date Header via HTTP puro (Google) se o ano for menor que 2026, garante a ativação de swap e auto-reinicia o Web App Flask e o container Docker `peixe_patel_bot` se caírem.
+  - **Mapeamento e Conferência de MAC Addresses**: Para evitar timeouts e quebras causadas pelo escaneamento dinâmico do menu lateral, o scraper agora lê os MACs estáticos configurados via `STRUCT_MACS` no `.env`. Ele realiza uma auditoria comparativa inicial no endpoint `/produtor` do site usando BeautifulSoup, emitindo alertas caso novos tanques sejam adicionados ao painel do Noctua IoT ou se tanques locais forem removidos no site, e navega diretamente para as URLs dos tanques.
 
 ## Domain Concepts
 

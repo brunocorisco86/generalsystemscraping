@@ -29,7 +29,7 @@ O sistema é projetado para operar em um ambiente de baixo custo e baixo consumo
 
 ## 4. Fluxo de Dados
 
-1.  **Captura**: O robô de scraping extrai dados do site Noctua-IoT e salva no SQLite local (todas as telemetrias).
+1.  **Captura**: O robô de scraping realiza login no site Noctua-IoT, audita os MACs dos tanques na tela `/produtor` comparando-os com o configurado localmente (`STRUCT_MACS`) para alertar sobre novos tanques em produção, e navega diretamente para as URLs das estruturas para extrair as telemetrias, salvando-as no SQLite local.
 2.  **Monitoramento & Alertas**: Scripts de checagem (`alert_check.py` e `offline_check.py`) verificam o SQLite local a cada 15 min, filtrando para emitir alertas de oxigênio crítico ou sensores inativos apenas para estruturas com lotes ativos no PostgreSQL.
 3.  **Interação via Bot**: O Bot do Telegram grava biometrias e dados de qualidade da água diretamente no PostgreSQL de produção, validando previamente se a estrutura tem um lote ativo para impedir lançamentos incorretos.
 4.  **Consolidação (Migração)**: O script `migrate_data.py` transfere novas leituras do SQLite para o PostgreSQL seletivamente (apenas de estruturas ativas). Ele utiliza a tabela `controle_migracao` no PostgreSQL para registrar o progresso de IDs lidos do SQLite e evitar retrabalho com registros inativos.
