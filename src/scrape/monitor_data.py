@@ -32,7 +32,7 @@ PASSWORD = os.getenv("LOGIN_PASSWORD")
 CHROMEDRIVER_PATH = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
 
 def get_driver():
-    """Configura o driver do Chrome em modo headless com fallback de localização."""
+    """Configura o driver do Chrome em modo headless com fallback de localização e otimizações de RAM."""
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
@@ -40,6 +40,19 @@ def get_driver():
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--remote-debugging-port=9222")
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    
+    # Otimizações de baixo consumo de RAM para hardware limitado (ex: Raspberry Pi)
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--disable-software-rasterizer")
+    chrome_options.add_argument("--no-zygote")
+    chrome_options.add_argument("--disable-gpu-program-cache")
+    chrome_options.add_argument("--disable-gpu-shader-disk-cache")
+    
+    # Desativa o carregamento de imagens para poupar memória e banda
+    chrome_options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
+    
+    # Estratégia de carregamento Eager: retorna assim que o HTML/DOM básico carregar, sem esperar mídias
+    chrome_options.page_load_strategy = 'eager'
 
     # Lista de caminhos prováveis do ChromeDriver para diferentes distros
     possiveis_caminhos = [
