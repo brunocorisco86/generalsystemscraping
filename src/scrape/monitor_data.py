@@ -161,6 +161,7 @@ def scrape_and_save():
             
             local_macs = get_configured_macs()
             urls_validas = []
+            tanques_site_unicos = []
             
             try:
                 # Navega para a página de perfil para auditar e extrair os MACs ativos
@@ -196,7 +197,6 @@ def scrape_and_save():
                 
                 # Remove duplicados
                 seen_macs = set()
-                tanques_site_unicos = []
                 for name, mac_addr in tanques_site:
                     if mac_addr not in seen_macs:
                         seen_macs.add(mac_addr)
@@ -238,16 +238,33 @@ def scrape_and_save():
             
             logger.info("Mapeamento concluído com sucesso. URLs a serem monitoradas diretamente: %s", urls_validas)
 
+            # Construir mapa de MAC para Nome para resolução estática
+            mac_to_name = {}
+            for name, mac in local_macs.items():
+                mac_to_name[mac.strip().lower()] = name.strip()
+            for name, mac in tanques_site_unicos:
+                mac_to_name[mac.strip().lower()] = name.strip()
+
             # 3. Coleta Individual
             for url in urls_validas:
-                mac_id = url.split('/')[-1]
-                logger.info("Acessando Tanque: %s", mac_id)
+                mac_id = url.split('/')[-1].strip().lower()
+                
+                # Tenta recuperar o nome pelo MAC id
+                nome = mac_to_name.get(mac_id)
+                if not nome:
+                    for m_key, n_val in mac_to_name.items():
+                        if m_key.lower() == mac_id:
+                            nome = n_val
+                            break
+                if not nome:
+                    nome = f"Tanque {mac_id.upper()}"
+
+                logger.info("Acessando Tanque: %s (MAC: %s)", nome, mac_id)
                 driver.get(url)
                 time.sleep(12) # Tempo conservador para o React/Next.js carregar o estado dos sensores
 
-                # JS Cirúrgico para extrair Nome, Texto e Aeradores
+                # JS Cirúrgico para extrair Texto e Aeradores
                 js_extrair = r'''
-                let nomeTxt = document.body.innerText.match(/Tanque \d+/) ? document.body.innerText.match(/Tanque \d+/)[0] : "N/A";
                 let motoresLabel = Array.from(document.querySelectorAll('div')).find(el => el.innerText === 'Motores');
                 let bolinhas = 0;
                 if (motoresLabel) {
@@ -255,7 +272,6 @@ def scrape_and_save():
                     bolinhas = box.querySelectorAll('div.bg-green-500').length;
                 }
                 return {
-                    nome: nomeTxt,
                     corpo: document.body.innerText,
                     aeradores: Math.min(bolinhas, 5)
                 };
@@ -269,7 +285,6 @@ def scrape_and_save():
                 time_match = re.search(r'(\d{2}/\d{2}/\d{4}, \d{2}:\d{2}:\d{2})', full_text)
 
                 if ox_match and temp_match:
-                    nome = dados_site['nome']
                     oxigenio = float(ox_match.group(1))
                     temperatura = float(temp_match.group(1))
                     aeradores = dados_site['aeradores']
