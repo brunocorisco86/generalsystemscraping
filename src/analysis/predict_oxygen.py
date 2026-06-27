@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 # Importar serviços do projeto
-from src.services.database import get_sqlite_connection
+from src.services.database import get_sqlite_connection, get_postgres_connection, get_all_estruturas_map
 from src.services.notification import send_telegram_photo
 
 # Configuração do logger
@@ -30,7 +30,7 @@ def get_historical_value(tanque, target_datetime):
             return None
         start_search = target_datetime - timedelta(minutes=15)
         end_search = target_datetime + timedelta(minutes=15)
-        query = f"SELECT oxigenio FROM leituras WHERE tanque = '{tanque}' AND timestamp_site BETWEEN '{start_search}' AND '{end_search}' ORDER BY ABS(strftime('%s', timestamp_site) - strftime('%s', '{target_datetime}')) LIMIT 1"
+        query = f"SELECT oxigenio FROM leituras WHERE nome_estrutura = '{tanque}' AND timestamp_site BETWEEN '{start_search}' AND '{end_search}' ORDER BY ABS(strftime('%s', timestamp_site) - strftime('%s', '{target_datetime}')) LIMIT 1"
         res = conn.execute(query).fetchone()
         return res[0] if res else None
     except Exception as e:
@@ -51,7 +51,7 @@ def generate_prediction():
         conn = get_sqlite_connection()
         if not conn:
             return
-        query = f"SELECT tanque, oxigenio, timestamp_site FROM leituras WHERE timestamp_site >= '{start_history}' ORDER BY timestamp_site ASC"
+        query = f"SELECT nome_estrutura, oxigenio, timestamp_site FROM leituras WHERE timestamp_site >= '{start_history}' ORDER BY timestamp_site ASC"
         df = pd.read_sql_query(query, conn)
     except Exception as e:
         logger.error("Erro ao carregar dados para previsão: %s", e)
@@ -75,8 +75,29 @@ def generate_prediction():
 
     colors = {'Tanque 1': '#1f77b4', 'Tanque 2': '#ff7f0e'}
 
+    # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
+    estruturas_ativas = None
+    pg_conn = get_postgres_connection()
+    if pg_conn:
+        try:
+            pg_cur = pg_conn.cursor()
+            pg_cur.execute("SELECT estrutura_uid FROM lotes WHERE data_abate IS NULL")
+            estruturas_ativas = {r[0] for r in pg_cur.fetchall()}
+        except Exception as e:
+            logger.error(f"Erro ao buscar estruturas ativas no Postgres para previsão: {e}")
+        finally:
+            pg_conn.close()
+
+    estruturas_map = get_all_estruturas_map()
+
     for tank, struct_df in df.groupby('nome_estrutura'):
         if not tank: continue
+
+        uid = estruturas_map.get(tank)
+        if estruturas_ativas is not None and (not uid or uid not in estruturas_ativas):
+            logger.info("Ignorando tanque %s (Lote inativo)", tank)
+            continue
+
         o2_agora = struct_df['oxigenio'].iloc[-1]
         time_agora = struct_df['timestamp_site'].iloc[-1]
         o2_mesmo_horario_ontem = get_historical_value(tank, yesterday_now)

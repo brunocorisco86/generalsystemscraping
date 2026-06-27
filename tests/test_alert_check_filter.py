@@ -52,3 +52,8 @@ def test_alert_check_filters_inactive_batches():
         mock_analyze.assert_called_once_with("Tanque Ativo", 1.0, 24.5)
         # send_telegram_message deve enviar a mensagem gerada pela IA
         mock_send_msg.assert_called_once_with("🚨 *ALERTA:* O2 Crítico no Tanque Ativo!")
+
+
+def teardown_module(module):
+    import sys
+    sys.modules.pop('src.bots.agent', None)

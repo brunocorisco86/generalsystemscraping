@@ -64,7 +64,7 @@ def get_vigi_report():
             dados_tanques[tanque].append(oxigenio)
 
         # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
-        estruturas_ativas = set()
+        estruturas_ativas = None
         pg_conn = get_postgres_connection()
         if pg_conn:
             try:
@@ -82,7 +82,7 @@ def get_vigi_report():
         for tanque in sorted(dados_tanques.keys()):
             # Filtra apenas se houver conexão bem-sucedida e estruturas ativas mapeadas
             uid = estruturas_map.get(tanque)
-            if estruturas_ativas and (not uid or uid not in estruturas_ativas):
+            if estruturas_ativas is not None and (not uid or uid not in estruturas_ativas):
                 continue
 
             leituras = dados_tanques[tanque]

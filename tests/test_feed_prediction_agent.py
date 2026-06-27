@@ -1,5 +1,12 @@
 import unittest
 from unittest.mock import patch, MagicMock
+import sys
+# Mock langchain packages
+for mod in ['langchain_google_genai', 'langchain_core', 'langchain_core.prompts', 
+            'langchain_core.prompts.ChatPromptTemplate', 'langchain_core.prompts.MessagesPlaceholder', 
+            'langchain', 'langchain.agents', 'src.bots.agent_tools']:
+    sys.modules[mod] = MagicMock()
+
 import pandas as pd
 from datetime import datetime
 
@@ -49,6 +56,13 @@ class TestFeedPredictionAgent(unittest.TestCase):
         
         self.assertIn("Alimentação liberada", resultado)
         self.assertTrue(mock_executor.invoke.called)
+
+def tearDownModule():
+    import sys
+    for mod in ['langchain_google_genai', 'langchain_core', 'langchain_core.prompts', 
+                'langchain_core.prompts.ChatPromptTemplate', 'langchain_core.prompts.MessagesPlaceholder', 
+                'langchain', 'langchain.agents', 'src.bots.agent_tools']:
+        sys.modules.pop(mod, None)
 
 if __name__ == "__main__":
     unittest.main()

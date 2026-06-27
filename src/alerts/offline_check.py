@@ -47,7 +47,7 @@ def check_last_reading():
             return
 
         # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
-        estruturas_ativas = set()
+        estruturas_ativas = None
         pg_conn = get_postgres_connection()
         if pg_conn:
             try:
@@ -68,7 +68,7 @@ def check_last_reading():
 
             # Filtra apenas se houver conexão bem-sucedida e o tanque não estiver ativo
             uid = estruturas_map.get(tank)
-            if estruturas_ativas and (not uid or uid not in estruturas_ativas):
+            if estruturas_ativas is not None and (not uid or uid not in estruturas_ativas):
                 logger.info("Ignorando verificação offline para %s (Lote inativo)", tank)
                 continue
 

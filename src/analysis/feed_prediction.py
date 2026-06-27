@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 # Importar serviços do projeto
-from src.services.database import get_sqlite_connection
+from src.services.database import get_sqlite_connection, get_postgres_connection, get_all_estruturas_map
 from src.services.notification import send_telegram_photo, send_telegram_message
 from src.bots.agent import analyze_feed_prediction_sync
 
@@ -54,12 +54,32 @@ def run_production_logic():
         if df.empty: return
         df['timestamp_site'] = pd.to_datetime(df['timestamp_site'])
         
+        # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
+        estruturas_ativas = None
+        pg_conn = get_postgres_connection()
+        if pg_conn:
+            try:
+                pg_cur = pg_conn.cursor()
+                pg_cur.execute("SELECT estrutura_uid FROM lotes WHERE data_abate IS NULL")
+                estruturas_ativas = {r[0] for r in pg_cur.fetchall()}
+            except Exception as e:
+                print(f"Erro ao buscar estruturas ativas no Postgres: {e}")
+            finally:
+                pg_conn.close()
+
+        estruturas_map = get_all_estruturas_map()
+        
         tank_groups = df.groupby('nome_estrutura')
         status_check = {}
         struct_results = []
         
         for tank, tdf in tank_groups:
             if not tank: continue
+
+            uid = estruturas_map.get(tank)
+            if estruturas_ativas is not None and (not uid or uid not in estruturas_ativas):
+                print(f"Ignorando tanque {tank} (Lote inativo)")
+                continue
             tdf['o2_smooth'] = tdf['oxigenio'].rolling(window=5, center=True).mean().fillna(tdf['oxigenio'])
             last_o2 = tdf['o2_smooth'].iloc[-1]
             last_temp_agua = tdf['temperatura'].iloc[-1] if 'temperatura' in tdf.columns else 24.0

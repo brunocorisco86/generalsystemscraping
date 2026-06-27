@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(project_root)
 
-from src.services.database import get_sqlite_connection  # noqa: E402
+from src.services.database import get_sqlite_connection, get_postgres_connection, get_all_estruturas_map  # noqa: E402
 from src.services.notification import send_telegram_photo, send_telegram_message  # noqa: E402
 from src.bots.agent import analyze_custom_report_sync  # noqa: E402
 
@@ -64,6 +64,21 @@ def get_fortnightly_report():
             return
 
         df['timestamp_site'] = pd.to_datetime(df['timestamp_site'])
+
+        # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
+        estruturas_ativas = None
+        pg_conn = get_postgres_connection()
+        if pg_conn:
+            try:
+                pg_cur = pg_conn.cursor()
+                pg_cur.execute("SELECT estrutura_uid FROM lotes WHERE data_abate IS NULL")
+                estruturas_ativas = {r[0] for r in pg_cur.fetchall()}
+            except Exception as e:
+                logger.error(f"Erro ao buscar estruturas ativas no Postgres: {e}")
+            finally:
+                pg_conn.close()
+
+        estruturas_map = get_all_estruturas_map()
         
         plt.style.use('seaborn-v0_8-darkgrid')
         plt.figure(figsize=(14, 8))
@@ -73,6 +88,11 @@ def get_fortnightly_report():
 
         for tank, struct_df in df.groupby('nome_estrutura'):
             if not tank:
+                continue
+
+            uid = estruturas_map.get(tank)
+            if estruturas_ativas is not None and (not uid or uid not in estruturas_ativas):
+                logger.info("Ignorando tanque %s (Lote inativo)", tank)
                 continue
             struct_df = struct_df.copy()
             if not struct_df.empty:

@@ -69,8 +69,10 @@ def test_get_weather_forecast(mock_client_class):
     d_var3.ValuesAsNumpy.return_value = [0.0, 2.0]
     d_var4 = MagicMock()
     d_var4.ValuesAsNumpy.return_value = [1013.0, 1012.0]
+    d_var5 = MagicMock()
+    d_var5.ValuesAsNumpy.return_value = [45.0, 50.0]
     
-    mock_daily.Variables.side_effect = [d_var0, d_var1, d_var2, d_var3, d_var4]
+    mock_daily.Variables.side_effect = [d_var0, d_var1, d_var2, d_var3, d_var4, d_var5]
     
     mock_response.Latitude.return_value = -24.0
     mock_response.Longitude.return_value = -53.0

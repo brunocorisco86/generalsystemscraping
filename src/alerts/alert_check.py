@@ -45,7 +45,7 @@ def check_alerts():
             return
 
         # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
-        estruturas_ativas = set()
+        estruturas_ativas = None
         pg_conn = get_postgres_connection()
         if pg_conn:
             try:
@@ -62,7 +62,7 @@ def check_alerts():
         for tanque, oxigenio, temperatura in leituras:
             # Filtra apenas se houver conexão bem-sucedida e o tanque não estiver ativo
             uid = estruturas_map.get(tanque)
-            if estruturas_ativas and (not uid or uid not in estruturas_ativas):
+            if estruturas_ativas is not None and (not uid or uid not in estruturas_ativas):
                 logger.info("Ignorando verificação para %s (Lote inativo)", tanque)
                 continue
 

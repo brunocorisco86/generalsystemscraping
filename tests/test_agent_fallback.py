@@ -65,5 +65,12 @@ class TestAgentFallback(unittest.TestCase):
         # Ensure no duplicates
         self.assertEqual(len(called_models), len(set(called_models)))
 
+def tearDownModule():
+    import sys
+    for mod in ['dotenv', 'langchain_google_genai', 'langchain_core', 'langchain_core.prompts', 
+                'langchain_core.prompts.ChatPromptTemplate', 'langchain_core.prompts.MessagesPlaceholder', 
+                'langchain', 'langchain.agents', 'src.bots.agent_tools']:
+        sys.modules.pop(mod, None)
+
 if __name__ == '__main__':
     unittest.main()

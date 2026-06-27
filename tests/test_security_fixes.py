@@ -80,5 +80,11 @@ class TestReportSecurity(unittest.TestCase):
 
         self.assertTrue(found, "pd.read_sql_query (weekly) should be called with '?' and params")
 
+def tearDownModule():
+    import sys
+    for mod in ['pandas', 'matplotlib', 'matplotlib.pyplot', 'dotenv', 
+                'src.services.database', 'src.services.notification', 'src.bots.agent']:
+        sys.modules.pop(mod, None)
+
 if __name__ == '__main__':
     unittest.main()

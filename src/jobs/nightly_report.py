@@ -70,7 +70,7 @@ def generate_nightly_report():
         df['timestamp_site'] = pd.to_datetime(df['timestamp_site'])
 
         # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
-        estruturas_ativas = set()
+        estruturas_ativas = None
         pg_conn = get_postgres_connection()
         if pg_conn:
             try:
@@ -100,7 +100,7 @@ def generate_nightly_report():
 
             # Filtra se houver conexão bem-sucedida e o tanque não estiver nos lotes ativos
             uid = estruturas_map.get(tank)
-            if estruturas_ativas and (not uid or uid not in estruturas_ativas):
+            if estruturas_ativas is not None and (not uid or uid not in estruturas_ativas):
                 continue
 
             struct_data = df[df['nome_estrutura'] == tank]
