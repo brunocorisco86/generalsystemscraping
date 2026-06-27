@@ -72,6 +72,9 @@ VENV_PYTHON=/home/bruno/generalsystemscraping/.venv/bin/python3
 0 1 * * * sh $PROJECT_ROOT/scripts/09-cleanup-logs.sh 7 >> $PROJECT_ROOT/logs/cron.log 2>&1
 0 4 1 * * sh $PROJECT_ROOT/scripts/09-cleanup-logs.sh 30 >> $PROJECT_ROOT/logs/cron.log 2>&1
 
+# Validação de rede e IP estático (Diário às 02:00)
+0 2 * * * sh $PROJECT_ROOT/scripts/check_network_health.sh
+
 # Correção de permissões no boot
 @reboot sleep 30 && sh $PROJECT_ROOT/scripts/08-fix-permissions.sh
 ```
