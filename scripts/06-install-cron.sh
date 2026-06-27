@@ -84,6 +84,10 @@ echo "0 4 1 * * sh $PROJECT_ROOT/scripts/09-cleanup-logs.sh 30 >> $PROJECT_ROOT/
 echo "# Watchdog de resiliência a cada 5 minutos" >> "$TMP_NEW"
 echo "*/5 * * * * sh $PROJECT_ROOT/scripts/14-watchdog-resilience.sh" >> "$TMP_NEW"
 
+echo "# Validação de rede e IP estático (Diário às 02:00)" >> "$TMP_NEW"
+echo "0 2 * * * sh $PROJECT_ROOT/scripts/check_network_health.sh" >> "$TMP_NEW"
+
+
 echo "# Inicialização do painel Web Flask e correção de permissões no boot" >> "$TMP_NEW"
 echo "@reboot sleep 40 && cd $PROJECT_ROOT && $VENV_PYTHON src/web/app.py >> $PROJECT_ROOT/logs/web.log 2>&1" >> "$TMP_NEW"
 echo "@reboot sleep 30 && sh $PROJECT_ROOT/scripts/08-fix-permissions.sh" >> "$TMP_NEW"

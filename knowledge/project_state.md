@@ -31,7 +31,7 @@
 - **Active Batch Isolation & Control**: 
   - **Migração Seletiva**: O script `migrate_data.py` filtra as leituras, enviando ao PostgreSQL apenas telemetrias de estruturas com lotes ativos (`data_abate IS NULL`).
   - **Tabela de Controle**: Progresso do SQLite rastreado por `controle_migracao` (campo `ultimo_id_leituras`), impedindo o processamento repetitivo de telemetrias inativas.
-  - **Telegram Bot e Relatórios**: O bot bloqueia lançamentos de biometria e qualidade de água para tanques sem lote ativo. Relatórios e alertas (`alert_check.py` e `offline_check.py`) ignoram dados de estruturas inativas para evitar falsos positivos.
+  - **Telegram Bot, Relatórios, Alertas e Consultas**: O bot bloqueia lançamentos de biometria e qualidade de água para tanques sem lote ativo. Relatórios, análises, consultas do bot e alertas de oxigênio/offline (`alert_check.py` e `offline_check.py`) filtram e ignoram dinamicamente estruturas inativas (ex: "Tanque 1" e "N/A") para evitar falsos positivos e processamento desnecessário.
 - **Environment**: All configuration resides in `.env`. Root path is dynamically detected.
 - **Resilience and Hardware Troubleshooting (Jun 2026)**:
   - **Memory Limits (OOM)**: A ativação do Selenium/Chromedriver em servidores com pouca RAM (ex: ~1GB de RAM) pode causar travamento dos processos do Chrome e erros de timeout. Foi ativado e configurado um **Swapfile de 1GB** persistente no `/etc/fstab` (`/swapfile swap swap defaults 0 0`).
@@ -39,9 +39,12 @@
   - **Watchdog Auto-Recuperação**: Implementado o script [14-watchdog-resilience.sh](file:///media/brunoconter/DOCUMENTOS2/9_ALPINE_GENERAL/scripts/14-watchdog-resilience.sh) (executado a cada 5 minutos pelo cron). Ele valida a resolução DNS (faz fallback temporário para `8.8.8.8` no `/etc/resolv.conf`), corrige o relógio do sistema buscando o Date Header via HTTP puro (Google) se o ano for menor que 2026, garante a ativação de swap e auto-reinicia o Web App Flask e o container Docker `peixe_patel_bot` se caírem.
   - **Mapeamento e Conferência de MAC Addresses**: Para evitar timeouts e quebras causadas pelo escaneamento dinâmico do menu lateral, o scraper agora lê os MACs estáticos configurados via `STRUCT_MACS` no `.env`. Ele realiza uma auditoria comparativa inicial no endpoint `/produtor` do site usando BeautifulSoup, emitindo alertas caso novos tanques sejam adicionados ao painel do Noctua IoT ou se tanques locais forem removidos no site, e navega diretamente para as URLs dos tanques.
   - **Autocomissionamento de MACs (scripts/15-*)**: Criada ferramenta interativa de setup integrada ao `setup.sh` que faz login no Noctua-IoT, extrai os MACs dos tanques e preenche automaticamente o campo `STRUCT_MACS` no `.env`.
+  - **Correção de DNS Local e Pi-hole**: Mapeamento DNS local configurado no Pi-hole (`/etc/pihole/pihole.toml`) no servidor `alpine` (192.168.1.7), direcionando `peixe` e `peixe.lan` para 192.168.1.99, e `alpine.lan` para 192.168.1.7.
+  - **Script de Validação de Rede**: Implementado e agendado o script `scripts/check_network_health.sh` via cron (diariamente às 02:00) para verificar se o IP estático está correto (192.168.1.99) e testar a resolução DNS local via `nslookup` contra o servidor DNS `alpine` (192.168.1.7). Os relatórios são salvos em `logs/network_health.log` e indicam sucesso total de resolução.
 
 ## Domain Concepts
 
 - **Ficha Verde (Green Sheet)**: Standardized data model for fish growth tracking.
 - **Biometria**: Weight and health checks logged by users via bot.
 - **Qualidade de Água**: Limnology (pH, Ammonia, Nitrite) and Consumption (Chlorine, ORP) metrics.
+
