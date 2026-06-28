@@ -101,8 +101,8 @@ def salvar_parecer_ia(contexto: str, parecer: str):
         cur = conn.cursor()
         # Trunca para economizar espaço e obedecer o schema do banco
         contexto_trunc = (contexto or "Geral")[:100]
-        # Trunca parecer para no máximo 250 caracteres no banco, ideal para contexto de prompt sem inflar tokens
-        parecer_trunc = (parecer or "")[:250].strip()
+        # Trunca parecer para no máximo 500 caracteres no banco, ideal para contexto de prompt sem inflar tokens
+        parecer_trunc = (parecer or "")[:500].strip()
         cur.execute(
             "INSERT INTO historico_pareceres_ia (contexto, parecer) VALUES (%s, %s)",
             (contexto_trunc, parecer_trunc)
