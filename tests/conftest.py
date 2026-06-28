@@ -13,9 +13,14 @@ def set_test_environment():
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     os.environ["PROJECT_ROOT"] = project_root
 
-    # Se você quiser garantir a criação de um banco SQLite temporário,
-    # pode criar a lógica aqui. Por enquanto, os scripts apontarão para
-    # "data/test_dummy_db.sqlite" que ficará isolado da produção.
+    # Inicializa o banco SQLite de teste com todas as tabelas necessárias
+    import importlib.util
+    import sys
+    spec = importlib.util.spec_from_file_location("init_sqlite_db", os.path.join(project_root, "scripts/05-init-sqlite-db.py"))
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["init_sqlite_db"] = module
+    spec.loader.exec_module(module)
+    module.init_sqlite()
     
     yield
     

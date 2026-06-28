@@ -1,7 +1,6 @@
 import sys
 from unittest.mock import patch, MagicMock, AsyncMock
-# Mock do modulo src.bots.agent antes de importar check_alerts para evitar erros de importacao do langchain
-sys.modules['src.bots.agent'] = MagicMock()
+
 
 import pytest
 from src.alerts.alert_check import check_alerts
@@ -54,6 +53,4 @@ def test_alert_check_filters_inactive_batches():
         mock_send_msg.assert_called_once_with("🚨 *ALERTA:* O2 Crítico no Tanque Ativo!")
 
 
-def teardown_module(module):
-    import sys
-    sys.modules.pop('src.bots.agent', None)
+
