@@ -192,9 +192,19 @@ async def init_postgres():
             );
         ''')
 
+        await conn.execute('''
+            CREATE TABLE IF NOT EXISTS historico_pareceres_ia (
+                id SERIAL PRIMARY KEY,
+                data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                contexto VARCHAR(100) NOT NULL,
+                parecer VARCHAR(500) NOT NULL
+            );
+        ''')
+
         # Índices para performance
         await conn.execute('CREATE INDEX IF NOT EXISTS idx_leituras_estrutura ON leituras(estrutura_uid);')
         await conn.execute('CREATE INDEX IF NOT EXISTS idx_lotes_estrutura ON lotes(estrutura_uid);')
+        await conn.execute('CREATE INDEX IF NOT EXISTS idx_historico_pareceres_data ON historico_pareceres_ia(data_registro DESC);')
 
         # Popula catálogo de tipos de exploração
         tipos = [

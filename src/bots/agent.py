@@ -80,8 +80,20 @@ def get_agent_executor() -> Optional[AgentExecutor]:
         
         logger.info(f"Modelos configurados para o Agente: {unique_models}")
 
+        # Buscar os últimos pareceres no Postgres para injetar dinamicamente no prompt do sistema
+        from src.services.database import obter_ultimos_pareceres
+        ultimos = obter_ultimos_pareceres(3)
+        contexto_recente = ""
+        if ultimos:
+            contexto_recente = "\n\nHISTÓRICO DE PARECERES RECENTES (Contexto):\n"
+            for dt, ctx, parc in ultimos:
+                dt_str = dt.strftime("%d/%m %H:%M")
+                contexto_recente += f"- [{dt_str}] {ctx}: {parc}\n"
+        
+        dynamic_system_prompt = SYSTEM_PROMPT + contexto_recente
+
         prompt = ChatPromptTemplate.from_messages([
-            ("system", SYSTEM_PROMPT),
+            ("system", dynamic_system_prompt),
             ("user", "{input}"),
             MessagesPlaceholder(variable_name="agent_scratchpad"),
         ])
@@ -131,6 +143,11 @@ async def ask_agent(mensagem: str, chat_id: int) -> str:
         output = response.get("output", "Sem resposta da IA.")
         
         logger.info(f"RESPOSTA DA IA:\n{output}")
+        
+        # Salva o parecer gerado no banco de dados histórico
+        from src.services.database import salvar_parecer_ia
+        salvar_parecer_ia("Chat", output)
+        
         return output
     except Exception as e:
         logger.error(f"Erro na execução do Agente: {e}", exc_info=True)
@@ -170,6 +187,10 @@ async def analyze_alert_data(tanque: str, oxigenio: float, temperatura: float) -
         
         logger.info(f"RESPOSTA DA IA:\n{output}")
         
+        # Salva o parecer gerado no banco de dados histórico
+        from src.services.database import salvar_parecer_ia
+        salvar_parecer_ia(f"Alerta {tanque}", output)
+        
         # Se a IA decidiu que é falso positivo, não enviamos notificação
         if output.strip().startswith("FALSO_POSITIVO"):
             logger.info(f"Agente suprimiu um alerta para o {tanque}. Justificativa: {output}")
@@ -194,7 +215,7 @@ def analyze_feed_prediction_sync(data_summary: str) -> str:
             
         prompt = (
             f"Como o Agente Especialista em Aquicultura, analise os seguintes dados de predição de arraçoamento "
-            f"e forneça um 'Parecer do Especialista' curto (máximo 4 linhas) focado na decisão de alimentar os peixes:\n\n"
+            f"e forneça um 'Parecer do Especialista' ultra-curto (máximo 2 linhas ou 50 palavras) focado na decisão de alimentar os peixes:\n\n"
             f"{data_summary}\n\n"
             f"Considere:\n"
             f"1. Relação entre temperatura da água e metabolismo/consumo.\n"
@@ -207,7 +228,13 @@ def analyze_feed_prediction_sync(data_summary: str) -> str:
             {"input": prompt},
             config={"configurable": {"session_id": "feed_prediction_sys"}}
         )
-        return response.get("output", "Sem parecer no momento.")
+        output = response.get("output", "Sem parecer no momento.")
+        
+        # Salva o parecer gerado no banco de dados histórico
+        from src.services.database import salvar_parecer_ia
+        salvar_parecer_ia("Previsão Arraçoamento", output)
+        
+        return output
     except Exception as e:
         logger.error(f"Erro na análise do especialista (feed_prediction): {e}")
         return "⚠️ Não foi possível obter o parecer do especialista no momento."
@@ -227,7 +254,7 @@ def analyze_evening_report_sync(summary_data: str, plot_data_csv: str) -> str:
         f"{summary_data}\n\n"
         f"Para uma análise mais profunda, aqui estão os dados brutos da série temporal em formato CSV:\n"
         f"```csv\n{plot_data_csv}\n```\n\n"
-        f"Por favor, escreva um BREVE parecer (máximo 3 frases) focado no risco de hipóxia para a noite e madrugada que se aproximam. "
+        f"Por favor, escreva um parecer ultra-curto (máximo 2 frases ou 50 palavras) focado no risco de hipóxia para a noite e madrugada que se aproximam. "
         f"Avalie a combinação de temperatura e nível de O2 atual para recomendar ou não atenção redobrada aos aeradores.\n"
         f"Lembre-se da economia de tokens: seja direto e prático."
     )
@@ -240,6 +267,11 @@ def analyze_evening_report_sync(summary_data: str, plot_data_csv: str) -> str:
         output = response.get("output", "")
         
         logger.info(f"RESPOSTA DA IA:\n{output}")
+        
+        # Salva o parecer gerado no banco de dados histórico
+        from src.services.database import salvar_parecer_ia
+        salvar_parecer_ia("Fechamento Tarde", output)
+        
         return output
     except Exception as e:
         logger.error(f"Erro ao gerar parecer noturno: {e}", exc_info=True)
@@ -262,7 +294,7 @@ def analyze_nightly_report_sync(start_time_str: str, end_time_str: str, summary_
         f"```csv\n{plot_data_csv}\n```\n\n"
         f"Sua tarefa: Faça uma avaliação geral de como foi a noite observando a série temporal. "
         f"Como você possui os dados CSV, avalie as curvas de cada tanque. "
-        f"Forneça um parecer conciso (máximo 4 frases) resumindo se a noite foi segura e se alguma "
+        f"Forneça um parecer ultra-curto (máximo 2 frases ou 50 palavras) resumindo se a noite foi segura e se alguma "
         f"estrutura apresentou risco contínuo ou anomalias."
     )
     try:
@@ -273,6 +305,11 @@ def analyze_nightly_report_sync(start_time_str: str, end_time_str: str, summary_
         output = response.get("output", "")
         
         logger.info(f"RESPOSTA DA IA:\n{output}")
+        
+        # Salva o parecer gerado no banco de dados histórico
+        from src.services.database import salvar_parecer_ia
+        salvar_parecer_ia("Relatório Noite", output)
+        
         return output
     except Exception as e:
         logger.error(f"Erro ao gerar parecer da noite: {e}", exc_info=True)
@@ -296,7 +333,7 @@ def analyze_custom_report_sync(report_title: str, summary_data: str, plot_data_c
         f"Sua tarefa: Faça uma avaliação da série temporal. Se for relatório de oxigênio ou temperatura, avalie tendências "
         f"de risco, constância e picos. Se for relatório de curva de peso (biometria), avalie o crescimento e sugira "
         f"ajustes nutricionais ou de manejo se a curva real estiver se distanciando da curva teórica.\n"
-        f"Forneça um parecer MUITO conciso (máximo 4 frases) apontando sua visão especialista."
+        f"Forneça um parecer ultra-curto (máximo 2 frases ou 50 palavras) apontando sua visão especialista."
     )
     try:
         logger.info(f"--- NOVA CHAMADA DO AGENTE: RELATORIO CUSTOM ({report_title}) ---")
@@ -306,6 +343,11 @@ def analyze_custom_report_sync(report_title: str, summary_data: str, plot_data_c
         output = response.get("output", "")
         
         logger.info(f"RESPOSTA DA IA:\n{output}")
+        
+        # Salva o parecer gerado no banco de dados histórico
+        from src.services.database import salvar_parecer_ia
+        salvar_parecer_ia(f"Relatório: {report_title[:50]}", output)
+        
         return output
     except Exception as e:
         logger.error(f"Erro ao gerar parecer para o relatório '{report_title}': {e}", exc_info=True)

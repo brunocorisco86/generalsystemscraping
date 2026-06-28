@@ -90,3 +90,48 @@ def get_default_estrutura_info():
         "pluscode": os.environ.get("STRUCT_PLUSCODE"),
         "type_id": os.environ.get("STRUCT_TYPE_ID")
     }
+
+def salvar_parecer_ia(contexto: str, parecer: str):
+    """Salva o parecer da IA no PostgreSQL de forma compacta."""
+    conn = get_postgres_connection()
+    if not conn:
+        logger.warning("Falha ao conectar ao Postgres para salvar parecer.")
+        return
+    try:
+        cur = conn.cursor()
+        # Trunca para economizar espaço e obedecer o schema do banco
+        contexto_trunc = (contexto or "Geral")[:100]
+        # Trunca parecer para no máximo 250 caracteres no banco, ideal para contexto de prompt sem inflar tokens
+        parecer_trunc = (parecer or "")[:250].strip()
+        cur.execute(
+            "INSERT INTO historico_pareceres_ia (contexto, parecer) VALUES (%s, %s)",
+            (contexto_trunc, parecer_trunc)
+        )
+        conn.commit()
+        logger.info("Parecer da IA salvo no Postgres com sucesso.")
+    except Exception as e:
+        logger.error(f"Erro ao salvar parecer no Postgres: {e}")
+        conn.rollback()
+    finally:
+        conn.close()
+
+def obter_ultimos_pareceres(limite=3) -> list:
+    """Busca os últimos pareceres da IA no PostgreSQL para serem usados como contexto."""
+    conn = get_postgres_connection()
+    if not conn:
+        logger.warning("Falha ao conectar ao Postgres para obter últimos pareceres.")
+        return []
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT data_registro, contexto, parecer FROM historico_pareceres_ia ORDER BY data_registro DESC LIMIT %s",
+            (limite,)
+        )
+        rows = cur.fetchall()
+        # Inverte para manter ordem cronológica no prompt (do mais antigo para o mais recente)
+        return list(reversed(rows))
+    except Exception as e:
+        logger.error(f"Erro ao obter pareceres do Postgres: {e}")
+        return []
+    finally:
+        conn.close()
