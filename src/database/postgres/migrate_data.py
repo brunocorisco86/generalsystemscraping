@@ -7,7 +7,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 # Adicionar a raiz do projeto ao sys.path
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 sys.path.append(project_root)
 
 from src.services.database import get_sqlite_connection, get_postgres_connection
