@@ -41,6 +41,8 @@
   - **Autocomissionamento de MACs (scripts/15-*)**: Criada ferramenta interativa de setup integrada ao `setup.sh` que faz login no Noctua-IoT, extrai os MACs dos tanques e preenche automaticamente o campo `STRUCT_MACS` no `.env`.
   - **Correção de DNS Local e Pi-hole**: Mapeamento DNS local configurado no Pi-hole (`/etc/pihole/pihole.toml`) no servidor `alpine` (192.168.1.7), direcionando `peixe` e `peixe.lan` para 192.168.1.99, e `alpine.lan` para 192.168.1.7.
   - **Script de Validação de Rede**: Implementado e agendado o script `scripts/check_network_health.sh` via cron (diariamente às 02:00) para verificar se o IP estático está correto (192.168.1.99) e testar a resolução DNS local via `nslookup` contra o servidor DNS `alpine` (192.168.1.7). Os relatórios são salvos em `logs/network_health.log` e indicam sucesso total de resolução.
+  - **Histórico de Pareceres da IA & Contexto Dinâmico**: O sistema persiste automaticamente os pareceres emitidos no PostgreSQL (`historico_pareceres_ia`) com limite aumentado para 500 caracteres (VARCHAR(500)), injetando cronologicamente os últimos 3 pareceres no prompt do sistema (`SYSTEM_PROMPT`) do Gemini para memória e contexto analítico.
+  - **Estabilização da Suíte de Testes (TDD)**: Resolvida poluição de mocks em `sys.modules` e incompatibilidades do Pydantic no LangChain 0.2.x. O banco SQLite dummy (`data/test_dummy_db.sqlite`) passou a ser autoinicializado dinamicamente via `conftest.py` antes de rodar os testes.
 
 ## Domain Concepts
 
