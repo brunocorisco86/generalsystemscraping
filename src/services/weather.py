@@ -9,6 +9,16 @@ from dotenv import load_dotenv
 # Carregar variáveis de ambiente
 load_dotenv()
 
+class TimeoutCachedSession(requests_cache.CachedSession):
+    """Sessão customizada para impor um timeout limite nas requisições HTTP."""
+    def __init__(self, *args, **kwargs):
+        self.timeout = kwargs.pop("timeout", None)
+        super().__init__(*args, **kwargs)
+
+    def request(self, method, url, **kwargs):
+        kwargs.setdefault("timeout", self.timeout)
+        return super().request(method, url, **kwargs)
+
 def log_weather_locally(data):
     """
     Salva os dados da previsão em um arquivo JSON local, 
@@ -53,9 +63,9 @@ def get_weather_forecast():
     Obtém a previsão do tempo utilizando a API Open-Meteo.
     Utiliza as coordenadas LATITUDE_SEDE e LONGITUDE_SEDE do arquivo .env.
     """
-    # Configuração da sessão com cache e retry
-    cache_session = requests_cache.CachedSession('.cache', expire_after=3600)
-    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+    # Configuração da sessão com cache, timeout de 3 segundos e retry (reduzido para 2 tentativas)
+    cache_session = TimeoutCachedSession('.cache', expire_after=3600, timeout=3.0)
+    retry_session = retry(cache_session, retries=2, backoff_factor=0.2)
     openmeteo = openmeteo_requests.Client(session=retry_session)
 
     # Coordenadas (fallback para as fornecidas pelo usuário se não estiverem no .env)
