@@ -1,16 +1,16 @@
 # Graph Report - 9_ALPINE_GENERAL  (2026-07-11)
 
 ## Corpus Check
-- 93 files · ~39,605 words
+- 94 files · ~40,130 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 515 nodes · 863 edges · 106 communities (33 shown, 73 thin omitted)
+- 524 nodes · 871 edges · 108 communities (34 shown, 74 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 33 edges (avg confidence: 0.55)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `dfb16c14`
+- Built from commit: `dc55e87a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -113,6 +113,8 @@
 - Watchdog Resilience
 - Predição de Arraçoamento com IA
 - src/jobs/migrate_data.py
+- 🛠️ Detalhes das Alterações
+- TestAgentFallback
 
 ## God Nodes (most connected - your core abstractions)
 1. `get_sqlite_connection()` - 51 edges
@@ -148,11 +150,11 @@
 - **Backup and DB Persistence Layer** — knowledge_backups_guide, knowledge_estrategia_backup_manus, src_services_database [INFERRED 0.85]
 - **System Monitoring and Self-Healing watchdog flow** — scripts_check_network_health, scripts_14_watchdog_resilience, src_alerts_alert_check, src_alerts_offline_check [INFERRED 0.85]
 
-## Communities (106 total, 73 thin omitted)
+## Communities (108 total, 74 thin omitted)
 
 ### Community 0 - "Agent & Alert System"
-Cohesion: 0.10
-Nodes (52): migrate_postgres(), migrate_sqlite(), check_alerts(), Verifica as últimas leituras no banco de dados e dispara alertas se necessário., check_last_reading(), Verifica o tempo da última leitura dos tanques.      Envia alerta se o atraso fo, run_production_logic(), ajustar_gompertz() (+44 more)
+Cohesion: 0.11
+Nodes (50): migrate_postgres(), migrate_sqlite(), check_last_reading(), Verifica o tempo da última leitura dos tanques.      Envia alerta se o atraso fo, run_production_logic(), ajustar_gompertz(), ajustar_reta(), gerar_curva() (+42 more)
 
 ### Community 1 - "Telegram Bot & Database Operations"
 Cohesion: 0.07
@@ -167,8 +169,8 @@ Cohesion: 0.09
 Nodes (25): get_hourly_report(), Gera o relatório estatístico das últimas leituras para cada tanque., Obtém o clima atual e salva na tabela clima_historico., sync_hourly_weather(), format_morning_report(), main(), Formata o relatório de bom dia com clima detalhado., get_weather_forecast() (+17 more)
 
 ### Community 4 - "Project Logs & System Setup"
-Cohesion: 0.10
-Nodes (23): AgentExecutor, analyze_alert_data(), analyze_evening_report_sync(), analyze_feed_prediction_sync(), analyze_nightly_report_sync(), ask_agent(), get_agent_executor(), Função para bater papo livremente com o agente via bot do Telegram. (+15 more)
+Cohesion: 0.09
+Nodes (24): AgentExecutor, check_alerts(), Verifica as últimas leituras no banco de dados e dispara alertas se necessário., analyze_alert_data(), analyze_evening_report_sync(), analyze_feed_prediction_sync(), analyze_nightly_report_sync(), ask_agent() (+16 more)
 
 ### Community 5 - "Device MAC Configuration & Scraper"
 Cohesion: 0.16
@@ -250,25 +252,29 @@ Nodes (3): Catálogos do Sistema, Tipos de Exploração, Unidades de Medida Suge
 Cohesion: 0.50
 Nodes (3): Alertas Automáticos (Push):, Comandos Disponíveis:, Comandos do Telegram para Monitoramento
 
+### Community 106 - "🛠️ Detalhes das Alterações"
+Cohesion: 0.22
+Nodes (8): 1. Auditoria e Grafo de Conhecimento (`graphify`), 2. Sistema de Suspensão de Telemetria e Alertas, 3. Interface de Comandos do Telegram, 4. Deploy no Servidor de Produção (`peixe`), 🛠️ Detalhes das Alterações, Diário de Bordo — 11 de Julho de 2026, 📋 Resumo do Dia, 📈 Status da Suíte de Testes
+
 ## Knowledge Gaps
-- **150 isolated node(s):** `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD`, `02-setup-venv.sh script`, `03-install-python-deps.sh script` (+145 more)
+- **156 isolated node(s):** `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD`, `02-setup-venv.sh script`, `03-install-python-deps.sh script` (+151 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **73 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **74 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `get_sqlite_connection()` connect `Agent & Alert System` to `Dashboard Web & Data Migration`, `Weather Sync & Reports`, `Device MAC Configuration & Scraper`?**
-  _High betweenness centrality (0.040) - this node is a cross-community bridge._
+- **Why does `get_sqlite_connection()` connect `Agent & Alert System` to `Dashboard Web & Data Migration`, `Weather Sync & Reports`, `Project Logs & System Setup`, `Device MAC Configuration & Scraper`?**
+  _High betweenness centrality (0.039) - this node is a cross-community bridge._
 - **Why does `get_weather_forecast()` connect `Weather Sync & Reports` to `Telegram Bot & Database Operations`, `Dashboard Web & Data Migration`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
-- **Why does `get_postgres_connection()` connect `Agent & Alert System` to `Dashboard Web & Data Migration`, `Weather Sync & Reports`, `Database Tools & Python Reports`, `Project Logs & System Setup`?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+  _High betweenness centrality (0.032) - this node is a cross-community bridge._
+- **Why does `get_postgres_connection()` connect `Agent & Alert System` to `Dashboard Web & Data Migration`, `Weather Sync & Reports`, `Project Logs & System Setup`, `Database Tools & Python Reports`?**
+  _High betweenness centrality (0.026) - this node is a cross-community bridge._
 - **Are the 25 inferred relationships involving `main()` (e.g. with `callback_agua_uid()` and `callback_bio_finish()`) actually correct?**
   _`main()` has 25 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD` to the rest of the system?**
-  _232 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _238 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Agent & Alert System` be split into smaller, more focused modules?**
-  _Cohesion score 0.09774157719363198 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10524256651017215 - nodes in this community are weakly interconnected._
 - **Should `Telegram Bot & Database Operations` be split into smaller, more focused modules?**
   _Cohesion score 0.07364185110663984 - nodes in this community are weakly interconnected._

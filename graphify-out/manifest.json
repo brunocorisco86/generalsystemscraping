@@ -455,9 +455,9 @@
     "semantic_hash": "ae6935750525aa9b65506be0e2357ed2"
   },
   "knowledge/project_state.md": {
-    "mtime": 1782624290.7271183,
-    "ast_hash": "c0f2d7d9c3e5a4757e79b5246ce992fc",
-    "semantic_hash": "c0f2d7d9c3e5a4757e79b5246ce992fc"
+    "mtime": 1783780386.5396905,
+    "ast_hash": "e898632bad6f27cc4cd42d25e2d7a0e2",
+    "semantic_hash": ""
   },
   "knowledge/roadmap.md": {
     "mtime": 1779293416.9836206,
@@ -502,6 +502,11 @@
   ".agents/workflows/graphify.md": {
     "mtime": 1783778598.1977618,
     "ast_hash": "0bc020d491fca99550c1ea3de0a5f862",
+    "semantic_hash": ""
+  },
+  "knowledge/diary_2026_07_11.md": {
+    "mtime": 1783780399.1485057,
+    "ast_hash": "f93ad22de4e95e561c4ff99c0778f2ac",
     "semantic_hash": ""
   }
 }

@@ -1058,7 +1058,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_alerts_alert_check_check_alerts",
-      "community": 0,
+      "community": 4,
       "norm_label": "check_alerts()"
     },
     {
@@ -1068,7 +1068,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_alerts_alert_check_rationale_22",
-      "community": 0,
+      "community": 4,
       "norm_label": "verifica as ultimas leituras no banco de dados e dispara alertas se necessario."
     },
     {
@@ -1248,7 +1248,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_bots_agent",
-      "community": 4,
+      "community": 0,
       "norm_label": "agent.py"
     },
     {
@@ -2088,7 +2088,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_database_postgres_migrate_data",
-      "community": 2,
+      "community": 0,
       "norm_label": "migrate_data.py"
     },
     {
@@ -2668,7 +2668,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "src_services_database_obter_ultimos_pareceres",
-      "community": 4,
+      "community": 0,
       "norm_label": "obter_ultimos_pareceres()"
     },
     {
@@ -2768,7 +2768,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "src_services_database_rationale_119",
-      "community": 4,
+      "community": 0,
       "norm_label": "busca os ultimos pareceres da ia no postgresql para serem usados como contexto."
     },
     {
@@ -3158,7 +3158,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_agent_fallback",
-      "community": 4,
+      "community": 107,
       "norm_label": "test_agent_fallback.py"
     },
     {
@@ -3168,7 +3168,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tests_test_agent_fallback_testagentfallback",
-      "community": 4,
+      "community": 107,
       "norm_label": "testagentfallback"
     },
     {
@@ -3178,7 +3178,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tests_test_agent_fallback_testagentfallback_test_get_agent_executor_fallback_logic",
-      "community": 4,
+      "community": 107,
       "norm_label": ".test_get_agent_executor_fallback_logic()"
     },
     {
@@ -3188,7 +3188,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "tests_test_agent_fallback_testagentfallback_test_unique_models_logic",
-      "community": 4,
+      "community": 107,
       "norm_label": ".test_unique_models_logic()"
     },
     {
@@ -3198,7 +3198,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_alert_check_filter",
-      "community": 0,
+      "community": 4,
       "norm_label": "test_alert_check_filter.py"
     },
     {
@@ -3208,7 +3208,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tests_test_alert_check_filter_test_alert_check_filters_inactive_batches",
-      "community": 0,
+      "community": 4,
       "norm_label": "test_alert_check_filters_inactive_batches()"
     },
     {
@@ -3218,7 +3218,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tests_test_alert_check_filter_rationale_9",
-      "community": 0,
+      "community": 4,
       "norm_label": "garante que check_alerts nao gera alertas de oxigenio para tanques sem lote ativ"
     },
     {
@@ -3508,7 +3508,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_security_fixes",
-      "community": 0,
+      "community": 69,
       "norm_label": "test_security_fixes.py"
     },
     {
@@ -4712,6 +4712,96 @@
       "norm_label": "\ud83d\udcc8 status da suite de testes"
     },
     {
+      "label": "diary_2026_07_11.md",
+      "file_type": "document",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "knowledge_diary_2026_07_11",
+      "community": 106,
+      "norm_label": "diary_2026_07_11.md"
+    },
+    {
+      "label": "Di\u00e1rio de Bordo \u2014 11 de Julho de 2026",
+      "file_type": "document",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "knowledge_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
+      "community": 106,
+      "norm_label": "diario de bordo \u2014 11 de julho de 2026"
+    },
+    {
+      "label": "\ud83d\udccb Resumo do Dia",
+      "file_type": "document",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "knowledge_diary_2026_07_11_resumo_do_dia",
+      "community": 106,
+      "norm_label": "\ud83d\udccb resumo do dia"
+    },
+    {
+      "label": "\ud83d\udee0\ufe0f Detalhes das Altera\u00e7\u00f5es",
+      "file_type": "document",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "community": 106,
+      "norm_label": "\ud83d\udee0\ufe0f detalhes das alteracoes"
+    },
+    {
+      "label": "1. Auditoria e Grafo de Conhecimento (`graphify`)",
+      "file_type": "document",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "knowledge_diary_2026_07_11_1_auditoria_e_grafo_de_conhecimento_graphify",
+      "community": 106,
+      "norm_label": "1. auditoria e grafo de conhecimento (`graphify`)"
+    },
+    {
+      "label": "2. Sistema de Suspens\u00e3o de Telemetria e Alertas",
+      "file_type": "document",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "knowledge_diary_2026_07_11_2_sistema_de_suspens\u00e3o_de_telemetria_e_alertas",
+      "community": 106,
+      "norm_label": "2. sistema de suspensao de telemetria e alertas"
+    },
+    {
+      "label": "3. Interface de Comandos do Telegram",
+      "file_type": "document",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "knowledge_diary_2026_07_11_3_interface_de_comandos_do_telegram",
+      "community": 106,
+      "norm_label": "3. interface de comandos do telegram"
+    },
+    {
+      "label": "4. Deploy no Servidor de Produ\u00e7\u00e3o (`peixe`)",
+      "file_type": "document",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "knowledge_diary_2026_07_11_4_deploy_no_servidor_de_produ\u00e7\u00e3o_peixe",
+      "community": 106,
+      "norm_label": "4. deploy no servidor de producao (`peixe`)"
+    },
+    {
+      "label": "\ud83d\udcc8 Status da Su\u00edte de Testes",
+      "file_type": "document",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "knowledge_diary_2026_07_11_status_da_su\u00edte_de_testes",
+      "community": 106,
+      "norm_label": "\ud83d\udcc8 status da suite de testes"
+    },
+    {
       "label": "estrategia_backup_manus.md",
       "file_type": "document",
       "source_file": "knowledge/estrategia_backup_manus.md",
@@ -4825,7 +4915,7 @@
       "label": "Domain Concepts",
       "file_type": "document",
       "source_file": "knowledge/project_state.md",
-      "source_location": "L47",
+      "source_location": "L48",
       "_origin": "ast",
       "id": "knowledge_project_state_domain_concepts",
       "community": 61,
@@ -4893,7 +4983,7 @@
       "rationale": "Evitar exibir relat\u00f3rios, enviar fotos ou disparar alertas (oxig\u00eanio cr\u00edtico, offline) para estruturas (tanques) que n\u00e3o possuam um lote ativo (data_abate IS NULL na tabela lotes).",
       "community": 10,
       "norm_label": "regra de filtragem de lotes ativos",
-      "id": "agents_agents_agents_agents_regra_filtragem_lotes_ativos"
+      "id": "agents_agents_agents_agents_agents_regra_filtragem_lotes_ativos"
     },
     {
       "label": "Segrega\u00e7\u00e3o SQLite e PostgreSQL",
@@ -4907,7 +4997,7 @@
       "rationale": "SQLite atua como cache r\u00e1pido de leitura local e coleta offline na borda, enquanto o PostgreSQL gerencia o hist\u00f3rico transacional centralizado e de longo prazo.",
       "community": 74,
       "norm_label": "segregacao sqlite e postgresql",
-      "id": "agents_agents_agents_agents_segregacao_sqlite_postgres"
+      "id": "agents_agents_agents_agents_agents_segregacao_sqlite_postgres"
     },
     {
       "label": "Fluxo de Deploy via Git",
@@ -4920,7 +5010,7 @@
       "contributor": null,
       "community": 37,
       "norm_label": "fluxo de deploy via git",
-      "id": "agents_agents_agents_agents_fluxo_deploy_git"
+      "id": "agents_agents_agents_agents_agents_fluxo_deploy_git"
     },
     {
       "label": "Infraestrutura de Rede e DNS",
@@ -4933,7 +5023,7 @@
       "contributor": null,
       "community": 38,
       "norm_label": "infraestrutura de rede e dns",
-      "id": "agents_agents_agents_agents_infraestrutura_rede_dns"
+      "id": "agents_agents_agents_agents_agents_infraestrutura_rede_dns"
     },
     {
       "label": "Predi\u00e7\u00e3o de Arra\u00e7oamento com IA",
@@ -14535,6 +14625,86 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "knowledge_diary_2026_07_11",
+      "target": "knowledge_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "knowledge_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
+      "target": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "knowledge_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
+      "target": "knowledge_diary_2026_07_11_resumo_do_dia",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "knowledge_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
+      "target": "knowledge_diary_2026_07_11_status_da_su\u00edte_de_testes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diary_2026_07_11_1_auditoria_e_grafo_de_conhecimento_graphify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diary_2026_07_11_2_sistema_de_suspens\u00e3o_de_telemetria_e_alertas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diary_2026_07_11_3_interface_de_comandos_do_telegram",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diary_2026_07_11_4_deploy_no_servidor_de_produ\u00e7\u00e3o_peixe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "knowledge/estrategia_backup_manus.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -14616,7 +14786,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "knowledge/project_state.md",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "knowledge_project_state_project_state_ai_context_compression",
       "target": "knowledge_project_state_domain_concepts",
@@ -14802,5 +14972,5 @@
       "source_file": "knowledge/project_state.md"
     }
   ],
-  "built_at_commit": "dfb16c14b8bf992bfd4a7aa003753311a154ec4d"
+  "built_at_commit": "dc55e87a1b89602f64eb9a8707025165be368b1c"
 }
