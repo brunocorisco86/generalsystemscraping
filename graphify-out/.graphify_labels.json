@@ -106,5 +106,6 @@
   "104": "Predição de Arraçoamento com IA",
   "105": "src/jobs/migrate_data.py",
   "106": "🛠️ Detalhes das Alterações",
-  "107": "TestAgentFallback"
+  "107": "TestAgentFallback",
+  "108": "run_migration"
 }

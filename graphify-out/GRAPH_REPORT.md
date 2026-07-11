@@ -1,16 +1,16 @@
 # Graph Report - 9_ALPINE_GENERAL  (2026-07-11)
 
 ## Corpus Check
-- 94 files · ~40,130 words
+- 94 files · ~40,185 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 524 nodes · 871 edges · 108 communities (34 shown, 74 thin omitted)
+- 525 nodes · 872 edges · 109 communities (33 shown, 76 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 33 edges (avg confidence: 0.55)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `dc55e87a`
+- Built from commit: `0f5cfbe8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -115,6 +115,7 @@
 - src/jobs/migrate_data.py
 - 🛠️ Detalhes das Alterações
 - TestAgentFallback
+- run_migration
 
 ## God Nodes (most connected - your core abstractions)
 1. `get_sqlite_connection()` - 51 edges
@@ -150,27 +151,27 @@
 - **Backup and DB Persistence Layer** — knowledge_backups_guide, knowledge_estrategia_backup_manus, src_services_database [INFERRED 0.85]
 - **System Monitoring and Self-Healing watchdog flow** — scripts_check_network_health, scripts_14_watchdog_resilience, src_alerts_alert_check, src_alerts_offline_check [INFERRED 0.85]
 
-## Communities (108 total, 74 thin omitted)
+## Communities (109 total, 76 thin omitted)
 
 ### Community 0 - "Agent & Alert System"
-Cohesion: 0.11
-Nodes (50): migrate_postgres(), migrate_sqlite(), check_last_reading(), Verifica o tempo da última leitura dos tanques.      Envia alerta se o atraso fo, run_production_logic(), ajustar_gompertz(), ajustar_reta(), gerar_curva() (+42 more)
+Cohesion: 0.07
+Nodes (71): AgentExecutor, migrate_postgres(), migrate_sqlite(), check_alerts(), Verifica as últimas leituras no banco de dados e dispara alertas se necessário., check_last_reading(), Verifica o tempo da última leitura dos tanques.      Envia alerta se o atraso fo, run_production_logic() (+63 more)
 
 ### Community 1 - "Telegram Bot & Database Operations"
 Cohesion: 0.07
 Nodes (68): CallbackQuery, InlineKeyboardMarkup, Message, Pool, criar_lote_completo(), finalizar_lote_abate(), get_estruturas_ativas(), get_lote_por_estrutura() (+60 more)
 
 ### Community 2 - "Dashboard Web & Data Migration"
-Cohesion: 0.10
-Nodes (24): migrate_data(), Migra dados do SQLite para o PostgreSQL., get_user_by_id(), init_web_auth_db(), Inicializa a tabela de usuários web no SQLite., Valida as credenciais do usuário., Retorna dados do usuário pelo ID., validate_user() (+16 more)
+Cohesion: 0.06
+Nodes (37): migrate_data(), Migra dados do SQLite para o PostgreSQL., format_morning_report(), main(), Formata o relatório de bom dia com clima detalhado., get_weather_forecast(), log_weather_locally(), Sessão customizada para impor um timeout limite nas requisições HTTP. (+29 more)
 
 ### Community 3 - "Weather Sync & Reports"
-Cohesion: 0.09
-Nodes (25): get_hourly_report(), Gera o relatório estatístico das últimas leituras para cada tanque., Obtém o clima atual e salva na tabela clima_historico., sync_hourly_weather(), format_morning_report(), main(), Formata o relatório de bom dia com clima detalhado., get_weather_forecast() (+17 more)
+Cohesion: 0.18
+Nodes (12): get_hourly_report(), Gera o relatório estatístico das últimas leituras para cada tanque., Obtém o clima atual e salva na tabela clima_historico., sync_hourly_weather(), Garante que get_hourly_report exclui dados de tanques sem lote ativo no Postgres, test_hourly_report_filters_inactive_batches(), Verifica se a tabela clima_historico foi criada no SQLite., Verifica se o job de sincronização salva dados no banco. (+4 more)
 
 ### Community 4 - "Project Logs & System Setup"
-Cohesion: 0.09
-Nodes (24): AgentExecutor, check_alerts(), Verifica as últimas leituras no banco de dados e dispara alertas se necessário., analyze_alert_data(), analyze_evening_report_sync(), analyze_feed_prediction_sync(), analyze_nightly_report_sync(), ask_agent() (+16 more)
+Cohesion: 0.29
+Nodes (5): format_data_summary_micro(), Versão condensada da lógica que iremos implementar no feed_prediction.py, Valida se o resumo de dados é realmente curto (Micro-contexto)., Testa a nova função do agente (mockada)., TestFeedPredictionAgent
 
 ### Community 5 - "Device MAC Configuration & Scraper"
 Cohesion: 0.16
@@ -191,10 +192,6 @@ Nodes (7): RCLONE_CONFIG_R2_ACCESS_KEY_ID, RCLONE_CONFIG_R2_ACL, RCLONE_CONFIG_R
 ### Community 11 - "Gompertz Growth Curves & Plotting"
 Cohesion: 0.20
 Nodes (9): 1. Correção de Resolução de DNS Local (Pi-hole), 2. Validação e Monitoramento de Rede e IP Estático, 3. Filtragem Dinâmica de Lotes Ativos, 4. Correções e Estabilidade na Suíte de Testes (TDD), 5. Limpeza de Dados Legados no SQLite Local, 🛠️ Detalhes das Alterações, Diário de Bordo — 27 de Junho de 2026, 📋 Resumo do Dia (+1 more)
-
-### Community 12 - "Database Tools & Python Reports"
-Cohesion: 0.29
-Nodes (6): execute_python_report(), query_postgres(), Aciona o script de migração de dados do SQLite (onde os dados brutos chegam) par, Executa uma consulta SELECT de leitura no banco de dados PostgreSQL e retorna os, Executa um script Python da pasta src/reports/ e retorna o resultado no terminal, run_migration()
 
 ### Community 15 - "System Maintenance Scripts"
 Cohesion: 0.40
@@ -221,8 +218,8 @@ Cohesion: 0.25
 Nodes (7): 1. Pré-requisitos, 2. Configuração do Ambiente (.env), 3. Instalação de Dependências, 4. Inicialização do Serviço, 5. Verificação e Testes, 6. Logs e Solução de Problemas, Guia de Comissionamento: Dashboard Web Local
 
 ### Community 57 - "Regras e Convenções do Projeto Piscicultura (general-system)"
-Cohesion: 0.33
-Nodes (5): 1. Regra de Filtragem de Lotes Ativos (Urgente/Crítico), 2. Segregação SQLite (Borda) e PostgreSQL (Histórico), 3. Fluxo de Trabalho (Deploy via Git), 4. Infraestrutura de Rede e DNS, Regras e Convenções do Projeto Piscicultura (general-system)
+Cohesion: 0.29
+Nodes (6): 1. Regra de Filtragem de Lotes Ativos (Urgente/Crítico), 2. Segregação SQLite (Borda) e PostgreSQL (Histórico), 3. Fluxo de Trabalho (Deploy via Git), 4. Infraestrutura de Rede e DNS, 5. Organização de Diários de Bordo (Diários), Regras e Convenções do Projeto Piscicultura (general-system)
 
 ### Community 58 - "Arquitetura do Sistema"
 Cohesion: 0.33
@@ -257,24 +254,24 @@ Cohesion: 0.22
 Nodes (8): 1. Auditoria e Grafo de Conhecimento (`graphify`), 2. Sistema de Suspensão de Telemetria e Alertas, 3. Interface de Comandos do Telegram, 4. Deploy no Servidor de Produção (`peixe`), 🛠️ Detalhes das Alterações, Diário de Bordo — 11 de Julho de 2026, 📋 Resumo do Dia, 📈 Status da Suíte de Testes
 
 ## Knowledge Gaps
-- **156 isolated node(s):** `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD`, `02-setup-venv.sh script`, `03-install-python-deps.sh script` (+151 more)
+- **157 isolated node(s):** `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD`, `02-setup-venv.sh script`, `03-install-python-deps.sh script` (+152 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **74 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **76 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `get_sqlite_connection()` connect `Agent & Alert System` to `Dashboard Web & Data Migration`, `Weather Sync & Reports`, `Project Logs & System Setup`, `Device MAC Configuration & Scraper`?**
+- **Why does `get_sqlite_connection()` connect `Agent & Alert System` to `Dashboard Web & Data Migration`, `Weather Sync & Reports`, `Device MAC Configuration & Scraper`?**
   _High betweenness centrality (0.039) - this node is a cross-community bridge._
-- **Why does `get_weather_forecast()` connect `Weather Sync & Reports` to `Telegram Bot & Database Operations`, `Dashboard Web & Data Migration`?**
+- **Why does `get_weather_forecast()` connect `Dashboard Web & Data Migration` to `Telegram Bot & Database Operations`, `Weather Sync & Reports`?**
   _High betweenness centrality (0.032) - this node is a cross-community bridge._
-- **Why does `get_postgres_connection()` connect `Agent & Alert System` to `Dashboard Web & Data Migration`, `Weather Sync & Reports`, `Project Logs & System Setup`, `Database Tools & Python Reports`?**
+- **Why does `get_postgres_connection()` connect `Agent & Alert System` to `Dashboard Web & Data Migration`, `Weather Sync & Reports`?**
   _High betweenness centrality (0.026) - this node is a cross-community bridge._
 - **Are the 25 inferred relationships involving `main()` (e.g. with `callback_agua_uid()` and `callback_bio_finish()`) actually correct?**
   _`main()` has 25 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD` to the rest of the system?**
-  _238 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _239 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Agent & Alert System` be split into smaller, more focused modules?**
-  _Cohesion score 0.10524256651017215 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07278835386338185 - nodes in this community are weakly interconnected._
 - **Should `Telegram Bot & Database Operations` be split into smaller, more focused modules?**
   _Cohesion score 0.07364185110663984 - nodes in this community are weakly interconnected._

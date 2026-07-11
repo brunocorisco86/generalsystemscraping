@@ -104,5 +104,7 @@
   "102": "Qualidade de Água",
   "103": "Watchdog Resilience",
   "104": "Predição de Arraçoamento com IA",
-  "105": "src/jobs/migrate_data.py"
+  "105": "src/jobs/migrate_data.py",
+  "106": "🛠️ Detalhes das Alterações",
+  "107": "TestAgentFallback"
 }

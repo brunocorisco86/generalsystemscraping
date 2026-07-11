@@ -35,3 +35,7 @@ Este arquivo define as regras de desenvolvimento e operação para agentes traba
 ## 4. Infraestrutura de Rede e DNS
 *   **Servidor DNS Local**: O servidor `192.168.1.7` (`alpine`) é responsável por mapear o hostname `peixe` e `peixe.lan` para o IP estático `192.168.1.99`.
 *   **Script de Saúde**: O script `scripts/check_network_health.sh` deve ser mantido no cron para auditar diariamente o status do IP estático e da resolução de nomes local.
+
+## 5. Organização de Diários de Bordo (Diários)
+*   **Localização**: Todos os diários de bordo (com o padrão de nome `diary_YYYY_MM_DD.md`) devem ser salvos exclusivamente no diretório `knowledge/diario/`.
+*   **Atualização**: Ao registrar o andamento, correções ou finalização de tarefas, crie ou atualize o diário correspondente na subpasta correta para manter o histórico centralizado e organizado.

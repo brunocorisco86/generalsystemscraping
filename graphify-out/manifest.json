@@ -375,9 +375,9 @@
     "semantic_hash": "075e23361944960db03c57087aa30018"
   },
   ".agents/AGENTS.md": {
-    "mtime": 1782614065.4875536,
-    "ast_hash": "5cbc15127dbcde5511edfd67e0a49a05",
-    "semantic_hash": "5cbc15127dbcde5511edfd67e0a49a05"
+    "mtime": 1783781917.6806068,
+    "ast_hash": "4320136ac8a9873a2eb878e101b2ae03",
+    "semantic_hash": ""
   },
   "README.md": {
     "mtime": 1779205958.3492072,
@@ -439,16 +439,6 @@
     "ast_hash": "f2b9242bef86bd4b435076f4ceb73cfd",
     "semantic_hash": "f2b9242bef86bd4b435076f4ceb73cfd"
   },
-  "knowledge/diary_2026_06_27.md": {
-    "mtime": 1782614065.496325,
-    "ast_hash": "053dcb5c31f4cb75e1095ff02c28ce00",
-    "semantic_hash": "053dcb5c31f4cb75e1095ff02c28ce00"
-  },
-  "knowledge/diary_2026_06_28.md": {
-    "mtime": 1782624285.1881726,
-    "ast_hash": "e28f41ba508afc5230c54691b035a2c6",
-    "semantic_hash": "e28f41ba508afc5230c54691b035a2c6"
-  },
   "knowledge/estrategia_backup_manus.md": {
     "mtime": 1775972784.6061168,
     "ast_hash": "ae6935750525aa9b65506be0e2357ed2",
@@ -504,7 +494,17 @@
     "ast_hash": "0bc020d491fca99550c1ea3de0a5f862",
     "semantic_hash": ""
   },
-  "knowledge/diary_2026_07_11.md": {
+  "knowledge/diario/diary_2026_06_27.md": {
+    "mtime": 1782614065.496325,
+    "ast_hash": "053dcb5c31f4cb75e1095ff02c28ce00",
+    "semantic_hash": ""
+  },
+  "knowledge/diario/diary_2026_06_28.md": {
+    "mtime": 1782624285.1881726,
+    "ast_hash": "e28f41ba508afc5230c54691b035a2c6",
+    "semantic_hash": ""
+  },
+  "knowledge/diario/diary_2026_07_11.md": {
     "mtime": 1783780399.1485057,
     "ast_hash": "f93ad22de4e95e561c4ff99c0778f2ac",
     "semantic_hash": ""

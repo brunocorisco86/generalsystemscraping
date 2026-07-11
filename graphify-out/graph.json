@@ -1058,7 +1058,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_alerts_alert_check_check_alerts",
-      "community": 4,
+      "community": 0,
       "norm_label": "check_alerts()"
     },
     {
@@ -1068,7 +1068,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_alerts_alert_check_rationale_22",
-      "community": 4,
+      "community": 0,
       "norm_label": "verifica as ultimas leituras no banco de dados e dispara alertas se necessario."
     },
     {
@@ -1258,7 +1258,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "src_bots_agent_get_agent_executor",
-      "community": 4,
+      "community": 0,
       "norm_label": "get_agent_executor()"
     },
     {
@@ -1268,7 +1268,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "agentexecutor",
-      "community": 4,
+      "community": 0,
       "norm_label": "agentexecutor"
     },
     {
@@ -1278,7 +1278,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "src_bots_agent_ask_agent",
-      "community": 4,
+      "community": 0,
       "norm_label": "ask_agent()"
     },
     {
@@ -1288,7 +1288,7 @@
       "source_location": "L158",
       "_origin": "ast",
       "id": "src_bots_agent_analyze_alert_data",
-      "community": 4,
+      "community": 0,
       "norm_label": "analyze_alert_data()"
     },
     {
@@ -1298,7 +1298,7 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "src_bots_agent_analyze_feed_prediction_sync",
-      "community": 4,
+      "community": 0,
       "norm_label": "analyze_feed_prediction_sync()"
     },
     {
@@ -1308,7 +1308,7 @@
       "source_location": "L242",
       "_origin": "ast",
       "id": "src_bots_agent_analyze_evening_report_sync",
-      "community": 4,
+      "community": 0,
       "norm_label": "analyze_evening_report_sync()"
     },
     {
@@ -1318,7 +1318,7 @@
       "source_location": "L280",
       "_origin": "ast",
       "id": "src_bots_agent_analyze_nightly_report_sync",
-      "community": 4,
+      "community": 0,
       "norm_label": "analyze_nightly_report_sync()"
     },
     {
@@ -1338,7 +1338,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "src_bots_agent_rationale_52",
-      "community": 4,
+      "community": 0,
       "norm_label": "inicializa o agentexecutor com suporte a multiplos modelos do gemini e fallbacks"
     },
     {
@@ -1348,7 +1348,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "src_bots_agent_rationale_133",
-      "community": 4,
+      "community": 0,
       "norm_label": "funcao para bater papo livremente com o agente via bot do telegram."
     },
     {
@@ -1358,7 +1358,7 @@
       "source_location": "L159",
       "_origin": "ast",
       "id": "src_bots_agent_rationale_159",
-      "community": 4,
+      "community": 0,
       "norm_label": "acionada pelo alert_check.py para analisar o contexto do tanque antes de dispara"
     },
     {
@@ -1368,7 +1368,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "src_bots_agent_rationale_206",
-      "community": 4,
+      "community": 0,
       "norm_label": "analisa os dados de predicao de arracoamento de forma sincrona.     recebe um re"
     },
     {
@@ -1378,7 +1378,7 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "src_bots_agent_rationale_243",
-      "community": 4,
+      "community": 0,
       "norm_label": "funcao sincrona para ser chamada por jobs em background (como evening_report.py)"
     },
     {
@@ -1388,7 +1388,7 @@
       "source_location": "L281",
       "_origin": "ast",
       "id": "src_bots_agent_rationale_281",
-      "community": 4,
+      "community": 0,
       "norm_label": "funcao sincrona para o relatorio da manha (nightly_report.py).     o agente rece"
     },
     {
@@ -1408,7 +1408,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_bots_agent_tools",
-      "community": 12,
+      "community": 0,
       "norm_label": "agent_tools.py"
     },
     {
@@ -1418,7 +1418,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_bots_agent_tools_run_migration",
-      "community": 12,
+      "community": 108,
       "norm_label": "run_migration()"
     },
     {
@@ -1428,7 +1428,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_bots_agent_tools_query_postgres",
-      "community": 12,
+      "community": 0,
       "norm_label": "query_postgres()"
     },
     {
@@ -1448,7 +1448,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_bots_agent_tools_rationale_17",
-      "community": 12,
+      "community": 108,
       "norm_label": "aciona o script de migracao de dados do sqlite (onde os dados brutos chegam) par"
     },
     {
@@ -1458,7 +1458,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_bots_agent_tools_rationale_39",
-      "community": 12,
+      "community": 0,
       "norm_label": "executa uma consulta select de leitura no banco de dados postgresql e retorna os"
     },
     {
@@ -2218,7 +2218,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_jobs_morning_weather_report",
-      "community": 3,
+      "community": 2,
       "norm_label": "morning_weather_report.py"
     },
     {
@@ -2228,7 +2228,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_jobs_morning_weather_report_format_morning_report",
-      "community": 3,
+      "community": 2,
       "norm_label": "format_morning_report()"
     },
     {
@@ -2238,7 +2238,7 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "src_jobs_morning_weather_report_main",
-      "community": 3,
+      "community": 2,
       "norm_label": "main()"
     },
     {
@@ -2248,7 +2248,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_jobs_morning_weather_report_rationale_13",
-      "community": 3,
+      "community": 2,
       "norm_label": "formata o relatorio de bom dia com clima detalhado."
     },
     {
@@ -2658,7 +2658,7 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "src_services_database_salvar_parecer_ia",
-      "community": 4,
+      "community": 0,
       "norm_label": "salvar_parecer_ia()"
     },
     {
@@ -2758,7 +2758,7 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "src_services_database_rationale_95",
-      "community": 4,
+      "community": 0,
       "norm_label": "salva o parecer da ia no postgresql de forma compacta."
     },
     {
@@ -2848,7 +2848,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_services_weather",
-      "community": 3,
+      "community": 2,
       "norm_label": "weather.py"
     },
     {
@@ -2858,7 +2858,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_services_weather_timeoutcachedsession",
-      "community": 3,
+      "community": 2,
       "norm_label": "timeoutcachedsession"
     },
     {
@@ -2868,7 +2868,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_services_weather_timeoutcachedsession_init",
-      "community": 3,
+      "community": 2,
       "norm_label": ".__init__()"
     },
     {
@@ -2878,7 +2878,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_services_weather_timeoutcachedsession_request",
-      "community": 3,
+      "community": 2,
       "norm_label": ".request()"
     },
     {
@@ -2888,7 +2888,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_services_weather_log_weather_locally",
-      "community": 3,
+      "community": 2,
       "norm_label": "log_weather_locally()"
     },
     {
@@ -2898,7 +2898,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "src_services_weather_get_weather_forecast",
-      "community": 3,
+      "community": 2,
       "norm_label": "get_weather_forecast()"
     },
     {
@@ -2908,7 +2908,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_services_weather_rationale_13",
-      "community": 3,
+      "community": 2,
       "norm_label": "sessao customizada para impor um timeout limite nas requisicoes http."
     },
     {
@@ -2918,7 +2918,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_services_weather_rationale_23",
-      "community": 3,
+      "community": 2,
       "norm_label": "salva os dados da previsao em um arquivo json local,      sobrescrevendo o anter"
     },
     {
@@ -2928,7 +2928,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_services_weather_rationale_62",
-      "community": 3,
+      "community": 2,
       "norm_label": "obtem a previsao do tempo utilizando a api open-meteo.     utiliza as coordenada"
     },
     {
@@ -3078,7 +3078,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "src_web_app_dashboard",
-      "community": 3,
+      "community": 2,
       "norm_label": "dashboard()"
     },
     {
@@ -3198,7 +3198,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_alert_check_filter",
-      "community": 4,
+      "community": 0,
       "norm_label": "test_alert_check_filter.py"
     },
     {
@@ -3208,7 +3208,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tests_test_alert_check_filter_test_alert_check_filters_inactive_batches",
-      "community": 4,
+      "community": 0,
       "norm_label": "test_alert_check_filters_inactive_batches()"
     },
     {
@@ -3218,7 +3218,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tests_test_alert_check_filter_rationale_9",
-      "community": 4,
+      "community": 0,
       "norm_label": "garante que check_alerts nao gera alertas de oxigenio para tanques sem lote ativ"
     },
     {
@@ -3548,7 +3548,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_weather",
-      "community": 3,
+      "community": 2,
       "norm_label": "test_weather.py"
     },
     {
@@ -3558,7 +3558,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "tests_test_weather_test_get_weather_forecast",
-      "community": 3,
+      "community": 2,
       "norm_label": "test_get_weather_forecast()"
     },
     {
@@ -3568,7 +3568,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "tests_test_weather_test_get_weather_forecast_env_vars",
-      "community": 3,
+      "community": 2,
       "norm_label": "test_get_weather_forecast_env_vars()"
     },
     {
@@ -3578,7 +3578,7 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "tests_test_weather_rationale_98",
-      "community": 3,
+      "community": 2,
       "norm_label": "verifica se o servico utiliza as coordenadas do .env corretamente."
     },
     {
@@ -3810,6 +3810,16 @@
       "id": "agents_agents_4_infraestrutura_de_rede_e_dns",
       "community": 57,
       "norm_label": "4. infraestrutura de rede e dns"
+    },
+    {
+      "label": "5. Organiza\u00e7\u00e3o de Di\u00e1rios de Bordo (Di\u00e1rios)",
+      "file_type": "document",
+      "source_file": ".agents/AGENTS.md",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "agents_agents_5_organiza\u00e7\u00e3o_de_di\u00e1rios_de_bordo_di\u00e1rios",
+      "community": 57,
+      "norm_label": "5. organizacao de diarios de bordo (diarios)"
     },
     {
       "label": "graphify.md",
@@ -4524,280 +4534,280 @@
     {
       "label": "diary_2026_06_27.md",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_27",
+      "id": "knowledge_diario_diary_2026_06_27",
       "community": 11,
       "norm_label": "diary_2026_06_27.md"
     },
     {
       "label": "Di\u00e1rio de Bordo \u2014 27 de Junho de 2026",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_27_di\u00e1rio_de_bordo_27_de_junho_de_2026",
+      "id": "knowledge_diario_diary_2026_06_27_di\u00e1rio_de_bordo_27_de_junho_de_2026",
       "community": 11,
       "norm_label": "diario de bordo \u2014 27 de junho de 2026"
     },
     {
       "label": "\ud83d\udccb Resumo do Dia",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_27_resumo_do_dia",
+      "id": "knowledge_diario_diary_2026_06_27_resumo_do_dia",
       "community": 11,
       "norm_label": "\ud83d\udccb resumo do dia"
     },
     {
       "label": "\ud83d\udee0\ufe0f Detalhes das Altera\u00e7\u00f5es",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
+      "id": "knowledge_diario_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
       "community": 11,
       "norm_label": "\ud83d\udee0\ufe0f detalhes das alteracoes"
     },
     {
       "label": "1. Corre\u00e7\u00e3o de Resolu\u00e7\u00e3o de DNS Local (Pi-hole)",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_27_1_corre\u00e7\u00e3o_de_resolu\u00e7\u00e3o_de_dns_local_pi_hole",
+      "id": "knowledge_diario_diary_2026_06_27_1_corre\u00e7\u00e3o_de_resolu\u00e7\u00e3o_de_dns_local_pi_hole",
       "community": 11,
       "norm_label": "1. correcao de resolucao de dns local (pi-hole)"
     },
     {
       "label": "2. Valida\u00e7\u00e3o e Monitoramento de Rede e IP Est\u00e1tico",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_27_2_valida\u00e7\u00e3o_e_monitoramento_de_rede_e_ip_est\u00e1tico",
+      "id": "knowledge_diario_diary_2026_06_27_2_valida\u00e7\u00e3o_e_monitoramento_de_rede_e_ip_est\u00e1tico",
       "community": 11,
       "norm_label": "2. validacao e monitoramento de rede e ip estatico"
     },
     {
       "label": "3. Filtragem Din\u00e2mica de Lotes Ativos",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L29",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_27_3_filtragem_din\u00e2mica_de_lotes_ativos",
+      "id": "knowledge_diario_diary_2026_06_27_3_filtragem_din\u00e2mica_de_lotes_ativos",
       "community": 11,
       "norm_label": "3. filtragem dinamica de lotes ativos"
     },
     {
       "label": "4. Corre\u00e7\u00f5es e Estabilidade na Su\u00edte de Testes (TDD)",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L37",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_27_4_corre\u00e7\u00f5es_e_estabilidade_na_su\u00edte_de_testes_tdd",
+      "id": "knowledge_diario_diary_2026_06_27_4_corre\u00e7\u00f5es_e_estabilidade_na_su\u00edte_de_testes_tdd",
       "community": 11,
       "norm_label": "4. correcoes e estabilidade na suite de testes (tdd)"
     },
     {
       "label": "5. Limpeza de Dados Legados no SQLite Local",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L41",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_27_5_limpeza_de_dados_legados_no_sqlite_local",
+      "id": "knowledge_diario_diary_2026_06_27_5_limpeza_de_dados_legados_no_sqlite_local",
       "community": 11,
       "norm_label": "5. limpeza de dados legados no sqlite local"
     },
     {
       "label": "\ud83d\udcc8 Status de Valida\u00e7\u00e3o na Produ\u00e7\u00e3o (peixe)",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L51",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_27_status_de_valida\u00e7\u00e3o_na_produ\u00e7\u00e3o_peixe",
+      "id": "knowledge_diario_diary_2026_06_27_status_de_valida\u00e7\u00e3o_na_produ\u00e7\u00e3o_peixe",
       "community": 11,
       "norm_label": "\ud83d\udcc8 status de validacao na producao (peixe)"
     },
     {
       "label": "diary_2026_06_28.md",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_28",
+      "id": "knowledge_diario_diary_2026_06_28",
       "community": 55,
       "norm_label": "diary_2026_06_28.md"
     },
     {
       "label": "Di\u00e1rio de Bordo \u2014 28 de Junho de 2026",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_28_di\u00e1rio_de_bordo_28_de_junho_de_2026",
+      "id": "knowledge_diario_diary_2026_06_28_di\u00e1rio_de_bordo_28_de_junho_de_2026",
       "community": 55,
       "norm_label": "diario de bordo \u2014 28 de junho de 2026"
     },
     {
       "label": "\ud83d\udccb Resumo do Dia",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_28_resumo_do_dia",
+      "id": "knowledge_diario_diary_2026_06_28_resumo_do_dia",
       "community": 55,
       "norm_label": "\ud83d\udccb resumo do dia"
     },
     {
       "label": "\ud83d\udee0\ufe0f Detalhes das Altera\u00e7\u00f5es",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
+      "id": "knowledge_diario_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
       "community": 55,
       "norm_label": "\ud83d\udee0\ufe0f detalhes das alteracoes"
     },
     {
       "label": "1. Ajuste e Reconstru\u00e7\u00e3o do Ambiente de Desenvolvimento (`.venv`)",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_28_1_ajuste_e_reconstru\u00e7\u00e3o_do_ambiente_de_desenvolvimento_venv",
+      "id": "knowledge_diario_diary_2026_06_28_1_ajuste_e_reconstru\u00e7\u00e3o_do_ambiente_de_desenvolvimento_venv",
       "community": 55,
       "norm_label": "1. ajuste e reconstrucao do ambiente de desenvolvimento (`.venv`)"
     },
     {
       "label": "2. Estabiliza\u00e7\u00e3o e Resolu\u00e7\u00e3o de Conflitos na Su\u00edte de Testes (TDD)",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_28_2_estabiliza\u00e7\u00e3o_e_resolu\u00e7\u00e3o_de_conflitos_na_su\u00edte_de_testes_tdd",
+      "id": "knowledge_diario_diary_2026_06_28_2_estabiliza\u00e7\u00e3o_e_resolu\u00e7\u00e3o_de_conflitos_na_su\u00edte_de_testes_tdd",
       "community": 55,
       "norm_label": "2. estabilizacao e resolucao de conflitos na suite de testes (tdd)"
     },
     {
       "label": "3. Melhoria no Truncamento de Pareceres no Banco de Dados",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_28_3_melhoria_no_truncamento_de_pareceres_no_banco_de_dados",
+      "id": "knowledge_diario_diary_2026_06_28_3_melhoria_no_truncamento_de_pareceres_no_banco_de_dados",
       "community": 55,
       "norm_label": "3. melhoria no truncamento de pareceres no banco de dados"
     },
     {
       "label": "4. Valida\u00e7\u00e3o na Produ\u00e7\u00e3o (`peixe`)",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L23",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_28_4_valida\u00e7\u00e3o_na_produ\u00e7\u00e3o_peixe",
+      "id": "knowledge_diario_diary_2026_06_28_4_valida\u00e7\u00e3o_na_produ\u00e7\u00e3o_peixe",
       "community": 55,
       "norm_label": "4. validacao na producao (`peixe`)"
     },
     {
       "label": "\ud83d\udcc8 Status da Su\u00edte de Testes",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L31",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_06_28_status_da_su\u00edte_de_testes",
+      "id": "knowledge_diario_diary_2026_06_28_status_da_su\u00edte_de_testes",
       "community": 55,
       "norm_label": "\ud83d\udcc8 status da suite de testes"
     },
     {
       "label": "diary_2026_07_11.md",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_07_11",
+      "id": "knowledge_diario_diary_2026_07_11",
       "community": 106,
       "norm_label": "diary_2026_07_11.md"
     },
     {
       "label": "Di\u00e1rio de Bordo \u2014 11 de Julho de 2026",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
+      "id": "knowledge_diario_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
       "community": 106,
       "norm_label": "diario de bordo \u2014 11 de julho de 2026"
     },
     {
       "label": "\ud83d\udccb Resumo do Dia",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_07_11_resumo_do_dia",
+      "id": "knowledge_diario_diary_2026_07_11_resumo_do_dia",
       "community": 106,
       "norm_label": "\ud83d\udccb resumo do dia"
     },
     {
       "label": "\ud83d\udee0\ufe0f Detalhes das Altera\u00e7\u00f5es",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "id": "knowledge_diario_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
       "community": 106,
       "norm_label": "\ud83d\udee0\ufe0f detalhes das alteracoes"
     },
     {
       "label": "1. Auditoria e Grafo de Conhecimento (`graphify`)",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_07_11_1_auditoria_e_grafo_de_conhecimento_graphify",
+      "id": "knowledge_diario_diary_2026_07_11_1_auditoria_e_grafo_de_conhecimento_graphify",
       "community": 106,
       "norm_label": "1. auditoria e grafo de conhecimento (`graphify`)"
     },
     {
       "label": "2. Sistema de Suspens\u00e3o de Telemetria e Alertas",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_07_11_2_sistema_de_suspens\u00e3o_de_telemetria_e_alertas",
+      "id": "knowledge_diario_diary_2026_07_11_2_sistema_de_suspens\u00e3o_de_telemetria_e_alertas",
       "community": 106,
       "norm_label": "2. sistema de suspensao de telemetria e alertas"
     },
     {
       "label": "3. Interface de Comandos do Telegram",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L23",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_07_11_3_interface_de_comandos_do_telegram",
+      "id": "knowledge_diario_diary_2026_07_11_3_interface_de_comandos_do_telegram",
       "community": 106,
       "norm_label": "3. interface de comandos do telegram"
     },
     {
       "label": "4. Deploy no Servidor de Produ\u00e7\u00e3o (`peixe`)",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L27",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_07_11_4_deploy_no_servidor_de_produ\u00e7\u00e3o_peixe",
+      "id": "knowledge_diario_diary_2026_07_11_4_deploy_no_servidor_de_produ\u00e7\u00e3o_peixe",
       "community": 106,
       "norm_label": "4. deploy no servidor de producao (`peixe`)"
     },
     {
       "label": "\ud83d\udcc8 Status da Su\u00edte de Testes",
       "file_type": "document",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L36",
       "_origin": "ast",
-      "id": "knowledge_diary_2026_07_11_status_da_su\u00edte_de_testes",
+      "id": "knowledge_diario_diary_2026_07_11_status_da_su\u00edte_de_testes",
       "community": 106,
       "norm_label": "\ud83d\udcc8 status da suite de testes"
     },
@@ -4983,7 +4993,7 @@
       "rationale": "Evitar exibir relat\u00f3rios, enviar fotos ou disparar alertas (oxig\u00eanio cr\u00edtico, offline) para estruturas (tanques) que n\u00e3o possuam um lote ativo (data_abate IS NULL na tabela lotes).",
       "community": 10,
       "norm_label": "regra de filtragem de lotes ativos",
-      "id": "agents_agents_agents_agents_agents_regra_filtragem_lotes_ativos"
+      "id": "agents_agents_agents_agents_agents_agents_regra_filtragem_lotes_ativos"
     },
     {
       "label": "Segrega\u00e7\u00e3o SQLite e PostgreSQL",
@@ -4997,7 +5007,7 @@
       "rationale": "SQLite atua como cache r\u00e1pido de leitura local e coleta offline na borda, enquanto o PostgreSQL gerencia o hist\u00f3rico transacional centralizado e de longo prazo.",
       "community": 74,
       "norm_label": "segregacao sqlite e postgresql",
-      "id": "agents_agents_agents_agents_agents_segregacao_sqlite_postgres"
+      "id": "agents_agents_agents_agents_agents_agents_segregacao_sqlite_postgres"
     },
     {
       "label": "Fluxo de Deploy via Git",
@@ -5010,7 +5020,7 @@
       "contributor": null,
       "community": 37,
       "norm_label": "fluxo de deploy via git",
-      "id": "agents_agents_agents_agents_agents_fluxo_deploy_git"
+      "id": "agents_agents_agents_agents_agents_agents_fluxo_deploy_git"
     },
     {
       "label": "Infraestrutura de Rede e DNS",
@@ -5023,7 +5033,7 @@
       "contributor": null,
       "community": 38,
       "norm_label": "infraestrutura de rede e dns",
-      "id": "agents_agents_agents_agents_agents_infraestrutura_rede_dns"
+      "id": "agents_agents_agents_agents_agents_agents_infraestrutura_rede_dns"
     },
     {
       "label": "Predi\u00e7\u00e3o de Arra\u00e7oamento com IA",
@@ -13855,6 +13865,16 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": ".agents/AGENTS.md",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "agents_agents_regras_e_conven\u00e7\u00f5es_do_projeto_piscicultura_general_system",
+      "target": "agents_agents_5_organiza\u00e7\u00e3o_de_di\u00e1rios_de_bordo_di\u00e1rios",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": ".agents/rules/graphify.md",
       "source_location": "L6",
       "weight": 1.0,
@@ -14455,251 +14475,251 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L1",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_27",
-      "target": "knowledge_diary_2026_06_27_di\u00e1rio_de_bordo_27_de_junho_de_2026",
+      "source": "knowledge_diario_diary_2026_06_27",
+      "target": "knowledge_diario_diary_2026_06_27_di\u00e1rio_de_bordo_27_de_junho_de_2026",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L8",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_27_di\u00e1rio_de_bordo_27_de_junho_de_2026",
-      "target": "knowledge_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
+      "source": "knowledge_diario_diary_2026_06_27_di\u00e1rio_de_bordo_27_de_junho_de_2026",
+      "target": "knowledge_diario_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L3",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_27_di\u00e1rio_de_bordo_27_de_junho_de_2026",
-      "target": "knowledge_diary_2026_06_27_resumo_do_dia",
+      "source": "knowledge_diario_diary_2026_06_27_di\u00e1rio_de_bordo_27_de_junho_de_2026",
+      "target": "knowledge_diario_diary_2026_06_27_resumo_do_dia",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L51",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_27_di\u00e1rio_de_bordo_27_de_junho_de_2026",
-      "target": "knowledge_diary_2026_06_27_status_de_valida\u00e7\u00e3o_na_produ\u00e7\u00e3o_peixe",
+      "source": "knowledge_diario_diary_2026_06_27_di\u00e1rio_de_bordo_27_de_junho_de_2026",
+      "target": "knowledge_diario_diary_2026_06_27_status_de_valida\u00e7\u00e3o_na_produ\u00e7\u00e3o_peixe",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L10",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_06_27_1_corre\u00e7\u00e3o_de_resolu\u00e7\u00e3o_de_dns_local_pi_hole",
+      "source": "knowledge_diario_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_06_27_1_corre\u00e7\u00e3o_de_resolu\u00e7\u00e3o_de_dns_local_pi_hole",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L18",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_06_27_2_valida\u00e7\u00e3o_e_monitoramento_de_rede_e_ip_est\u00e1tico",
+      "source": "knowledge_diario_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_06_27_2_valida\u00e7\u00e3o_e_monitoramento_de_rede_e_ip_est\u00e1tico",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L29",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_06_27_3_filtragem_din\u00e2mica_de_lotes_ativos",
+      "source": "knowledge_diario_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_06_27_3_filtragem_din\u00e2mica_de_lotes_ativos",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L37",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_06_27_4_corre\u00e7\u00f5es_e_estabilidade_na_su\u00edte_de_testes_tdd",
+      "source": "knowledge_diario_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_06_27_4_corre\u00e7\u00f5es_e_estabilidade_na_su\u00edte_de_testes_tdd",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_27.md",
+      "source_file": "knowledge/diario/diary_2026_06_27.md",
       "source_location": "L41",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_06_27_5_limpeza_de_dados_legados_no_sqlite_local",
+      "source": "knowledge_diario_diary_2026_06_27_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_06_27_5_limpeza_de_dados_legados_no_sqlite_local",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L1",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_28",
-      "target": "knowledge_diary_2026_06_28_di\u00e1rio_de_bordo_28_de_junho_de_2026",
+      "source": "knowledge_diario_diary_2026_06_28",
+      "target": "knowledge_diario_diary_2026_06_28_di\u00e1rio_de_bordo_28_de_junho_de_2026",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L8",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_28_di\u00e1rio_de_bordo_28_de_junho_de_2026",
-      "target": "knowledge_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
+      "source": "knowledge_diario_diary_2026_06_28_di\u00e1rio_de_bordo_28_de_junho_de_2026",
+      "target": "knowledge_diario_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L3",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_28_di\u00e1rio_de_bordo_28_de_junho_de_2026",
-      "target": "knowledge_diary_2026_06_28_resumo_do_dia",
+      "source": "knowledge_diario_diary_2026_06_28_di\u00e1rio_de_bordo_28_de_junho_de_2026",
+      "target": "knowledge_diario_diary_2026_06_28_resumo_do_dia",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L31",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_28_di\u00e1rio_de_bordo_28_de_junho_de_2026",
-      "target": "knowledge_diary_2026_06_28_status_da_su\u00edte_de_testes",
+      "source": "knowledge_diario_diary_2026_06_28_di\u00e1rio_de_bordo_28_de_junho_de_2026",
+      "target": "knowledge_diario_diary_2026_06_28_status_da_su\u00edte_de_testes",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L10",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_06_28_1_ajuste_e_reconstru\u00e7\u00e3o_do_ambiente_de_desenvolvimento_venv",
+      "source": "knowledge_diario_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_06_28_1_ajuste_e_reconstru\u00e7\u00e3o_do_ambiente_de_desenvolvimento_venv",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L14",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_06_28_2_estabiliza\u00e7\u00e3o_e_resolu\u00e7\u00e3o_de_conflitos_na_su\u00edte_de_testes_tdd",
+      "source": "knowledge_diario_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_06_28_2_estabiliza\u00e7\u00e3o_e_resolu\u00e7\u00e3o_de_conflitos_na_su\u00edte_de_testes_tdd",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L19",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_06_28_3_melhoria_no_truncamento_de_pareceres_no_banco_de_dados",
+      "source": "knowledge_diario_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_06_28_3_melhoria_no_truncamento_de_pareceres_no_banco_de_dados",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_06_28.md",
+      "source_file": "knowledge/diario/diary_2026_06_28.md",
       "source_location": "L23",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_06_28_4_valida\u00e7\u00e3o_na_produ\u00e7\u00e3o_peixe",
+      "source": "knowledge_diario_diary_2026_06_28_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_06_28_4_valida\u00e7\u00e3o_na_produ\u00e7\u00e3o_peixe",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L1",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_07_11",
-      "target": "knowledge_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
+      "source": "knowledge_diario_diary_2026_07_11",
+      "target": "knowledge_diario_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L8",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
-      "target": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "source": "knowledge_diario_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
+      "target": "knowledge_diario_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L3",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
-      "target": "knowledge_diary_2026_07_11_resumo_do_dia",
+      "source": "knowledge_diario_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
+      "target": "knowledge_diario_diary_2026_07_11_resumo_do_dia",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L36",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
-      "target": "knowledge_diary_2026_07_11_status_da_su\u00edte_de_testes",
+      "source": "knowledge_diario_diary_2026_07_11_di\u00e1rio_de_bordo_11_de_julho_de_2026",
+      "target": "knowledge_diario_diary_2026_07_11_status_da_su\u00edte_de_testes",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L10",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_07_11_1_auditoria_e_grafo_de_conhecimento_graphify",
+      "source": "knowledge_diario_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_07_11_1_auditoria_e_grafo_de_conhecimento_graphify",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L15",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_07_11_2_sistema_de_suspens\u00e3o_de_telemetria_e_alertas",
+      "source": "knowledge_diario_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_07_11_2_sistema_de_suspens\u00e3o_de_telemetria_e_alertas",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L23",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_07_11_3_interface_de_comandos_do_telegram",
+      "source": "knowledge_diario_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_07_11_3_interface_de_comandos_do_telegram",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "knowledge/diary_2026_07_11.md",
+      "source_file": "knowledge/diario/diary_2026_07_11.md",
       "source_location": "L27",
       "weight": 1.0,
-      "source": "knowledge_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
-      "target": "knowledge_diary_2026_07_11_4_deploy_no_servidor_de_produ\u00e7\u00e3o_peixe",
+      "source": "knowledge_diario_diary_2026_07_11_detalhes_das_altera\u00e7\u00f5es",
+      "target": "knowledge_diario_diary_2026_07_11_4_deploy_no_servidor_de_produ\u00e7\u00e3o_peixe",
       "confidence_score": 1.0
     },
     {
@@ -14972,5 +14992,5 @@
       "source_file": "knowledge/project_state.md"
     }
   ],
-  "built_at_commit": "dc55e87a1b89602f64eb9a8707025165be368b1c"
+  "built_at_commit": "0f5cfbe8060cc80aa51131794687827597906be0"
 }
