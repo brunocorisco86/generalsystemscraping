@@ -21,6 +21,11 @@ def check_last_reading():
     Verifica o tempo da última leitura dos tanques. 
     Envia alerta se o atraso for maior que o configurado.
     """
+    from src.services.database import is_system_suspended
+    if is_system_suspended():
+        logger.info("Sistema suspenso. Ignorando verificação offline.")
+        return
+
     logger.info("--- Iniciando Verificação de Status Offline ---")
     logger.info("Configuração: Alerta após %d minutos de inatividade.", MINUTOS_OFFLINE_ALERTA)
     

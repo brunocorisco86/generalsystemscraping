@@ -133,4 +133,9 @@ def main():
         # send_telegram_message(error_msg)
 
 if __name__ == "__main__":
+    import sys
+    from src.services.database import is_system_suspended
+    if is_system_suspended():
+        print("Sistema suspenso. Ignorando relatório matinal de clima.")
+        sys.exit(0)
     main()

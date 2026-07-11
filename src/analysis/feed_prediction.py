@@ -174,4 +174,9 @@ def run_production_logic():
     except Exception as e: print(f"Erro: {e}")
 
 if __name__ == "__main__":
+    import sys
+    from src.services.database import is_system_suspended
+    if is_system_suspended():
+        print("Sistema suspenso. Ignorando predição de arraçoamento.")
+        sys.exit(0)
     run_production_logic()

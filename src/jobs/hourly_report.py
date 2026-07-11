@@ -146,6 +146,12 @@ def get_hourly_report():
             conn.close()
 
 if __name__ == "__main__":
+    import sys
+    from src.services.database import is_system_suspended
+    if is_system_suspended():
+        print("Sistema suspenso. Ignorando relatório horário.")
+        sys.exit(0)
+
     # Para executar do root: python3 -m src.jobs.hourly_report
     mensagem_final = get_hourly_report()
     send_telegram_message(mensagem_final)

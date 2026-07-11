@@ -150,7 +150,42 @@ def generate_prediction():
         logger.error("Erro ao enviar foto para o Telegram: %s", e)
 
 if __name__ == "__main__":
-    generate_prediction()
+    # Configuração básica de logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    from src.services.database import is_system_suspended, get_postgres_connection
+    from src.services.notification import send_telegram_message
+    
+    if is_system_suspended():
+        logger.info("Sistema suspenso. Executando aviso especial das 17h.")
+        lote_aberto = None
+        pg_conn = get_postgres_connection()
+        if pg_conn:
+            try:
+                pg_cur = pg_conn.cursor()
+                pg_cur.execute("SELECT lote FROM lotes WHERE data_abate IS NULL LIMIT 1")
+                row = pg_cur.fetchone()
+                if row:
+                    lote_aberto = row[0]
+            except Exception as e:
+                logger.error(f"Erro ao verificar lotes em aberto no Postgres: {e}")
+            finally:
+                pg_conn.close()
 
-if __name__ == "__main__":
-    generate_prediction()
+        if lote_aberto:
+            msg = (
+                f"⚠️ *Aviso do Sistema (17h)* ⚠️\n\n"
+                f"O monitoramento de sensores e alertas está *suspenso*, mas o *Lote {lote_aberto}* ainda não foi finalizado no banco de dados.\n"
+                f"Caso todos os peixes já tenham saído, por favor registre o encerramento do ciclo utilizando o comando `/fechar_lote` no bot do Telegram."
+            )
+        else:
+            msg = (
+                f"ℹ️ *Aviso do Sistema (17h)* ℹ️\n\n"
+                f"O sistema de monitoramento continua *suspenso* (leituras e alertas desativados).\n"
+                f"Aguardando o início de um novo ciclo com `/novo_lote`."
+            )
+        send_telegram_message(msg)
+    else:
+        generate_prediction()

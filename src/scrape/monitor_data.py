@@ -94,6 +94,11 @@ def get_driver():
         raise
 
 def scrape_and_save():
+    from src.services.database import is_system_suspended
+    if is_system_suspended():
+        logger.info("Sistema suspenso. Ignorando coleta (scraping).")
+        return
+
     max_tentativas = 5
     tentativa = 1
     sucesso = False

@@ -20,6 +20,11 @@ LIMITE_OXIGENIO_CRITICO = float(os.getenv("LIMITE_OXIGENIO_CRITICO", 1.5))
 
 def check_alerts():
     """Verifica as últimas leituras no banco de dados e dispara alertas se necessário."""
+    from src.services.database import is_system_suspended
+    if is_system_suspended():
+        logger.info("Sistema suspenso. Ignorando verificação de alertas.")
+        return
+
     conn = None
     try:
         conn = get_sqlite_connection()

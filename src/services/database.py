@@ -135,3 +135,23 @@ def obter_ultimos_pareceres(limite=3) -> list:
         return []
     finally:
         conn.close()
+
+def is_system_suspended() -> bool:
+    """Verifica se o arquivo de flag de suspensão existe."""
+    proj_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    flag_path = os.path.join(proj_root, "data", "suspended.flag")
+    return os.path.exists(flag_path)
+
+def set_system_suspended(suspended: bool):
+    """Ativa ou desativa a suspensão criando/removendo o arquivo de flag."""
+    proj_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    data_dir = os.path.join(proj_root, "data")
+    os.makedirs(data_dir, exist_ok=True)
+    flag_path = os.path.join(data_dir, "suspended.flag")
+    if suspended:
+        with open(flag_path, "w", encoding="utf-8") as f:
+            f.write("suspended")
+    else:
+        if os.path.exists(flag_path):
+            os.remove(flag_path)
+

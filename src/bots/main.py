@@ -132,6 +132,8 @@ async def cmd_start(message: Message):
         "/curvapeso - Projeção de Crescimento (Peso)\n\n"
         "🛠️ *Sistema*\n"
         "/backup - Sincronizar banco de dados\n"
+        "/suspender - Suspender monitoramento/alertas\n"
+        "/reativar - Reativar monitoramento/alertas\n"
         "/cancel - Cancelar operação atual",
         parse_mode="Markdown"
     )
@@ -139,6 +141,28 @@ async def cmd_start(message: Message):
 async def cmd_cancel(message: Message):
     estado_chat.pop(message.chat.id, None)
     await message.answer("❌ Operação cancelada.")
+
+async def cmd_suspender(message: Message):
+    from src.services.database import set_system_suspended
+    set_system_suspended(True)
+    await message.answer(
+        "⏸️ *Sistema de Monitoramento Suspenso!*\n\n"
+        "A partir de agora:\n"
+        "• O scraping de sensores está desativado.\n"
+        "• Todos os alertas e relatórios automáticos foram suspensos.\n"
+        "• Apenas a notificação diária das 17h rodará para avisar se restarem lotes pendentes.\n\n"
+        "O sistema será reativado automaticamente assim que você abrir um novo lote com `/novo_lote` ou usar `/reativar`.",
+        parse_mode="Markdown"
+    )
+
+async def cmd_reativar(message: Message):
+    from src.services.database import set_system_suspended
+    set_system_suspended(False)
+    await message.answer(
+        "▶️ *Sistema de Monitoramento Reativado!*\n\n"
+        "Coleta de dados (scraping), leituras periódicas e alertas de sensores foram reativados com sucesso.",
+        parse_mode="Markdown"
+    )
 
 # ==========================
 # HANDLERS: RELATÓRIOS (SUBPROCESS)
@@ -560,6 +584,9 @@ async def handle_messages(message: Message):
             estado["descricao"] = texto if texto else None
             await criar_lote_completo(estado)
             await message.answer(f"✅ Lote {estado['lote']} iniciado!")
+            from src.services.database import set_system_suspended
+            set_system_suspended(False)
+            await message.answer("▶️ *Sistema de Monitoramento Reativado automaticamente para o novo lote!*", parse_mode="Markdown")
             estado_chat.pop(chat_id, None)
         elif step == "fl_data":
             estado["data_abate"] = parse_data_br(texto)
@@ -602,6 +629,8 @@ async def main():
     dp.message.register(cmd_agua, Command("agua", "lancar_agua"))
     dp.message.register(cmd_novo_lote, Command("novo_lote"))
     dp.message.register(cmd_fechar_lote, Command("fechar_lote"))
+    dp.message.register(cmd_suspender, Command("suspender"))
+    dp.message.register(cmd_reativar, Command("reativar"))
     dp.message.register(cmd_cancel, Command("cancel"))
     
     # Comandos Legados (usando decorators acima ou registro explícito)

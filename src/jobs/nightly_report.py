@@ -153,6 +153,12 @@ def generate_nightly_report():
             conn.close()
 
 if __name__ == "__main__":
+    import sys
+    from src.services.database import is_system_suspended
+    if is_system_suspended():
+        print("Sistema suspenso. Ignorando relatório noturno.")
+        sys.exit(0)
+
     # Configuração básica de logging para execução direta
     logging.basicConfig(
         level=logging.INFO,

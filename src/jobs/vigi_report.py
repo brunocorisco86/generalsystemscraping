@@ -121,6 +121,12 @@ def get_vigi_report():
             conn.close()
 
 if __name__ == "__main__":
+    import sys
+    from src.services.database import is_system_suspended
+    if is_system_suspended():
+        print("Sistema suspenso. Ignorando relatório de vigília.")
+        sys.exit(0)
+
     # Para executar do root: python3 -m src.jobs.vigi_report
     msg = get_vigi_report()
     send_telegram_message(msg)
