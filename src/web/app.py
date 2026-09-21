@@ -123,7 +123,22 @@ def dashboard():
                 )
                 ORDER BY nome_estrutura ASC
             ''')
-            leituras = cursor.fetchall()
+            leituras_raw = cursor.fetchall()
+            leituras = []
+            for row in leituras_raw:
+                nome, ox, temp, ts_str, aer = row
+                is_offline = False
+                minutos_atraso = 0
+                if ts_str:
+                    try:
+                        dt_ts = datetime.strptime(ts_str, '%Y-%m-%d %H:%M:%S')
+                        diff_min = int((datetime.now() - dt_ts).total_seconds() / 60)
+                        minutos_atraso = max(0, diff_min)
+                        if diff_min > 30:
+                            is_offline = True
+                    except Exception:
+                        pass
+                leituras.append((nome, ox, temp, ts_str, aer, is_offline, minutos_atraso))
 
             # 2. Obter Histórico de 24h para os Gráficos
             yesterday = (datetime.now() - timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
