@@ -636,9 +636,9 @@
     "semantic_hash": ""
   },
   "ROADMAP.md": {
-    "mtime": 1789950220.764329,
-    "seen": 1789950240.5839849,
-    "ast_hash": "64f09717cb2f317ede5d89291d509854",
+    "mtime": 1789952692.1876197,
+    "seen": 1789952728.9951365,
+    "ast_hash": "2f7a7de399d2b27a618423329fce97bd",
     "semantic_hash": ""
   },
   "docs/Idea\u00e7\u00e3o_ integra\u00e7\u00e3o direta com a API do Noctua IoT.md": {
@@ -648,9 +648,9 @@
     "semantic_hash": ""
   },
   "knowledge/diario/diary_2026_09_20.md": {
-    "mtime": 1789951768.8839006,
-    "seen": 1789951773.1393244,
-    "ast_hash": "9decac44a98d4fd9b3775dc9efad9906",
+    "mtime": 1789952713.5354273,
+    "seen": 1789952728.9957886,
+    "ast_hash": "d476667be639b96052b45f222d910008",
     "semantic_hash": ""
   },
   "scripts/noctua_diagnose.py": {

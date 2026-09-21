@@ -366,9 +366,9 @@
     "semantic_hash": "a7cc751f4c179d3b8ed6e390caad803b"
   },
   "src/web/app.py": {
-    "mtime": 1789952023.8717153,
-    "seen": 1789952193.5121534,
-    "ast_hash": "932cd05f94a5958bd8be40e62f8deff7",
+    "mtime": 1789952556.7283833,
+    "seen": 1789952583.4643013,
+    "ast_hash": "f728fa8125d28e9462cdc05f13083365",
     "semantic_hash": ""
   },
   "tests/__init__.py": {
@@ -570,9 +570,9 @@
     "semantic_hash": "ba5ca5edcbd61111ddee8bc1e1846e3c"
   },
   "src/web/templates/dashboard.html": {
-    "mtime": 1789949727.1217687,
-    "seen": 1789950240.584006,
-    "ast_hash": "21359a521027c25bbbfb9ff62e37608f",
+    "mtime": 1789952563.8443701,
+    "seen": 1789952583.466124,
+    "ast_hash": "56b8cd27c6b9d3383621120be2d3ba96",
     "semantic_hash": ""
   },
   "src/web/templates/login.html": {

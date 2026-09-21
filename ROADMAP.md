@@ -105,6 +105,14 @@ flowchart LR
   - Criar `Dockerfile` unificado leve (Python 3.11 Slim com Gunicorn).
   - Criar serviço autônomo `src/jobs/collector_service.py` eliminando cron bare-metal.
   - Atualizar `docker-compose.yml` com suporte a variáveis de portas (`WEB_PORT`) e reutilização de PostgreSQL externo.
+- [x] **Validação Local em Containers (Opção 1)**:
+  - Stack validada e executada com sucesso via Docker Compose local (`piscicultura_web`, `piscicultura_collector`, `piscicultura_postgres`).
+  - Consumo global de memória reduzido para menos de 400 MB RAM total.
+  - Ajuste na inicialização do `init_web_auth_db()` para suporte a múltiplos workers no Gunicorn.
+- [x] **Robustez & Hardening da Coleta**:
+  - Deduplicação de telemetria no coletor (`src/scrape/monitor_data.py`), evitando duplicação ao forçar coleta.
+  - Consulta segura com `MAX(id)` no dashboard (`src/web/app.py`), garantindo rigorosamente 1 card por tanque.
+  - Badge visual de conectividade em tempo real no frontend (`🟢 ONLINE` / `⚠️ OFFLINE há Xh`).
 - [x] **Testes de Regressão**:
   - Executar suíte completa (`bash scripts/run_tests.sh`) com 100% de aprovação (44 testes aprovados).
 

@@ -4018,7 +4018,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udccb proximos passos (milestone 5 - deploy vps de producao)",
       "source_file": "knowledge/diario/diary_2026_09_20.md",
-      "source_location": "L83"
+      "source_location": "L89"
     },
     {
       "id": "knowledge_diario_diary_2026_09_20_valida\u00e7\u00e3o_e_testes",
@@ -4234,7 +4234,7 @@
       "node_kind": "heading",
       "norm_label": "milestone 5: deploy e homologacao na vps",
       "source_file": "ROADMAP.md",
-      "source_location": "L114"
+      "source_location": "L122"
     },
     {
       "id": "roadmap_roadmap_do_projeto_transi\u00e7\u00e3o_noctua_iot_containeriza\u00e7\u00e3o",
@@ -16504,7 +16504,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "knowledge/diario/diary_2026_09_20.md",
-      "source_location": "L83",
+      "source_location": "L89",
       "weight": 1.0
     },
     {
@@ -16757,7 +16757,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "ROADMAP.md",
-      "source_location": "L114",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -21251,5 +21251,5 @@
       "source_file": "docs/MER.md"
     }
   ],
-  "built_at_commit": "fe704cd6b271f19af47b587643abfc8d3e9e5a7b"
+  "built_at_commit": "02f365435d6771e16db6d6379216677e68feeb56"
 }
