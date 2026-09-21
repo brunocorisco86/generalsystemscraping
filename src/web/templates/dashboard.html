@@ -189,7 +189,91 @@
         </div>
     </div>
 
+    <!-- LINHA 5: Automação, Thresholds e Controle de Motores (Noctua IoT) -->
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-top border-4 border-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title fw-bold mb-0">
+                            <i class="bi bi-sliders me-2"></i>Automação, Thresholds & Acionamento de Motores
+                        </h5>
+                        <div class="d-flex align-items-center gap-2">
+                            <label for="endpointSelect" class="form-label mb-0 fw-semibold">Tanque:</label>
+                            <select id="endpointSelect" class="form-select form-select-sm" style="width: auto;" onchange="fetchEndpointData(this.value)">
+                                <option value="10:20:BA:66:2E:C8" selected>Tanque 1 (10:20:BA:66:2E:C8)</option>
+                                <option value="10:20:BA:6A:90:00">Tanque 2 (10:20:BA:6A:90:00)</option>
+                            </select>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="fetchEndpointData(document.getElementById('endpointSelect').value)">
+                                ⟳ Atualizar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <!-- Coluna 1: Limiares de Oxigênio (Thresholds) -->
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded bg-light h-100">
+                                <h6 class="fw-bold text-primary mb-3">Limiares de Oxigênio</h6>
+                                <div class="mb-2">
+                                    <label class="form-label small fw-semibold">O2 Crítico Mínimo (mg/L):</label>
+                                    <input type="number" step="0.1" min="1.0" max="8.0" id="inputCriticalO2" class="form-control form-control-sm" placeholder="Ex: 2.0">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label small fw-semibold">O2 Crítico Máximo (mg/L):</label>
+                                    <input type="number" step="0.1" min="1.0" max="15.0" id="inputCriticalO2Max" class="form-control form-control-sm" placeholder="Ex: 4.5">
+                                </div>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="switchAutoOn">
+                                    <label class="form-check-label small fw-semibold" for="switchAutoOn">Automação Ativa (AutoOn)</label>
+                                </div>
+                                <button class="btn btn-sm btn-primary w-100" onclick="submitThresholds()">
+                                    💾 Salvar Limiares
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Coluna 2: Programação Horária (Timers) -->
+                        <div class="col-md-5">
+                            <div class="p-3 border rounded bg-light h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold text-warning mb-0">Programação de Janelas (Timer)</h6>
+                                    <span class="badge bg-secondary" id="timerStatusBadge">Carregando...</span>
+                                </div>
+                                <textarea id="inputTimerJson" class="form-control form-control-sm font-monospace" rows="5" placeholder="Configuração JSON do timer..."></textarea>
+                                <button class="btn btn-sm btn-warning text-dark w-100 mt-2" onclick="submitTimers()">
+                                    ⏰ Salvar Programação de Janelas
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Coluna 3: Acionamento Manual de Motores -->
+                        <div class="col-md-3">
+                            <div class="p-3 border rounded bg-light h-100">
+                                <h6 class="fw-bold text-danger mb-2">Acionamento Manual</h6>
+                                <p class="small text-muted mb-2">Operação protegida por protocolo seguro e confirmação.</p>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-sm btn-outline-success" onclick="triggerMotorCommand('MOTOR_ALL_ON', 'Ligar todos os aeradores')">
+                                        ⚡ Ligar Aeradores
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="triggerMotorCommand('MOTOR_ALL_OFF', 'Desligar todos os aeradores')">
+                                        ⏹️ Desligar Aeradores
+                                    </button>
+                                </div>
+                                <div class="mt-2 text-center">
+                                    <small class="text-muted" id="commandStatusInfo">Pronto</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
 
 <!-- Modal para Parecer da IA -->
 <div class="modal fade" id="aiModal" tabindex="-1" aria-labelledby="aiModalLabel" aria-hidden="true">
@@ -276,6 +360,139 @@
         type: 'line',
         data: tempData,
         options: commonOptions
+    });
+
+    // --- CONTROLE DE ENDPOINTS, THRESHOLDS E TIMERS ---
+    async function fetchEndpointData(mac) {
+        if (!mac) return;
+        document.getElementById('commandStatusInfo').innerText = "Carregando parâmetros...";
+        try {
+            const resp = await fetch(`/api/endpoint/${mac}`);
+            const data = await resp.json();
+            if (data.status === 'success' && data.endpoint) {
+                const ep = data.endpoint;
+                document.getElementById('inputCriticalO2').value = ep.criticalO2 !== null ? ep.criticalO2 : '';
+                document.getElementById('inputCriticalO2Max').value = ep.criticalO2Max !== null ? ep.criticalO2Max : '';
+                document.getElementById('switchAutoOn').checked = !!ep.autoOn;
+                
+                // Formatação do timer JSON
+                if (ep.timer) {
+                    try {
+                        const parsed = typeof ep.timer === 'string' ? JSON.parse(ep.timer) : ep.timer;
+                        document.getElementById('inputTimerJson').value = JSON.stringify(parsed, null, 2);
+                        document.getElementById('timerStatusBadge').className = parsed.enabled ? "badge bg-success" : "badge bg-secondary";
+                        document.getElementById('timerStatusBadge').innerText = parsed.enabled ? "Ativo" : "Desativado";
+                    } catch (e) {
+                        document.getElementById('inputTimerJson').value = ep.timer;
+                        document.getElementById('timerStatusBadge').innerText = "Texto Bruto";
+                    }
+                } else {
+                    document.getElementById('inputTimerJson').value = "{}";
+                    document.getElementById('timerStatusBadge').innerText = "Vazio";
+                }
+                document.getElementById('commandStatusInfo').innerText = "Configurações sincronizadas!";
+            } else {
+                document.getElementById('commandStatusInfo').innerText = "API offline ou chave não configurada.";
+            }
+        } catch (err) {
+            console.error(err);
+            document.getElementById('commandStatusInfo').innerText = "Falha de conexão com API.";
+        }
+    }
+
+    async function submitThresholds() {
+        const mac = document.getElementById('endpointSelect').value;
+        const critO2 = parseFloat(document.getElementById('inputCriticalO2').value);
+        const critO2Max = parseFloat(document.getElementById('inputCriticalO2Max').value);
+        const autoOn = document.getElementById('switchAutoOn').checked;
+
+        if (isNaN(critO2)) {
+            alert("Por favor, preencha o valor de O2 Crítico Mínimo.");
+            return;
+        }
+
+        if (!confirm(`Confirma salvar novos thresholds para ${mac}?\nO2 Mín: ${critO2} mg/L\nAutoOn: ${autoOn}`)) return;
+
+        showLoading();
+        try {
+            const resp = await fetch(`/api/endpoint/${mac}/thresholds`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ critical_o2: critO2, critical_o2_max: critO2Max, auto_on: autoOn })
+            });
+            const resData = await resp.json();
+            alert(resData.message);
+            if (resData.status === 'success') {
+                fetchEndpointData(mac);
+            }
+        } catch (err) {
+            alert("Erro ao salvar limiares: " + err);
+        } finally {
+            hideLoading();
+        }
+    }
+
+    async function submitTimers() {
+        const mac = document.getElementById('endpointSelect').value;
+        const timerRaw = document.getElementById('inputTimerJson').value.trim();
+
+        try {
+            JSON.parse(timerRaw);
+        } catch (e) {
+            alert("JSON inválido no campo de timers! Corrija a formatação antes de salvar.");
+            return;
+        }
+
+        if (!confirm(`Confirma enviar a nova programação horária para ${mac}?`)) return;
+
+        showLoading();
+        try {
+            const resp = await fetch(`/api/endpoint/${mac}/timers`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ timer: timerRaw })
+            });
+            const resData = await resp.json();
+            alert(resData.message);
+            if (resData.status === 'success') {
+                fetchEndpointData(mac);
+            }
+        } catch (err) {
+            alert("Erro ao salvar programação: " + err);
+        } finally {
+            hideLoading();
+        }
+    }
+
+    async function triggerMotorCommand(cmd, label) {
+        const mac = document.getElementById('endpointSelect').value;
+        if (!confirm(`[ATENÇÃO - PROTOCOLO DE SEGURANÇA]\n\nDeseja realmente executar o comando: "${label}" no endpoint ${mac}?`)) return;
+
+        showLoading();
+        document.getElementById('commandStatusInfo').innerText = `Enviando comando ${cmd}...`;
+        try {
+            const resp = await fetch(`/api/endpoint/${mac}/command`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ command: cmd, message: `Acionamento manual: ${label}` })
+            });
+            const resData = await resp.json();
+            alert(resData.message);
+            document.getElementById('commandStatusInfo').innerText = resData.message;
+        } catch (err) {
+            alert("Erro ao transmitir comando: " + err);
+            document.getElementById('commandStatusInfo').innerText = "Erro no envio.";
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // Carregamento inicial do primeiro endpoint
+    document.addEventListener('DOMContentLoaded', () => {
+        const initialMac = document.getElementById('endpointSelect')?.value;
+        if (initialMac) {
+            fetchEndpointData(initialMac);
+        }
     });
 </script>
 {% endblock %}

@@ -1,28 +1,58 @@
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: piscicultura_postgres
-    environment:
-      POSTGRES_DB: ${PG_DBNAME:-piscicultura_history}
-      POSTGRES_USER: ${PG_USER:-admin}
-      POSTGRES_PASSWORD: ${PG_PASSWORD:-admin}
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+  # 1. Dashboard Web (Flask + Gunicorn)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: piscicultura_web
     restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "${WEB_PORT:-5000}:5000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./reports:/app/reports
+    depends_on:
+      postgres:
+        condition: service_started
+        required: false
 
+  # 2. Coletor Autônomo e Despachante de Alertas (Substitui o cron bare-metal)
+  collector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: piscicultura_collector
+    restart: unless-stopped
+    command: ["python3", "-u", "src/jobs/collector_service.py"]
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./reports:/app/reports
+    depends_on:
+      postgres:
+        condition: service_started
+        required: false
+
+  # 3. Bot Telegram Unificado (PeixePatelBot)
   bot_unificado:
     build:
       context: .
       dockerfile: src/bots/Dockerfile
     container_name: peixe_patel_bot
+    restart: unless-stopped
     env_file:
       - .env
     environment:
-      - PG_HOST=postgres
-      - PG_PORT=5432
-      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - PYTHONUNBUFFERED=1
     volumes:
       - ./src:/app/src
       - ./logs:/app/logs
@@ -30,6 +60,20 @@ services:
       - ./reports:/app/reports
       - ./scripts:/app/scripts
     depends_on:
-      - postgres
-    restart: unless-stopped
+      postgres:
+        condition: service_started
+        required: false
 
+  # 4. PostgreSQL Local (Opcional: Desative se na VPS já existir um PostgreSQL ativo)
+  postgres:
+    image: postgres:15-alpine
+    container_name: piscicultura_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${PG_DBNAME:-piscicultura_history}
+      POSTGRES_USER: ${PG_USER:-admin}
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-admin}
+    ports:
+      - "${PG_PORT:-5432}:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data

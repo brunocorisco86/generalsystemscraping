@@ -1,12 +1,14 @@
-# Backend e análise
-selenium
-scipy
-setuptools
-wheel
+# Backend e API
+requests
 psycopg2-binary
 Flask
 Flask-Login
 Werkzeug
+gunicorn
+
+# Análise de Dados
+scipy
+pandas
 
 # Telegram Bots
 aiogram==3.4.1
@@ -22,7 +24,6 @@ pytz
 openmeteo_requests
 requests_cache
 retry_requests
-pandas
 
 # Graphify
 graphifyy

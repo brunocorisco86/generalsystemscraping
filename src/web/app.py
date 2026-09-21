@@ -16,6 +16,12 @@ if project_root not in sys.path:
 from src.services.web_auth import init_web_auth_db, validate_user, get_user_by_id
 from src.services.database import get_sqlite_connection, get_postgres_connection
 from src.services.weather import get_weather_forecast
+from src.services.noctua_client import (
+    NoctuaClient,
+    KNOWN_ENDPOINTS,
+    NoctuaClientException,
+    NoctuaReadOnlyException
+)
 # Importar funções adaptadas para modo silencioso
 from src.scrape.monitor_data import scrape_and_save
 from src.database.postgres.migrate_data import migrate_data
@@ -238,9 +244,111 @@ def api_sync():
         logger.error(f"Erro na sincronização via Web: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/api/endpoints', methods=['GET'])
+@login_required
+def api_endpoints_list():
+    """Lista os endpoints conhecidos e seus nomes amigáveis."""
+    return jsonify({
+        "status": "success",
+        "endpoints": [
+            {"mac": mac, "nome": nome} for mac, nome in KNOWN_ENDPOINTS.items()
+        ]
+    })
+
+@app.route('/api/endpoint/<mac>', methods=['GET'])
+@login_required
+def api_get_endpoint(mac):
+    """Consulta os dados atuais de configuração de um endpoint (thresholds, timers, autoOn)."""
+    client = NoctuaClient()
+    try:
+        data = client.get_endpoint_config(mac)
+        return jsonify({"status": "success", "endpoint": data})
+    except NoctuaClientException as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+    except Exception as e:
+        logger.error(f"Erro ao buscar endpoint {mac}: {e}")
+        return jsonify({"status": "error", "message": "Falha de comunicação com a API Noctua"}), 500
+
+@app.route('/api/endpoint/<mac>/thresholds', methods=['POST'])
+@login_required
+def api_update_thresholds(mac):
+    """Atualiza criticalO2, criticalO2Max e autoOn de um endpoint."""
+    client = NoctuaClient()
+    payload = request.get_json() or {}
+    
+    crit_o2 = payload.get('critical_o2')
+    crit_o2_max = payload.get('critical_o2_max')
+    auto_on = payload.get('auto_on')
+
+    try:
+        crit_o2_val = float(crit_o2) if crit_o2 is not None else None
+        crit_o2_max_val = float(crit_o2_max) if crit_o2_max is not None else None
+        auto_on_val = bool(auto_on) if auto_on is not None else None
+
+        updated = client.update_endpoint_thresholds(
+            endpoint_id=mac,
+            critical_o2=crit_o2_val,
+            critical_o2_max=crit_o2_max_val,
+            auto_on=auto_on_val
+        )
+        return jsonify({"status": "success", "message": "Thresholds atualizados com sucesso!", "data": updated})
+    except NoctuaReadOnlyException as e:
+        return jsonify({"status": "error", "message": str(e)}), 403
+    except ValueError as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+    except Exception as e:
+        logger.error(f"Erro ao atualizar thresholds do endpoint {mac}: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/endpoint/<mac>/timers', methods=['POST'])
+@login_required
+def api_update_timers(mac):
+    """Atualiza a programação horária (timer) de um endpoint."""
+    client = NoctuaClient()
+    payload = request.get_json() or {}
+    timer_data = payload.get('timer')
+
+    if timer_data is None:
+        return jsonify({"status": "error", "message": "Campo 'timer' obrigatório."}), 400
+
+    try:
+        updated = client.update_endpoint_timer(endpoint_id=mac, timer_data=timer_data)
+        return jsonify({"status": "success", "message": "Programação de timers atualizada com sucesso!", "data": updated})
+    except NoctuaReadOnlyException as e:
+        return jsonify({"status": "error", "message": str(e)}), 403
+    except ValueError as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+    except Exception as e:
+        logger.error(f"Erro ao atualizar timer do endpoint {mac}: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/endpoint/<mac>/command', methods=['POST'])
+@login_required
+def api_send_motor_command(mac):
+    """Envia comando de motor para o endpoint respeitando travas de segurança."""
+    client = NoctuaClient()
+    payload = request.get_json() or {}
+    command = payload.get('command')
+    message = payload.get('message', 'Acionamento manual via Web Dashboard')
+
+    if not command:
+        return jsonify({"status": "error", "message": "Comando não informado."}), 400
+
+    try:
+        result = client.send_motor_command(endpoint_id=mac, command=command, message=message)
+        return jsonify({"status": "success", "message": "Comando transmitido com sucesso!", "data": result})
+    except NoctuaReadOnlyException as e:
+        return jsonify({"status": "error", "message": str(e)}), 403
+    except NoctuaClientException as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+    except Exception as e:
+        logger.error(f"Erro ao enviar comando para o endpoint {mac}: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 if __name__ == '__main__':
     # Inicializa banco de usuários
     init_web_auth_db()
     
-    # Rodar em 0.0.0.0 para ser acessível na rede local
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    web_host = os.environ.get("WEB_HOST", "0.0.0.0")
+    web_port = int(os.environ.get("WEB_PORT", 5000))
+    app.run(host=web_host, port=web_port, debug=False)

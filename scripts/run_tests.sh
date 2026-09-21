@@ -22,8 +22,8 @@ if ! command -v pytest &> /dev/null; then
     exit 1
 fi
 
-# Executa o pytest
-pytest -v
+# Executa o pytest via python3 do venv ativo
+python3 -m pytest -v
 
 TEST_RESULT=$?
 

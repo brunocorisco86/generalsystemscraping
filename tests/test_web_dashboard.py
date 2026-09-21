@@ -35,9 +35,91 @@ def test_web_auth_service():
     assert validated['username'] == user
 
 def test_api_endpoints_protected(client):
-    """Verifica se os endpoints de API estão protegidos."""
+    """Verifica se os endpoints de API estão protegidos sem autenticação."""
     response = client.post('/api/scrape')
     assert response.status_code == 302 # Redirect to login
     
     response = client.post('/api/sync')
     assert response.status_code == 302 # Redirect to login
+
+    response = client.get('/api/endpoints')
+    assert response.status_code == 302
+
+    response = client.get('/api/endpoint/10:20:BA:66:2E:C8')
+    assert response.status_code == 302
+
+    response = client.post('/api/endpoint/10:20:BA:66:2E:C8/thresholds')
+    assert response.status_code == 302
+
+
+from unittest.mock import patch
+
+@pytest.fixture
+def auth_client(client):
+    """Cria um cliente logado para testar rotas protegidas."""
+    init_web_auth_db()
+    client.post('/login', data={'username': 'test_admin', 'password': 'admin123'})
+    return client
+
+
+def test_api_endpoints_list(auth_client):
+    response = auth_client.get('/api/endpoints')
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['status'] == 'success'
+    assert len(data['endpoints']) >= 2
+
+
+def test_api_get_endpoint(auth_client):
+    mock_ep = {
+        "id": "10:20:BA:66:2E:C8",
+        "name": "Tanque 1",
+        "criticalO2": 2.0,
+        "criticalO2Max": 4.5,
+        "autoOn": True,
+        "timer": '{"enabled": true}'
+    }
+    with patch("src.web.app.NoctuaClient.get_endpoint_config", return_value=mock_ep):
+        response = auth_client.get('/api/endpoint/10:20:BA:66:2E:C8')
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['status'] == 'success'
+        assert data['endpoint']['criticalO2'] == 2.0
+
+
+def test_api_update_thresholds(auth_client):
+    mock_ret = {"id": "10:20:BA:66:2E:C8", "criticalO2": 2.5}
+    with patch("src.web.app.NoctuaClient.update_endpoint_thresholds", return_value=mock_ret):
+        response = auth_client.post(
+            '/api/endpoint/10:20:BA:66:2E:C8/thresholds',
+            json={"critical_o2": 2.5, "critical_o2_max": 5.0, "auto_on": True}
+        )
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['status'] == 'success'
+        assert "atualizados com sucesso" in data['message']
+
+
+def test_api_update_timers(auth_client):
+    mock_ret = {"id": "10:20:BA:66:2E:C8", "timer": '{"enabled": false}'}
+    with patch("src.web.app.NoctuaClient.update_endpoint_timer", return_value=mock_ret):
+        response = auth_client.post(
+            '/api/endpoint/10:20:BA:66:2E:C8/timers',
+            json={"timer": '{"enabled": false}'}
+        )
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['status'] == 'success'
+
+
+def test_api_send_motor_command_success(auth_client):
+    mock_ret = {"messageId": "msg-123", "status": "SENT"}
+    with patch("src.web.app.NoctuaClient.send_motor_command", return_value=mock_ret):
+        response = auth_client.post(
+            '/api/endpoint/10:20:BA:66:2E:C8/command',
+            json={"command": "MOTOR_ALL_ON"}
+        )
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['status'] == 'success'
+        assert data['data']['status'] == "SENT"
