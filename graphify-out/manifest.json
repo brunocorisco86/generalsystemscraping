@@ -648,9 +648,15 @@
     "semantic_hash": ""
   },
   "knowledge/diario/diary_2026_09_20.md": {
-    "mtime": 1789950234.5892036,
-    "seen": 1789950240.5839994,
-    "ast_hash": "1277759734b0e4f096b8d479bfc385ac",
+    "mtime": 1789951017.0681067,
+    "seen": 1789951023.4692237,
+    "ast_hash": "292233f4483a42cc159d17ea6d3a62af",
+    "semantic_hash": ""
+  },
+  "scripts/noctua_diagnose.py": {
+    "mtime": 1789950934.02686,
+    "seen": 1789951023.4651766,
+    "ast_hash": "dcf8e0dcd80e0c644f0c43c7475c302c",
     "semantic_hash": ""
   }
 }

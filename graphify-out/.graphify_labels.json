@@ -1,7 +1,7 @@
 {
   "0": "get_sqlite_connection",
   "1": "main.py",
-  "2": "test_web_dashboard.py",
+  "2": "app.py",
   "3": "get_weather_forecast",
   "4": ".test_analyze_feed_prediction_sync_mock",
   "5": "monitor_data.py",
@@ -20,7 +20,7 @@
   "18": "Configuração do Menu do Bot no BotFather",
   "19": "knowledge/scripts/11-backup-db.sh",
   "20": "01-system-deps.sh",
-  "21": "app.py",
+  "21": "NoctuaClient",
   "22": "test_environment_is_isolated",
   "23": "aliases.sh",
   "24": "Cron: Alertas Críticos",
@@ -109,5 +109,6 @@
   "107": "TestAgentFallback",
   "108": "Ideação: integração direta com a API do Noctua IoT",
   "109": "🛠️ Ações Executadas",
-  "110": "ROADMAP DO PROJETO: TRANSIÇÃO NOCTUA IOT & CONTAINERIZAÇÃO"
+  "110": "ROADMAP DO PROJETO: TRANSIÇÃO NOCTUA IOT & CONTAINERIZAÇÃO",
+  "111": "noctua_diagnose.py"
 }

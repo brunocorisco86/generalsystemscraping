@@ -42,3 +42,4 @@ logs/
 gha-creds-*.json
 planilhas/
 /piscicultura_dados_backup.db
+noctua_diagnosis.json
