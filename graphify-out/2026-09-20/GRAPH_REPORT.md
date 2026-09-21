@@ -1,16 +1,16 @@
 # Graph Report - generalsystemscraping  (2026-09-20)
 
 ## Corpus Check
-- 104 files · ~49,177 words
+- 103 files · ~49,140 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 668 nodes · 1124 edges · 112 communities (39 shown, 73 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 50 edges (avg confidence: 0.88)
+- 668 nodes · 1126 edges · 112 communities (39 shown, 73 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 51 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5dc5bd03`
+- Built from commit: `b45705e8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -157,8 +157,8 @@
 ## Communities (112 total, 73 thin omitted)
 
 ### Community 0 - "get_sqlite_connection"
-Cohesion: 0.08
-Nodes (68): AgentExecutor, migrate_postgres(), migrate_sqlite(), check_alerts(), Verifica as últimas leituras no banco de dados e dispara alertas se necessário., check_last_reading(), Verifica o tempo da última leitura dos tanques. Envia alerta se o atraso for…, run_production_logic() (+60 more)
+Cohesion: 0.07
+Nodes (71): AgentExecutor, migrate_postgres(), migrate_sqlite(), check_alerts(), Verifica as últimas leituras no banco de dados e dispara alertas se necessário., check_last_reading(), Verifica o tempo da última leitura dos tanques. Envia alerta se o atraso for…, run_production_logic() (+63 more)
 
 ### Community 1 - "main.py"
 Cohesion: 0.07
@@ -169,8 +169,8 @@ Cohesion: 0.06
 Nodes (40): login_required, route, get_user_by_id(), init_web_auth_db(), Inicializa a tabela de usuários web no SQLite., Valida as credenciais do usuário., Retorna dados do usuário pelo ID., validate_user() (+32 more)
 
 ### Community 3 - "get_weather_forecast"
-Cohesion: 0.08
-Nodes (28): migrate_data(), Migra dados do SQLite para o PostgreSQL., run_collector_loop(), get_hourly_report(), Gera o relatório estatístico das últimas leituras para cada tanque., Obtém o clima atual e salva na tabela clima_historico., sync_hourly_weather(), format_morning_report() (+20 more)
+Cohesion: 0.09
+Nodes (25): get_hourly_report(), Gera o relatório estatístico das últimas leituras para cada tanque., Obtém o clima atual e salva na tabela clima_historico., sync_hourly_weather(), format_morning_report(), main(), Formata o relatório de bom dia com clima detalhado., get_weather_forecast() (+17 more)
 
 ### Community 4 - ".test_analyze_feed_prediction_sync_mock"
 Cohesion: 0.25
@@ -299,6 +299,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD` to the rest of the system?**
   _192 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `get_sqlite_connection` be split into smaller, more focused modules?**
-  _Cohesion score 0.07620640229335882 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07090258783925941 - nodes in this community are weakly interconnected._
 - **Should `main.py` be split into smaller, more focused modules?**
   _Cohesion score 0.06771929824561404 - nodes in this community are weakly interconnected._

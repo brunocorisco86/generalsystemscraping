@@ -106,6 +106,15 @@ def collect_via_api() -> bool:
                 pluscode = info_env['pluscode'] if nome_tanque == info_env['nome'] else "UNKNOWN"
                 uid = get_estrutura_uid(nome_tanque, pluscode)
 
+            # Evitar duplicata se já existir leitura para a mesma estrutura e timestamp_site
+            cursor.execute('''
+                SELECT id FROM leituras 
+                WHERE nome_estrutura = ? AND timestamp_site = ?
+            ''', (nome_tanque, ts_sql))
+            if cursor.fetchone():
+                logger.info("Leitura já existente para %s no timestamp %s. Ignorando duplicata.", nome_tanque, ts_sql)
+                continue
+
             # Inserção no banco
             cursor.execute('''
                 INSERT INTO leituras (estrutura_uid, nome_estrutura, oxigenio, temperatura, aeradores_ativos, timestamp_site)

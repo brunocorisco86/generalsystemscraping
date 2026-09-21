@@ -112,15 +112,16 @@ def dashboard():
     if conn:
         try:
             cursor = conn.cursor()
-            # Pega a última leitura de cada estrutura
+            # Pega a última leitura de cada estrutura (garante exatamente 1 card por estrutura)
             cursor.execute('''
-                SELECT l1.nome_estrutura, l1.oxigenio, l1.temperatura, l1.timestamp_site, l1.aeradores_ativos
-                FROM leituras l1
-                INNER JOIN (
-                    SELECT nome_estrutura, MAX(timestamp_site) as max_ts
+                SELECT nome_estrutura, oxigenio, temperatura, timestamp_site, aeradores_ativos
+                FROM leituras
+                WHERE id IN (
+                    SELECT MAX(id)
                     FROM leituras
                     GROUP BY nome_estrutura
-                ) l2 ON l1.nome_estrutura = l2.nome_estrutura AND l1.timestamp_site = l2.max_ts
+                )
+                ORDER BY nome_estrutura ASC
             ''')
             leituras = cursor.fetchall()
 
