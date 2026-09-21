@@ -114,6 +114,8 @@ def check_last_reading():
     
     logger.info("--- Verificação Finalizada ---")
 
+check_offline = check_last_reading
+
 if __name__ == "__main__":
     # Configuração básica de logging para execução direta
     logging.basicConfig(
@@ -122,3 +124,4 @@ if __name__ == "__main__":
     )
     # Para executar do root: python3 -m src.alerts.offline_check
     check_last_reading()
+

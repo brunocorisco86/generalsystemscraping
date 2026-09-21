@@ -1,14 +1,16 @@
 # Backend e API
 requests
+python-dotenv
 psycopg2-binary
 Flask
 Flask-Login
 Werkzeug
 gunicorn
 
-# Análise de Dados
+# Análise de Dados e Gráficos
 scipy
 pandas
+matplotlib
 
 # Telegram Bots
 aiogram==3.4.1

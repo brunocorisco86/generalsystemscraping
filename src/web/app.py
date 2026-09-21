@@ -51,6 +51,10 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+# Garantir tabela e usuário admin criados (tanto em standalone quanto sob Gunicorn)
+init_web_auth_db()
+
+
 class User(UserMixin):
     def __init__(self, user_data):
         self.id = user_data['id']

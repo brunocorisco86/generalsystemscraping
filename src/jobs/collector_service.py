@@ -12,7 +12,7 @@ from datetime import datetime
 
 from src.scrape.monitor_data import scrape_and_save
 from src.alerts.alert_check import check_alerts
-from src.alerts.offline_check import check_offline
+from src.alerts.offline_check import check_last_reading as check_offline
 from src.jobs.hourly_weather_sync import sync_hourly_weather
 from src.database.postgres.migrate_data import migrate_data
 
