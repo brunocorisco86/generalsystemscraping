@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: piscicultura_web
     restart: unless-stopped
+    command: ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--threads", "4", "--timeout", "60", "src.web.app:app"]
     env_file:
       - .env
     environment:

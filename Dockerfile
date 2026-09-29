@@ -26,5 +26,5 @@ ENV PYTHONPATH=/app
 # Exposição da porta web padrão interna
 EXPOSE 5000
 
-# Comando padrão (Web com Gunicorn)
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "60", "src.web.app:app"]
+# Comando padrão (Web com Gunicorn otimizado em threads para baixo consumo de RAM)
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--threads", "4", "--timeout", "60", "src.web.app:app"]

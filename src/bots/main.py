@@ -7,7 +7,10 @@ import os
 import sys
 import asyncio
 import logging
-import pandas as pd
+import os
+import sys
+import asyncio
+import logging
 from datetime import date, datetime
 from dotenv import load_dotenv
 
@@ -34,7 +37,6 @@ from src.bots.db import (  # noqa: E402
     inserir_qualidade_consumo,
 )
 
-from src.bots.agent import ask_agent  # noqa: E402
 from src.services.weather import get_weather_forecast  # noqa: E402
 
 # ==========================
@@ -214,6 +216,7 @@ async def handle_backup(message: Message):
 async def handle_clima(message: Message):
     """Handler para exibir a previsão do tempo."""
     try:
+        import pandas as pd
         data = get_weather_forecast()
         curr = data['current']
         
@@ -454,6 +457,7 @@ async def handle_messages(message: Message):
     if not estado or not message.text:
         if message.text and not message.text.startswith('/'):
             msg_pendente = await message.answer("🧠 *Processando com Inteligência Artificial...*", parse_mode="Markdown")
+            from src.bots.agent import ask_agent
             resposta = await ask_agent(message.text, chat_id)
             await msg_pendente.delete()
             await message.answer(resposta, parse_mode="Markdown")

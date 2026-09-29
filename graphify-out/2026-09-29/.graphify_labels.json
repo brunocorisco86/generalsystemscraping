@@ -11,7 +11,7 @@
   "9": "13-restore-db.sh",
   "10": "Regra de Filtragem de Lotes Ativos",
   "11": "🛠️ Detalhes das Alterações",
-  "12": "agent_tools.py",
+  "12": "query_postgres",
   "13": "scripts/11-backup-db.sh",
   "14": "Bot Unificado Container Service",
   "15": "weekly_maintenance.sh",
@@ -122,5 +122,6 @@
   "120": "api_settings_db_status",
   "121": "api_mdm_salvar_propriedade",
   "122": "api_update_thresholds",
-  "123": "api_update_timers"
+  "123": "api_update_timers",
+  "124": "get_local_now"
 }
