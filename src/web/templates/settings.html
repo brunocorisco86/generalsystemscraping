@@ -1,0 +1,432 @@
+{% extends "base.html" %}
+
+{% block title %}Configurações & MDM{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-gear-wide-connected text-primary me-2"></i>Configurações & Master Data (MDM)</h2>
+            <p class="text-muted mb-0">Gestão cadastral de produtor, propriedade, estruturas físicas e diagnóstico do banco de dados.</p>
+        </div>
+        <div class="mt-3 mt-md-0">
+            <button class="btn btn-outline-secondary" onclick="carregarStatusDB(); carregarDadosMDM();">
+                <i class="bi bi-arrow-clockwise me-1"></i> Atualizar Painel
+            </button>
+        </div>
+    </div>
+
+    <!-- Navegação de Abas -->
+    <ul class="nav nav-tabs mb-4" id="settingsTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-semibold px-4" id="mdm-tab" data-bs-toggle="tab" data-bs-target="#mdm-content" type="button" role="tab">
+                <i class="bi bi-person-badge me-1"></i> Cadastros MDM (Produtor & Tanques)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-semibold px-4" id="db-tab" data-bs-toggle="tab" data-bs-target="#db-content" type="button" role="tab">
+                <i class="bi bi-database-check me-1"></i> Banco de Dados & CRUD
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="settingsTabContent">
+        <!-- ============================================================== -->
+        <!-- ABA 1: MASTER DATA MANAGEMENT (MDM)                            -->
+        <!-- ============================================================== -->
+        <div class="tab-pane fade show active" id="mdm-content" role="tabpanel">
+            <div class="row g-4">
+                <!-- 1.1 Proprietário / Produtor -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm border-top border-4 border-primary h-100">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="card-title fw-bold mb-0 text-primary">
+                                <i class="bi bi-person-vcard me-2"></i>Dados do Produtor (Proprietário)
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="formProprietario" onsubmit="salvarProprietario(event)">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Nome Completo</label>
+                                    <input type="text" class="form-control" name="nome" id="propNome" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">CPF</label>
+                                    <input type="text" class="form-control" name="cpf" id="propCpf" placeholder="000.000.000-00" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">UID Imutável (SHA256)</label>
+                                    <input type="text" class="form-control bg-light font-monospace small" id="propUid" readonly>
+                                    <small class="text-muted">Gerado automaticamente para anonimização e integridade.</small>
+                                </div>
+                                <button type="submit" class="btn btn-primary fw-semibold">
+                                    <i class="bi bi-save me-1"></i> Salvar Produtor
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.2 Propriedade Rural -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm border-top border-4 border-success h-100">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="card-title fw-bold mb-0 text-success">
+                                <i class="bi bi-house-door me-2"></i>Propriedade Rural (Sítio / Fazenda)
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="formPropriedade" onsubmit="salvarPropriedade(event)">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Nome da Propriedade</label>
+                                    <input type="text" class="form-control" name="nome" id="propriedadeNome" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Endereço / Linha</label>
+                                    <input type="text" class="form-control" name="endereco" id="propriedadeEndereco" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">CADPRO</label>
+                                    <input type="text" class="form-control" name="cadpro" id="propriedadeCadpro" required>
+                                </div>
+                                <button type="submit" class="btn btn-success fw-semibold">
+                                    <i class="bi bi-save me-1"></i> Salvar Propriedade
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.3 Estruturas / Tanques -->
+                <div class="col-12">
+                    <div class="card shadow-sm border-top border-4 border-info">
+                        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                            <h5 class="card-title fw-bold mb-0 text-dark">
+                                <i class="bi bi-diagram-3 me-2"></i>Estruturas Físicas & Vínculo IoT (Tanques)
+                            </h5>
+                            <button class="btn btn-sm btn-info text-white fw-semibold" data-bs-toggle="modal" data-bs-target="#modalEstrutura">
+                                <i class="bi bi-plus-lg me-1"></i> Nova Estrutura
+                            </button>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Nome do Tanque</th>
+                                            <th>PlusCode</th>
+                                            <th>UID da Estrutura</th>
+                                            <th>Vínculo Hardware / MAC</th>
+                                            <th>Lote Ativo Vigente</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tabelaEstruturasBody">
+                                        <tr><td colspan="5" class="text-center py-4 text-muted">Carregando estruturas...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- ABA 2: BANCO DE DADOS & CRUD                                   -->
+        <!-- ============================================================== -->
+        <div class="tab-pane fade" id="db-content" role="tabpanel">
+            <!-- Cards de Status dos Bancos -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-start border-primary border-4 h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h5 class="fw-bold mb-1">PostgreSQL Transacional (SSOT)</h5>
+                                    <p class="text-muted small mb-0" id="pgHostInfo">Host: 192.168.1.7:5432 (alpine)</p>
+                                </div>
+                                <span class="badge bg-secondary fs-6" id="pgStatusCardBadge">Verificando...</span>
+                            </div>
+                            <hr class="my-2">
+                            <div class="row text-center mt-3" id="pgVolumetria">
+                                <div class="col-3">
+                                    <span class="fs-5 fw-bold text-dark" id="cntLotes">--</span>
+                                    <small class="text-muted d-block">Lotes</small>
+                                </div>
+                                <div class="col-3">
+                                    <span class="fs-5 fw-bold text-dark" id="cntBiometria">--</span>
+                                    <small class="text-muted d-block">Biometrias</small>
+                                </div>
+                                <div class="col-3">
+                                    <span class="fs-5 fw-bold text-dark" id="cntLeituras">--</span>
+                                    <small class="text-muted d-block">Leituras</small>
+                                </div>
+                                <div class="col-3">
+                                    <span class="fs-5 fw-bold text-dark" id="cntEstruturas">--</span>
+                                    <small class="text-muted d-block">Tanques</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-start border-warning border-4 h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h5 class="fw-bold mb-1">SQLite de Borda (Local)</h5>
+                                    <p class="text-muted small mb-0">Arquivo: data/piscicultura_dados.db</p>
+                                </div>
+                                <span class="badge bg-success fs-6" id="sqliteStatusBadge">🟢 Ativo</span>
+                            </div>
+                            <hr class="my-2">
+                            <p class="small text-muted mb-0">
+                                Armazena telemetria imediata coletada na borda para desacoplamento de rede e funcionamento autônomo offline.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inspecionador de Tabelas & CRUD -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-table me-2"></i>Inspecionador de Registros</h5>
+                        <select class="form-select form-select-sm w-auto" id="selectTabelaDB" onchange="carregarDadosTabela()">
+                            <option value="lotes">Tabela: lotes</option>
+                            <option value="biometria">Tabela: biometria</option>
+                            <option value="estruturas">Tabela: estruturas</option>
+                            <option value="leituras">Tabela: leituras</option>
+                            <option value="qualidade_agua_limnologia">Tabela: qualidade_agua_limnologia</option>
+                            <option value="clima_historico">Tabela: clima_historico</option>
+                            <option value="historico_pareceres_ia">Tabela: historico_pareceres_ia</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary" onclick="carregarDadosTabela()">
+                        <i class="bi bi-arrow-repeat me-1"></i> Recarregar Tabela
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                        <table class="table table-sm table-striped table-hover mb-0" id="tabelaInspecao">
+                            <thead class="table-dark sticky-top" id="tabelaInspecaoHead">
+                                <tr><th>Carregando...</th></tr>
+                            </thead>
+                            <tbody id="tabelaInspecaoBody">
+                                <tr><td class="text-center py-4 text-muted">Selecione uma tabela para visualizar os dados.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Adicionar / Editar Estrutura -->
+<div class="modal fade" id="modalEstrutura" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title fw-bold"><i class="bi bi-plus-circle me-2"></i>Cadastrar Estrutura / Tanque</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formEstrutura" onsubmit="salvarEstrutura(event)">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nome da Estrutura <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="nome" placeholder="Ex: Tanque 3" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">PlusCode / Localização</label>
+                        <input type="text" class="form-control" name="pluscode" placeholder="Ex: 87G8+H6 Toledo" value="87G8+H6 Toledo">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">MAC Address do Sensor Noctua IoT (Opcional)</label>
+                        <input type="text" class="form-control font-monospace" name="mac" placeholder="Ex: 10:20:BA:6A:90:00">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-info text-white fw-bold"><i class="bi bi-save me-1"></i> Gravar Tanque</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function carregarDadosMDM() {
+    showLoading();
+    fetch('/api/mdm/dados')
+        .then(r => r.json())
+        .then(data => {
+            hideLoading();
+            if (data.proprietario) {
+                document.getElementById('propNome').value = data.proprietario.nome || '';
+                document.getElementById('propCpf').value = data.proprietario.cpf || '';
+                document.getElementById('propUid').value = data.proprietario.uid || '';
+            }
+            if (data.propriedade) {
+                document.getElementById('propriedadeNome').value = data.propriedade.nome || '';
+                document.getElementById('propriedadeEndereco').value = data.propriedade.endereco || '';
+                document.getElementById('propriedadeCadpro').value = data.propriedade.cadpro || '';
+            }
+            renderTabelaEstruturas(data.estruturas || []);
+        })
+        .catch(err => {
+            hideLoading();
+            console.error("Erro MDM:", err);
+        });
+}
+
+function renderTabelaEstruturas(estruturas) {
+    const tbody = document.getElementById('tabelaEstruturasBody');
+    if (!estruturas || estruturas.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">Nenhuma estrutura cadastrada.</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = estruturas.map(e => `
+        <tr>
+            <td class="fw-bold">${e.nome}</td>
+            <td><code>${e.pluscode || 'N/A'}</code></td>
+            <td><small class="font-monospace text-muted">${e.uid}</small></td>
+            <td><span class="badge bg-dark font-monospace">${e.mac || 'Não vinculado'}</span></td>
+            <td>${e.lote_ativo ? `<span class="badge bg-success">${e.lote_ativo}</span>` : '<span class="badge bg-secondary">Vazio / Inativo</span>'}</td>
+        </tr>
+    `).join('');
+}
+
+function salvarProprietario(e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    showLoading();
+    fetch('/api/mdm/proprietario', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        hideLoading();
+        if (res.status === 'ok') {
+            alert("Dados do produtor atualizados com sucesso!");
+            carregarDadosMDM();
+        } else {
+            alert("Erro: " + res.message);
+        }
+    })
+    .catch(err => { hideLoading(); alert("Erro: " + err); });
+}
+
+function salvarPropriedade(e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    showLoading();
+    fetch('/api/mdm/propriedade', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        hideLoading();
+        if (res.status === 'ok') {
+            alert("Dados da propriedade atualizados com sucesso!");
+            carregarDadosMDM();
+        } else {
+            alert("Erro: " + res.message);
+        }
+    })
+    .catch(err => { hideLoading(); alert("Erro: " + err); });
+}
+
+function salvarEstrutura(e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    showLoading();
+    fetch('/api/mdm/estruturas', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        hideLoading();
+        if (res.status === 'ok') {
+            bootstrap.Modal.getInstance(document.getElementById('modalEstrutura')).hide();
+            e.target.reset();
+            carregarDadosMDM();
+        } else {
+            alert("Erro: " + res.message);
+        }
+    })
+    .catch(err => { hideLoading(); alert("Erro: " + err); });
+}
+
+function carregarStatusDB() {
+    fetch('/api/settings/db/status')
+        .then(r => r.json())
+        .then(data => {
+            const badge = document.getElementById('pgStatusCardBadge');
+            if (data.status === 'ok') {
+                badge.className = 'badge bg-success fs-6';
+                badge.textContent = `🟢 Conectado (${data.latencia_ms}ms)`;
+                document.getElementById('pgHostInfo').textContent = `Host: ${data.host}:${data.port} (${data.database})`;
+                document.getElementById('cntLotes').textContent = data.counts.lotes || 0;
+                document.getElementById('cntBiometria').textContent = data.counts.biometria || 0;
+                document.getElementById('cntLeituras').textContent = data.counts.leituras || 0;
+                document.getElementById('cntEstruturas').textContent = data.counts.estruturas || 0;
+            } else {
+                badge.className = 'badge bg-danger fs-6';
+                badge.textContent = '🔴 Erro na Conexão';
+            }
+        })
+        .catch(() => {
+            const badge = document.getElementById('pgStatusCardBadge');
+            badge.className = 'badge bg-danger fs-6';
+            badge.textContent = '🔴 Offline';
+        });
+}
+
+function carregarDadosTabela() {
+    const tabela = document.getElementById('selectTabelaDB').value;
+    showLoading();
+    fetch(`/api/settings/db/table/${tabela}`)
+        .then(r => r.json())
+        .then(res => {
+            hideLoading();
+            const head = document.getElementById('tabelaInspecaoHead');
+            const body = document.getElementById('tabelaInspecaoBody');
+            if (!res.columns || res.columns.length === 0) {
+                head.innerHTML = `<tr><th>Informação</th></tr>`;
+                body.innerHTML = `<tr><td class="text-center py-3 text-muted">Tabela sem registros.</td></tr>`;
+                return;
+            }
+            head.innerHTML = `<tr>${res.columns.map(c => `<th>${c}</th>`).join('')}</tr>`;
+            if (res.rows.length === 0) {
+                body.innerHTML = `<tr><td colspan="${res.columns.length}" class="text-center py-3 text-muted">Nenhum registro encontrado nesta tabela.</td></tr>`;
+                return;
+            }
+            body.innerHTML = res.rows.map(row => `
+                <tr>
+                    ${row.map(val => `<td>${val !== null ? String(val) : '<span class="text-muted">null</span>'}</td>`).join('')}
+                </tr>
+            `).join('');
+        })
+        .catch(err => {
+            hideLoading();
+            alert("Erro ao ler tabela: " + err);
+        });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    carregarDadosMDM();
+    carregarStatusDB();
+    carregarDadosTabela();
+});
+</script>
+{% endblock %}

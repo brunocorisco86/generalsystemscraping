@@ -1,0 +1,661 @@
+{% extends "base.html" %}
+
+{% block title %}Gestão de Lotes & Ficha Verde{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header com Título e Ações Rápidas -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-clipboard2-pulse text-primary me-2"></i>Gestão de Lotes & Ficha Verde</h2>
+            <p class="text-muted mb-0">Controle zootécnico de alojamento, biometria amostral, mortalidade e encerramento de safras.</p>
+        </div>
+        <div class="mt-3 mt-md-0 d-flex gap-2">
+            <button class="btn btn-outline-secondary" onclick="carregarDadosLotes()">
+                <i class="bi bi-arrow-clockwise me-1"></i> Atualizar
+            </button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovoLote">
+                <i class="bi bi-plus-circle me-1"></i> Abrir Novo Lote
+            </button>
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalLoteHistorico">
+                <i class="bi bi-clock-history me-1"></i> Cadastrar Lote Anterior
+            </button>
+        </div>
+    </div>
+
+    <!-- Navegação por Abas: Lotes Ativos vs Histórico de Safras -->
+    <ul class="nav nav-pills mb-4" id="lotesTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active px-4" id="ativos-tab" data-bs-toggle="pill" data-bs-target="#ativos-content" type="button" role="tab">
+                <i class="bi bi-water me-1"></i> Lotes Ativos (<span id="countAtivos">0</span>)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link px-4" id="historico-tab" data-bs-toggle="pill" data-bs-target="#historico-content" type="button" role="tab">
+                <i class="bi bi-archive me-1"></i> Safras Anteriores (<span id="countHistorico">0</span>)
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="lotesTabContent">
+        <!-- ABA 1: LOTES ATIVOS -->
+        <div class="tab-pane fade show active" id="ativos-content" role="tabpanel">
+            <div id="lotesAtivosCards" class="row g-4">
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="text-muted mt-2">Carregando lotes ativos...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 2: SAFRAS ANTERIORES (HISTÓRICO) -->
+        <div class="tab-pane fade" id="historico-content" role="tabpanel">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Lote</th>
+                                    <th>Tanque</th>
+                                    <th>Alojamento</th>
+                                    <th>Abate</th>
+                                    <th>Duração</th>
+                                    <th>Alojados</th>
+                                    <th>Entregues</th>
+                                    <th>Peso Total</th>
+                                    <th>Rend. Filé</th>
+                                    <th>R$/Peixe</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaHistoricoBody">
+                                <tr>
+                                    <td colspan="11" class="text-center py-4 text-muted">Carregando histórico...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================== -->
+<!-- MODAIS DE OPERAÇÃO                                             -->
+<!-- ============================================================== -->
+
+<!-- 1. Modal Abertura de Novo Lote -->
+<div class="modal fade" id="modalNovoLote" tabindex="-1" aria-labelledby="modalNovoLoteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold" id="modalNovoLoteLabel"><i class="bi bi-plus-circle me-2"></i>Abertura de Novo Lote</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formNovoLote" onsubmit="salvarNovoLote(event)">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Tanque / Estrutura <span class="text-danger">*</span></label>
+                            <select class="form-select select-estruturas" name="estrutura_uid" required>
+                                <option value="">Selecione o tanque...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Identificador do Lote <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="lote" placeholder="Ex: LOTE-2026-03" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Data de Alojamento <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="data_alojamento" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Peixes Alojados <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" name="peixes_alojados" id="peixesAlojadosInput" placeholder="Ex: 15000" min="1" required oninput="calcularDensidade()">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Peso Médio Inicial (g)</label>
+                            <input type="number" step="0.01" class="form-control" name="peso_medio" placeholder="Ex: 35.0" value="35.0">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Área do Açude / Tanque (m²)</label>
+                            <input type="number" step="0.1" class="form-control" name="area_acude" id="areaAcudeInput" placeholder="Ex: 1000.0" oninput="calcularDensidade()">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Densidade Calculada (peixes/m²)</label>
+                            <input type="text" class="form-control bg-light" name="densidade" id="densidadeCalculada" readonly value="--">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Descrição / Observações</label>
+                            <textarea class="form-control" name="descricao" rows="2" placeholder="Linhagem, fornecedor de alevinos, observações de povoamento..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary fw-bold"><i class="bi bi-check-lg me-1"></i> Confirmar Abertura</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 2. Modal Lançamento de Biometria (Peso Médio) -->
+<div class="modal fade" id="modalBiometria" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold"><i class="bi bi-speedometer me-2"></i>Lançamento de Biometria</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formBiometria" onsubmit="salvarBiometria(event)">
+                <input type="hidden" name="lote_id" id="bioLoteId">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Lote</label>
+                        <input type="text" class="form-control bg-light" id="bioLoteNome" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Data da Biometria <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" name="data_biometria" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Peso Médio Amostrado (gramas) <span class="text-danger">*</span></label>
+                        <input type="number" step="0.1" class="form-control" name="peso_medio" placeholder="Ex: 245.5" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Quantidade de Peixes Amostrados (Opcional)</label>
+                        <input type="number" class="form-control" name="quantidade" placeholder="Ex: 50">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-success fw-bold"><i class="bi bi-save me-1"></i> Gravar Biometria</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 3. Modal Lançamento de Mortalidade & Ração -->
+<div class="modal fade" id="modalMortalidadeRacao" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold"><i class="bi bi-journal-plus me-2"></i>Mortalidade & Consumo de Ração</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formMortalidadeRacao" onsubmit="salvarMortalidadeRacao(event)">
+                <input type="hidden" name="lote_id" id="mortLoteId">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Lote</label>
+                        <input type="text" class="form-control bg-light" id="mortLoteNome" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Data do Registro <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" name="data_registro" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mortalidade do Dia (Peixes mortos recolhidos)</label>
+                        <input type="number" class="form-control" name="mortalidade" placeholder="Ex: 5" min="0" value="0">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Consumo de Ração do Dia (kg)</label>
+                        <input type="number" step="0.1" class="form-control" name="consumo_racao" placeholder="Ex: 40.0" min="0" value="0.0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-warning fw-bold"><i class="bi bi-save me-1"></i> Gravar Lançamento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 4. Modal Fechamento / Despesca de Lote -->
+<div class="modal fade" id="modalFecharLote" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold"><i class="bi bi-flag-fill me-2"></i>Encerramento de Safra / Despesca</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formFecharLote" onsubmit="salvarFechamentoLote(event)">
+                <input type="hidden" name="lote_id" id="fecharLoteId">
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <strong>Atenção:</strong> Ao fechar o lote, os alertas de oxigênio crítico e relatórios automáticos do Telegram para esta estrutura serão desativados.
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Lote</label>
+                            <input type="text" class="form-control bg-light" id="fecharLoteNome" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Data de Abate / Despesca <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="data_abate" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Quantidade de Peixes Entregues</label>
+                            <input type="number" class="form-control" name="qtd_peixes_entregues" placeholder="Ex: 14200" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Peso Total Entregue no Frigorífico (kg)</label>
+                            <input type="number" step="0.01" class="form-control" name="peso_entregue" placeholder="Ex: 12070.50" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Rendimento de Filé (%)</label>
+                            <input type="number" step="0.01" class="form-control" name="pct_rend_file" placeholder="Ex: 34.50">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Resultado Financeiro (R$ por Peixe)</label>
+                            <input type="number" step="0.01" class="form-control" name="reais_por_peixe" placeholder="Ex: 1.85">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger fw-bold"><i class="bi bi-check-circle me-1"></i> Confirmar Fechamento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 5. Modal Cadastrar Lote Anterior (Histórico) -->
+<div class="modal fade" id="modalLoteHistorico" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title fw-bold"><i class="bi bi-clock-history me-2"></i>Cadastrar Lote Anterior (Safra Passada)</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formLoteHistorico" onsubmit="salvarLoteHistorico(event)">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Tanque / Estrutura <span class="text-danger">*</span></label>
+                            <select class="form-select select-estruturas" name="estrutura_uid" required>
+                                <option value="">Selecione o tanque...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Identificador do Lote <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="lote" placeholder="Ex: 2024/01" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Data de Alojamento <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="data_alojamento" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Data de Abate / Finalização <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="data_abate" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Peixes Alojados</label>
+                            <input type="number" class="form-control" name="peixes_alojados" placeholder="Ex: 15000">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Peixes Entregues</label>
+                            <input type="number" class="form-control" name="qtd_peixes_entregues" placeholder="Ex: 14200">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Peso Entregue (kg)</label>
+                            <input type="number" step="0.01" class="form-control" name="peso_entregue" placeholder="Ex: 12050.0">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Rendimento de Filé (%)</label>
+                            <input type="number" step="0.01" class="form-control" name="pct_rend_file" placeholder="Ex: 34.2">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">R$ por Peixe</label>
+                            <input type="number" step="0.01" class="form-control" name="reais_por_peixe" placeholder="Ex: 1.70">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Descrição</label>
+                            <textarea class="form-control" name="descricao" rows="2" placeholder="Anotações do lote passado..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-dark fw-bold"><i class="bi bi-save me-1"></i> Salvar Lote Histórico</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================== -->
+<!-- JAVASCRIPT DE CONTROLE                                         -->
+<!-- ============================================================== -->
+<script>
+let estruturasCache = [];
+
+function setDefaultDates() {
+    const today = new Date().toISOString().split('T')[0];
+    document.querySelectorAll('input[type="date"]').forEach(input => {
+        if (!input.value) input.value = today;
+    });
+}
+
+function calcularDensidade() {
+    const peixes = parseFloat(document.getElementById('peixesAlojadosInput').value) || 0;
+    const area = parseFloat(document.getElementById('areaAcudeInput').value) || 0;
+    const densidadeInput = document.getElementById('densidadeCalculada');
+    if (peixes > 0 && area > 0) {
+        densidadeInput.value = (peixes / area).toFixed(2);
+    } else {
+        densidadeInput.value = '--';
+    }
+}
+
+function carregarEstruturas() {
+    fetch('/api/mdm/estruturas')
+        .then(r => r.json())
+        .then(data => {
+            estruturasCache = data;
+            document.querySelectorAll('.select-estruturas').forEach(sel => {
+                sel.innerHTML = '<option value="">Selecione o tanque...</option>';
+                data.forEach(est => {
+                    const opt = document.createElement('option');
+                    opt.value = est.uid;
+                    opt.textContent = `${est.nome} (${est.pluscode || 'Geral'})`;
+                    sel.appendChild(opt);
+                });
+            });
+        })
+        .catch(err => console.error("Erro ao carregar estruturas:", err));
+}
+
+function carregarDadosLotes() {
+    showLoading();
+    fetch('/api/lotes')
+        .then(r => r.json())
+        .then(data => {
+            hideLoading();
+            renderLotesAtivos(data.ativos || []);
+            renderLotesHistorico(data.historico || []);
+        })
+        .catch(err => {
+            hideLoading();
+            alert("Erro ao buscar dados de lotes: " + err);
+        });
+}
+
+function renderLotesAtivos(ativos) {
+    document.getElementById('countAtivos').textContent = ativos.length;
+    const container = document.getElementById('lotesAtivosCards');
+    if (!ativos || ativos.length === 0) {
+        container.innerHTML = `
+            <div class="col-12">
+                <div class="alert alert-info text-center py-4">
+                    <i class="bi bi-info-circle fs-3 d-block mb-2"></i>
+                    Nenhum lote ativo no momento. Use o botão <strong>Abrir Novo Lote</strong> para iniciar uma safra.
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = ativos.map(l => {
+        const taxaSobrevivencia = l.peixes_alojados > 0 
+            ? (((l.peixes_alojados - l.mortalidade_acumulada) / l.peixes_alojados) * 100).toFixed(1)
+            : 100;
+        const biomassaKg = l.peso_atual_g > 0 
+            ? (((l.peixes_alojados - l.mortalidade_acumulada) * l.peso_atual_g) / 1000).toFixed(1)
+            : '--';
+        const ca = l.conversao_alimentar ? l.conversao_alimentar.toFixed(2) : '--';
+
+        return `
+        <div class="col-md-6 col-xl-6">
+            <div class="card shadow-sm border-top border-4 border-primary h-100">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary text-uppercase me-1">${l.nome_estrutura}</span>
+                        <span class="fw-bold text-dark fs-5">${l.lote}</span>
+                    </div>
+                    <span class="badge bg-success fs-6"><i class="bi bi-check-circle me-1"></i>Ativo há ${l.dias_cultivo} dias</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3 text-center mb-3">
+                        <div class="col-4 border-end">
+                            <span class="text-muted small d-block">Peixes Vivos</span>
+                            <span class="fs-4 fw-bold text-dark">${(l.peixes_alojados - l.mortalidade_acumulada).toLocaleString()}</span>
+                            <small class="text-muted d-block font-monospace">${taxaSobrevivencia}% sobrevida</small>
+                        </div>
+                        <div class="col-4 border-end">
+                            <span class="text-muted small d-block">Peso Médio</span>
+                            <span class="fs-4 fw-bold text-primary">${l.peso_atual_g.toFixed(1)} <small class="fs-6">g</small></span>
+                            <small class="text-muted d-block">Biomassa: ${biomassaKg} kg</small>
+                        </div>
+                        <div class="col-4">
+                            <span class="text-muted small d-block">Conversão (CA)</span>
+                            <span class="fs-4 fw-bold text-success">${ca}</span>
+                            <small class="text-muted d-block">Ração: ${l.racao_acumulada_kg.toFixed(0)} kg</small>
+                        </div>
+                    </div>
+                    <div class="p-2 bg-light rounded small mb-3">
+                        <strong>Alojamento:</strong> ${l.data_alojamento} &bull; 
+                        <strong>Densidade:</strong> ${l.densidade || '--'} peixes/m² &bull;
+                        <strong>Mortos:</strong> ${l.mortalidade_acumulada} peixes
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0 pt-0 pb-3">
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-outline-success btn-sm flex-fill" onclick="abrirModalBiometria(${l.id}, '${l.lote}')">
+                            <i class="bi bi-speedometer2 me-1"></i> Biometria
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm flex-fill text-dark" onclick="abrirModalMortalidade(${l.id}, '${l.lote}')">
+                            <i class="bi bi-journal-plus me-1"></i> Mortos / Ração
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm flex-fill" onclick="abrirModalFechar(${l.id}, '${l.lote}')">
+                            <i class="bi bi-flag me-1"></i> Despesca
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+function renderLotesHistorico(historico) {
+    document.getElementById('countHistorico').textContent = historico.length;
+    const tbody = document.getElementById('tabelaHistoricoBody');
+    if (!historico || historico.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11" class="text-center py-4 text-muted">Nenhum lote finalizado registrado.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = historico.map(h => `
+        <tr>
+            <td class="fw-bold">${h.lote}</td>
+            <td><span class="badge bg-secondary">${h.nome_estrutura}</span></td>
+            <td>${h.data_alojamento}</td>
+            <td>${h.data_abate || '--'}</td>
+            <td>${h.dias_cultivo} dias</td>
+            <td>${(h.peixes_alojados || 0).toLocaleString()}</td>
+            <td class="fw-bold">${(h.qtd_peixes_entregues || 0).toLocaleString()}</td>
+            <td class="text-primary fw-bold">${h.peso_entregue ? h.peso_entregue.toFixed(1) + ' kg' : '--'}</td>
+            <td>${h.pct_rend_file ? h.pct_rend_file.toFixed(1) + '%' : '--'}</td>
+            <td class="text-success fw-bold">${h.reais_por_peixe ? 'R$ ' + h.reais_por_peixe.toFixed(2) : '--'}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-secondary" title="Ver detalhes" onclick="alert('Lote: ${h.lote}\\nDescrição: ${h.descricao || 'N/A'}')">
+                    <i class="bi bi-eye"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function abrirModalBiometria(id, nome) {
+    document.getElementById('bioLoteId').value = id;
+    document.getElementById('bioLoteNome').value = nome;
+    setDefaultDates();
+    new bootstrap.Modal(document.getElementById('modalBiometria')).show();
+}
+
+function abrirModalMortalidade(id, nome) {
+    document.getElementById('mortLoteId').value = id;
+    document.getElementById('mortLoteNome').value = nome;
+    setDefaultDates();
+    new bootstrap.Modal(document.getElementById('modalMortalidadeRacao')).show();
+}
+
+function abrirModalFechar(id, nome) {
+    document.getElementById('fecharLoteId').value = id;
+    document.getElementById('fecharLoteNome').value = nome;
+    setDefaultDates();
+    new bootstrap.Modal(document.getElementById('modalFecharLote')).show();
+}
+
+function salvarNovoLote(e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    showLoading();
+    fetch('/api/lotes', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        hideLoading();
+        if (res.status === 'ok') {
+            bootstrap.Modal.getInstance(document.getElementById('modalNovoLote')).hide();
+            e.target.reset();
+            carregarDadosLotes();
+        } else {
+            alert("Erro: " + res.message);
+        }
+    })
+    .catch(err => {
+        hideLoading();
+        alert("Erro na requisição: " + err);
+    });
+}
+
+function salvarBiometria(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const loteId = formData.get('lote_id');
+    const data = Object.fromEntries(formData);
+    showLoading();
+    fetch(`/api/lotes/${loteId}/biometria`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        hideLoading();
+        if (res.status === 'ok') {
+            bootstrap.Modal.getInstance(document.getElementById('modalBiometria')).hide();
+            e.target.reset();
+            carregarDadosLotes();
+        } else {
+            alert("Erro: " + res.message);
+        }
+    })
+    .catch(err => {
+        hideLoading();
+        alert("Erro na requisição: " + err);
+    });
+}
+
+function salvarMortalidadeRacao(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const loteId = formData.get('lote_id');
+    const data = Object.fromEntries(formData);
+    showLoading();
+    fetch(`/api/lotes/${loteId}/biometria`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        hideLoading();
+        if (res.status === 'ok') {
+            bootstrap.Modal.getInstance(document.getElementById('modalMortalidadeRacao')).hide();
+            e.target.reset();
+            carregarDadosLotes();
+        } else {
+            alert("Erro: " + res.message);
+        }
+    })
+    .catch(err => {
+        hideLoading();
+        alert("Erro na requisição: " + err);
+    });
+}
+
+function salvarFechamentoLote(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const loteId = formData.get('lote_id');
+    const data = Object.fromEntries(formData);
+    if (!confirm("Confirma o encerramento da safra para o lote selecionado?")) return;
+    showLoading();
+    fetch(`/api/lotes/${loteId}/fechar`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        hideLoading();
+        if (res.status === 'ok') {
+            bootstrap.Modal.getInstance(document.getElementById('modalFecharLote')).hide();
+            e.target.reset();
+            carregarDadosLotes();
+        } else {
+            alert("Erro: " + res.message);
+        }
+    })
+    .catch(err => {
+        hideLoading();
+        alert("Erro na requisição: " + err);
+    });
+}
+
+function salvarLoteHistorico(e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    showLoading();
+    fetch('/api/lotes', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        hideLoading();
+        if (res.status === 'ok') {
+            bootstrap.Modal.getInstance(document.getElementById('modalLoteHistorico')).hide();
+            e.target.reset();
+            carregarDadosLotes();
+        } else {
+            alert("Erro: " + res.message);
+        }
+    })
+    .catch(err => {
+        hideLoading();
+        alert("Erro na requisição: " + err);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    setDefaultDates();
+    carregarEstruturas();
+    carregarDadosLotes();
+});
+</script>
+{% endblock %}

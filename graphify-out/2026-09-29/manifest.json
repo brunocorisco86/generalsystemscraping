@@ -366,9 +366,9 @@
     "semantic_hash": "a7cc751f4c179d3b8ed6e390caad803b"
   },
   "src/web/app.py": {
-    "mtime": 1790652680.3165932,
-    "seen": 1790653002.0375144,
-    "ast_hash": "4671c6ac6bc4cbbf060e85c9b8c5884f",
+    "mtime": 1789952556.7283833,
+    "seen": 1789952583.4643013,
+    "ast_hash": "f728fa8125d28e9462cdc05f13083365",
     "semantic_hash": ""
   },
   "tests/__init__.py": {
@@ -444,9 +444,9 @@
     "semantic_hash": "888821ea66d155bc7b32b848003e155b"
   },
   "tests/test_web_dashboard.py": {
-    "mtime": 1790652970.429364,
-    "seen": 1790653002.0380893,
-    "ast_hash": "2df730a3fca9dd6f45df52b377a1118e",
+    "mtime": 1789949860.3435726,
+    "seen": 1789950240.58398,
+    "ast_hash": "f2242900bf468fa1784c10280e520c20",
     "semantic_hash": ""
   },
   ".agents/AGENTS.md": {
@@ -564,10 +564,10 @@
     "semantic_hash": "621406b84dcbbc2cf0c60fee9f684b46"
   },
   "src/web/templates/base.html": {
-    "mtime": 1790650534.591517,
-    "seen": 1790653002.0392919,
-    "ast_hash": "5e328b781bfc7dea4d5c4f1c5634b062",
-    "semantic_hash": ""
+    "mtime": 1789948388.0869322,
+    "seen": 1789950240.5840054,
+    "ast_hash": "ba5ca5edcbd61111ddee8bc1e1846e3c",
+    "semantic_hash": "ba5ca5edcbd61111ddee8bc1e1846e3c"
   },
   "src/web/templates/dashboard.html": {
     "mtime": 1789952563.8443701,
@@ -618,9 +618,9 @@
     "semantic_hash": ""
   },
   "src/services/noctua_client.py": {
-    "mtime": 1790649901.0067754,
-    "seen": 1790653002.037379,
-    "ast_hash": "027816e6aa17edbe404a392c49e328ef",
+    "mtime": 1789949355.6751034,
+    "seen": 1789950240.583963,
+    "ast_hash": "a33e91d0f6f353aa179dd895e83f5b06",
     "semantic_hash": ""
   },
   "tests/test_monitor_data.py": {
@@ -669,24 +669,6 @@
     "mtime": 1790649031.3859105,
     "seen": 1790649035.898712,
     "ast_hash": "18c4758620be7be065023f42ae384e10",
-    "semantic_hash": ""
-  },
-  "tests/test_postgres_concurrency.py": {
-    "mtime": 1790652928.89156,
-    "seen": 1790653002.0379677,
-    "ast_hash": "3f85846fb11a54bedfae920145a40027",
-    "semantic_hash": ""
-  },
-  "src/web/templates/lotes.html": {
-    "mtime": 1790651739.2871752,
-    "seen": 1790653002.0393932,
-    "ast_hash": "7256a29ac808e117bc8ee3cf14a15fe7",
-    "semantic_hash": ""
-  },
-  "src/web/templates/settings.html": {
-    "mtime": 1790652117.132262,
-    "seen": 1790653002.0393946,
-    "ast_hash": "55a0f277747a04599b1fa659649bc211",
     "semantic_hash": ""
   }
 }

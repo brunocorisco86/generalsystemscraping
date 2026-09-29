@@ -52,14 +52,19 @@ def test_api_endpoints_protected(client):
     assert response.status_code == 302
 
 
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
+from datetime import date
 
 @pytest.fixture
 def auth_client(client):
     """Cria um cliente logado para testar rotas protegidas."""
     init_web_auth_db()
-    client.post('/login', data={'username': 'test_admin', 'password': 'admin123'})
+    # Efetuar login com as credenciais do .env.test
+    user = os.environ.get("WEB_ADMIN_USER", "test_admin")
+    pw = os.environ.get("WEB_ADMIN_PASS", "admin123")
+    client.post('/login', data={'username': user, 'password': pw})
     return client
+
 
 
 def test_api_endpoints_list(auth_client):
@@ -123,3 +128,61 @@ def test_api_send_motor_command_success(auth_client):
         data = response.get_json()
         assert data['status'] == 'success'
         assert data['data']['status'] == "SENT"
+
+
+def test_lotes_page_loads(auth_client):
+    """Garante que a página de lotes carrega para usuário autenticado."""
+    response = auth_client.get('/lotes')
+    assert response.status_code == 200
+    assert b"Gest\xc3\xa3o de Lotes" in response.data or b"Lotes" in response.data
+
+
+def test_settings_page_loads(auth_client):
+    """Garante que a página de configurações carrega para usuário autenticado."""
+    response = auth_client.get('/settings')
+    assert response.status_code == 200
+    assert b"Configura\xc3\xa7\xc3\xb5es" in response.data or b"Settings" in response.data
+
+
+def test_api_get_lotes_route(auth_client):
+    """Testa endpoint GET /api/lotes com mock do postgres."""
+    with patch("src.web.app.get_postgres_connection") as mock_conn:
+        mock_pg = MagicMock()
+        mock_cur = MagicMock()
+        mock_pg.cursor.return_value = mock_cur
+        mock_conn.return_value = mock_pg
+
+        # 1. lotes ativos, 2. biometria totais, 3. ultimo peso, 4. historico
+        mock_cur.fetchall.side_effect = [
+            [(1, "uid1", "Tanque 1", "LOTE-01", date(2026, 9, 20), 10000, 35.0, 1000.0, 10.0, "Desc")],
+            []
+        ]
+        mock_cur.fetchone.side_effect = [
+            (5, 50.0), # mort_tot, racao_tot
+            (42.5,)    # last_peso
+        ]
+
+        response = auth_client.get('/api/lotes')
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['status'] == 'ok'
+        assert len(data['ativos']) == 1
+        assert data['ativos'][0]['lote'] == 'LOTE-01'
+
+
+def test_api_settings_db_status_route(auth_client):
+    """Testa endpoint GET /api/settings/db/status com mock do postgres."""
+    with patch("src.web.app.get_postgres_connection") as mock_conn:
+        mock_pg = MagicMock()
+        mock_cur = MagicMock()
+        mock_pg.cursor.return_value = mock_cur
+        mock_conn.return_value = mock_pg
+        mock_cur.fetchone.return_value = (10,)
+
+        response = auth_client.get('/api/settings/db/status')
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['status'] == 'ok'
+        assert 'counts' in data
+        assert data['counts']['lotes'] == 10
+
