@@ -11,6 +11,7 @@ from src.services.database import (
     get_default_estrutura_info,
     get_all_estruturas_map,
     is_system_suspended,
+    get_local_now,
     SQLITE_DB_PATH
 )
 from src.services.noctua_client import NoctuaClient, NoctuaClientException
@@ -94,9 +95,9 @@ def collect_via_api() -> bool:
                     dt_obj = datetime.fromisoformat(clean_ts)
                     ts_sql = dt_obj.strftime("%Y-%m-%d %H:%M:%S")
                 except Exception:
-                    ts_sql = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    ts_sql = get_local_now().strftime("%Y-%m-%d %H:%M:%S")
             else:
-                ts_sql = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                ts_sql = get_local_now().strftime("%Y-%m-%d %H:%M:%S")
 
             # Resolver UID da estrutura
             uid = estruturas_map.get(nome_tanque)

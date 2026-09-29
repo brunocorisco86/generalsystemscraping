@@ -4,7 +4,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 # Importar serviços do projeto
-from src.services.database import get_sqlite_connection, get_postgres_connection, get_all_estruturas_map
+from src.services.database import get_sqlite_connection, get_postgres_connection, get_all_estruturas_map, get_local_now
 from src.services.notification import send_telegram_message
 
 # Configuração do logger
@@ -80,7 +80,7 @@ def check_last_reading():
             if last_reading_str:
                 try:
                     last_reading_time = datetime.strptime(last_reading_str, '%Y-%m-%d %H:%M:%S')
-                    time_difference = datetime.now() - last_reading_time
+                    time_difference = get_local_now() - last_reading_time
                     diff_minutos = int(time_difference.total_seconds() / 60)
 
                     logger.info("Verificando %s:", tank)

@@ -1,16 +1,16 @@
 # Graph Report - generalsystemscraping  (2026-09-29)
 
 ## Corpus Check
-- 106 files · ~58,350 words
+- 108 files · ~59,128 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 747 nodes · 1237 edges · 123 communities (44 shown, 79 thin omitted)
+- 767 nodes · 1303 edges · 124 communities (45 shown, 79 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 51 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7609564f`
+- Built from commit: `6936c2a9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -27,7 +27,7 @@
 - 13-restore-db.sh
 - Regra de Filtragem de Lotes Ativos
 - 🛠️ Detalhes das Alterações
-- query_postgres
+- agent_tools.py
 - scripts/11-backup-db.sh
 - Bot Unificado Container Service
 - weekly_maintenance.sh
@@ -124,12 +124,13 @@
 - route
 - app.py
 - TestPostgresConcurrency
-- api_get_endpoint
+- 🛠️ Ações Executadas
 - api_get_lotes
-- api_mdm_estruturas
+- api_criar_lote
 - api_settings_db_status
-- api_settings_db_table
+- api_mdm_salvar_propriedade
 - api_update_thresholds
+- api_update_timers
 
 ## God Nodes (most connected - your core abstractions)
 1. `get_sqlite_connection()` - 55 edges
@@ -140,8 +141,8 @@
 6. `send_telegram_photo()` - 26 edges
 7. `NoctuaClient` - 25 edges
 8. `analyze_custom_report_sync()` - 20 edges
-9. `is_system_suspended()` - 15 edges
-10. `get_weather_forecast()` - 15 edges
+9. `get_local_now()` - 16 edges
+10. `is_system_suspended()` - 15 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `test_send_motor_command_unknown_endpoint()` --uses--> `NoctuaClientException`  [INFERRED]
@@ -165,31 +166,31 @@
 - **System Monitoring and Self-Healing watchdog flow** — scripts_check_network_health, scripts_14_watchdog_resilience, src_alerts_alert_check, src_alerts_offline_check [INFERRED 0.85]
 - **Monitoramento de Qualidade da Água** — docs_mer_qualidade_agua_limnologia, docs_mer_qualidade_agua_consumo, docs_tech_stack_stack_aiogram [INFERRED 0.85]
 
-## Communities (123 total, 79 thin omitted)
+## Communities (124 total, 79 thin omitted)
 
 ### Community 0 - "get_sqlite_connection"
 Cohesion: 0.07
-Nodes (74): AgentExecutor, migrate_postgres(), migrate_sqlite(), check_alerts(), Verifica as últimas leituras no banco de dados e dispara alertas se necessário., check_last_reading(), Verifica o tempo da última leitura dos tanques. Envia alerta se o atraso for…, run_production_logic() (+66 more)
+Nodes (76): AgentExecutor, datetime, migrate_postgres(), migrate_sqlite(), check_alerts(), Verifica as últimas leituras no banco de dados e dispara alertas se necessário., run_production_logic(), ajustar_gompertz() (+68 more)
 
 ### Community 1 - "main.py"
 Cohesion: 0.07
-Nodes (73): asyncio, CallbackQuery, InlineKeyboardMarkup, Message, Pool, ask_agent(), Função para bater papo livremente com o agente via bot do Telegram., criar_lote_completo() (+65 more)
+Nodes (71): asyncio, CallbackQuery, InlineKeyboardMarkup, Message, Pool, criar_lote_completo(), finalizar_lote_abate(), get_estruturas_ativas() (+63 more)
 
 ### Community 2 - "test_web_dashboard.py"
 Cohesion: 0.09
 Nodes (18): auth_client(), client(), fixture, Garante que a página de lotes carrega para usuário autenticado., Verifica se a página de login carrega corretamente., Garante que a página de configurações carrega para usuário autenticado., Testa endpoint GET /api/lotes com mock do postgres., Testa endpoint GET /api/settings/db/status com mock do postgres. (+10 more)
 
 ### Community 3 - "get_weather_forecast"
-Cohesion: 0.11
-Nodes (20): migrate_data(), Migra dados do SQLite para o PostgreSQL., run_collector_loop(), Obtém o clima atual e salva na tabela clima_historico., sync_hourly_weather(), format_morning_report(), main(), Formata o relatório de bom dia com clima detalhado. (+12 more)
+Cohesion: 0.21
+Nodes (10): get_weather_forecast(), log_weather_locally(), Sessão customizada para impor um timeout limite nas requisições HTTP., Salva os dados da previsão em um arquivo JSON local, sobrescrevendo o anterior…, Obtém a previsão do tempo utilizando a API Open-Meteo. Utiliza as coordenadas…, TimeoutCachedSession, patch, Verifica se o serviço utiliza as coordenadas do .env corretamente. (+2 more)
 
 ### Community 4 - ".test_analyze_feed_prediction_sync_mock"
 Cohesion: 0.25
 Nodes (6): format_data_summary_micro(), patch, Versão condensada da lógica que iremos implementar no feed_prediction.py, Valida se o resumo de dados é realmente curto (Micro-contexto)., Testa a nova função do agente (mockada)., TestFeedPredictionAgent
 
 ### Community 5 - "monitor_data.py"
-Cohesion: 0.11
-Nodes (21): main(), Atualiza as variáveis STRUCT_MACS, STRUCT_NAME e STRUCT_PLUSCODE no arquivo…, update_env_file(), collect_via_api(), ensure_leituras_table(), Função principal de tomada de dados. Utiliza preferencialmente a API GraphQL…, Garante que a tabela de leituras exista com o schema correto., Realiza a coleta das leituras dos tanques diretamente via AWS AppSync GraphQL… (+13 more)
+Cohesion: 0.06
+Nodes (40): main(), Atualiza as variáveis STRUCT_MACS, STRUCT_NAME e STRUCT_PLUSCODE no arquivo…, update_env_file(), check_last_reading(), Verifica o tempo da última leitura dos tanques. Envia alerta se o atraso for…, migrate_data(), Migra dados do SQLite para o PostgreSQL., run_collector_loop() (+32 more)
 
 ### Community 6 - "Tabelas de Monitoramento (Operacional)"
 Cohesion: 0.18
@@ -207,8 +208,8 @@ Nodes (7): RCLONE_CONFIG_R2_ACCESS_KEY_ID, RCLONE_CONFIG_R2_ACL, RCLONE_CONFIG_R
 Cohesion: 0.20
 Nodes (9): 1. Correção de Resolução de DNS Local (Pi-hole), 2. Validação e Monitoramento de Rede e IP Estático, 3. Filtragem Dinâmica de Lotes Ativos, 4. Correções e Estabilidade na Suíte de Testes (TDD), 5. Limpeza de Dados Legados no SQLite Local, 🛠️ Detalhes das Alterações, Diário de Bordo — 27 de Junho de 2026, 📋 Resumo do Dia (+1 more)
 
-### Community 12 - "query_postgres"
-Cohesion: 0.29
+### Community 12 - "agent_tools.py"
+Cohesion: 0.32
 Nodes (7): execute_python_report(), query_postgres(), Aciona o script de migração de dados do SQLite (onde os dados brutos chegam)…, Executa uma consulta SELECT de leitura no banco de dados PostgreSQL e retorna…, Executa um script Python da pasta src/reports/ e retorna o resultado no…, run_migration(), tool
 
 ### Community 15 - "weekly_maintenance.sh"
@@ -301,7 +302,7 @@ Nodes (8): 1. Auditoria e Varredura da Base de Código (Graphify & Análise Est�
 
 ### Community 114 - "route"
 Cohesion: 0.11
-Nodes (29): login_required, route, api_agent(), api_criar_lote(), api_endpoints_list(), api_fechar_lote(), api_mdm_dados(), api_mdm_salvar_propriedade() (+21 more)
+Nodes (29): login_required, route, api_agent(), api_endpoints_list(), api_fechar_lote(), api_get_endpoint(), api_mdm_dados(), api_mdm_estruturas() (+21 more)
 
 ### Community 115 - "app.py"
 Cohesion: 0.16
@@ -311,25 +312,29 @@ Nodes (13): get_user_by_id(), init_web_auth_db(), Inicializa a tabela de usuári
 Cohesion: 0.15
 Nodes (10): pg_pool(), fixture, Valida inserções concorrentes de biometria e mortalidade para o mesmo lote sob…, Testa tentativa de fechamento concorrente garantindo atomicidade sem deadlocks., Pool de conexões thread-safe para testes de concorrência., Cria uma estrutura e um lote temporários dedicados para os testes de estresse., Suíte de Testes de Concorrência, Leitura e Escrita sob Carga no PostgreSQL., Valida que múltiplas threads simultâneas realizam leituras sem contenção ou… (+2 more)
 
+### Community 117 - "🛠️ Ações Executadas"
+Cohesion: 0.20
+Nodes (9): 1. Front-End: Layout Base & Navegação, 2. Front-End: Interface de Batch Management (`lotes.html`), 3. Front-End: Interface de MDM & Settings (`settings.html`), 4. Backend Flask: Novas Rotas em `src/web/app.py`, 5. Suíte de Testes de Concorrência & Estresse, 🛠️ Ações Executadas, Diário de Bordo - 29/09/2026, 🎯 Objetivo da Sessão (+1 more)
+
 ## Knowledge Gaps
-- **215 isolated node(s):** `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD`, `02-setup-venv.sh script`, `03-install-python-deps.sh script` (+210 more)
+- **222 isolated node(s):** `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD`, `02-setup-venv.sh script`, `03-install-python-deps.sh script` (+217 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **79 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `get_sqlite_connection()` connect `get_sqlite_connection` to `app.py`, `route`, `get_weather_forecast`, `monitor_data.py`?**
-  _High betweenness centrality (0.040) - this node is a cross-community bridge._
-- **Why does `NoctuaClient` connect `NoctuaClient` to `monitor_data.py`, `route`, `app.py`, `api_get_endpoint`, `api_update_thresholds`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
-- **Why does `get_postgres_connection()` connect `get_sqlite_connection` to `get_weather_forecast`, `query_postgres`, `route`, `app.py`, `api_get_lotes`, `api_mdm_estruturas`, `api_settings_db_status`, `api_settings_db_table`?**
+- **Why does `NoctuaClient` connect `NoctuaClient` to `monitor_data.py`, `route`, `app.py`, `api_update_thresholds`, `api_update_timers`?**
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+- **Why does `get_sqlite_connection()` connect `get_sqlite_connection` to `route`, `app.py`, `monitor_data.py`?**
   _High betweenness centrality (0.032) - this node is a cross-community bridge._
-- **Are the 25 inferred relationships involving `main()` (e.g. with `callback_agua_uid()` and `callback_bio_finish()`) actually correct?**
-  _`main()` has 25 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `get_postgres_connection()` connect `get_sqlite_connection` to `monitor_data.py`, `agent_tools.py`, `route`, `app.py`, `api_get_lotes`, `api_criar_lote`, `api_settings_db_status`, `api_mdm_salvar_propriedade`?**
+  _High betweenness centrality (0.028) - this node is a cross-community bridge._
 - **What connects `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD` to the rest of the system?**
-  _215 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _222 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `get_sqlite_connection` be split into smaller, more focused modules?**
-  _Cohesion score 0.06787878787878789 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06853226727584237 - nodes in this community are weakly interconnected._
 - **Should `main.py` be split into smaller, more focused modules?**
-  _Cohesion score 0.06664388243335612 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06918918918918919 - nodes in this community are weakly interconnected._
+- **Should `test_web_dashboard.py` be split into smaller, more focused modules?**
+  _Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected._

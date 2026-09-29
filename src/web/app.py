@@ -14,7 +14,7 @@ if project_root not in sys.path:
     sys.path.append(project_root)
 
 from src.services.web_auth import init_web_auth_db, validate_user, get_user_by_id
-from src.services.database import get_sqlite_connection, get_postgres_connection
+from src.services.database import get_sqlite_connection, get_postgres_connection, get_local_now
 from src.services.weather import get_weather_forecast
 from src.services.noctua_client import (
     NoctuaClient,
@@ -132,7 +132,7 @@ def dashboard():
                 if ts_str:
                     try:
                         dt_ts = datetime.strptime(ts_str, '%Y-%m-%d %H:%M:%S')
-                        diff_min = int((datetime.now() - dt_ts).total_seconds() / 60)
+                        diff_min = int((get_local_now() - dt_ts).total_seconds() / 60)
                         minutos_atraso = max(0, diff_min)
                         if diff_min > 30:
                             is_offline = True
@@ -141,7 +141,7 @@ def dashboard():
                 leituras.append((nome, ox, temp, ts_str, aer, is_offline, minutos_atraso))
 
             # 2. Obter Histórico de 24h para os Gráficos
-            yesterday = (datetime.now() - timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
+            yesterday = (get_local_now() - timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute('''
                 SELECT nome_estrutura, oxigenio, temperatura, timestamp_site
                 FROM leituras
@@ -224,7 +224,7 @@ def api_agent():
         return jsonify({"status": "error", "message": "Erro ao conectar ao banco."}), 500
     
     try:
-        yesterday = (datetime.now() - timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
+        yesterday = (get_local_now() - timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
         df = pd.read_sql_query("SELECT * FROM leituras WHERE timestamp_site >= ?", conn, params=(yesterday,))
         
         if df.empty:
@@ -406,7 +406,7 @@ def api_get_lotes():
             peso_inicial_g = float(r[6] or 35.0)
             
             # Dias de cultivo
-            hoje = datetime.now().date()
+            hoje = get_local_now().date()
             dias_cultivo = (hoje - data_aloj).days if data_aloj else 0
 
             # Totais de biometria e mortalidade acumulada
@@ -600,7 +600,7 @@ def api_fechar_lote(lote_id):
 def api_salvar_biometria(lote_id):
     """Registra lançamento de biometria, mortalidade e/ou ração na tabela biometria."""
     data = request.get_json() or {}
-    data_biometria = data.get('data_biometria') or data.get('data_registro') or datetime.now().date().isoformat()
+    data_biometria = data.get('data_biometria') or data.get('data_registro') or get_local_now().date().isoformat()
     peso_medio = data.get('peso_medio')
     quantidade = data.get('quantidade') or None
     mortalidade = data.get('mortalidade') or 0

@@ -17,6 +17,20 @@ if not os.path.exists(env_path):
 
 load_dotenv(env_path)
 
+from datetime import datetime, timezone, timedelta
+try:
+    from zoneinfo import ZoneInfo
+    TIMEZONE_LOCAL = ZoneInfo("America/Sao_Paulo")
+except Exception:
+    TIMEZONE_LOCAL = timezone(timedelta(hours=-3))
+
+def get_local_now() -> datetime:
+    """Retorna datetime ingênuo representando o horário local de Brasília (America/Sao_Paulo)."""
+    try:
+        return datetime.now(TIMEZONE_LOCAL).replace(tzinfo=None)
+    except Exception:
+        return datetime.now()
+
 # --- Configurações do .env ---
 SQLITE_DB_PATH = os.environ.get("SQLITE_DB_PATH", "data/piscicultura_dados.db")
 PG_HOST = os.environ.get("PG_HOST")
