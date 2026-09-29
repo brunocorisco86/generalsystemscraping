@@ -46,6 +46,8 @@ def get_sqlite_connection():
         # no mesmo processo precisarem acessar o banco, o que pode
         # acontecer em algumas aplicações web ou com bots.
         conn = sqlite3.connect(SQLITE_DB_PATH, check_same_thread=False)
+        conn.execute("PRAGMA journal_mode=WAL;")
+        conn.execute("PRAGMA synchronous=NORMAL;")
         return conn
     except sqlite3.Error as e:
         logger.error(f"Erro ao conectar ao SQLite: {e}")
