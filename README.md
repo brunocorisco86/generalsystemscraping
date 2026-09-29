@@ -63,4 +63,5 @@ Para detalhes aprofundados sobre cada componente, consulte o documento: [Stack T
 
 
 ---
-Para detalhes arquiteturais e estado atual, consulte `docs/architecture.md` e `knowledge/project_state.md`.
+Para especificações completas, detalhes arquiteturais e estado atual, consulte [Especificações Técnicas](docs/specs.md), [Arquitetura do Sistema](docs/architecture.md) e [Project State](knowledge/project_state.md).
+
