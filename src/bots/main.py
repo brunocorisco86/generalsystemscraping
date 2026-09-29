@@ -52,9 +52,14 @@ BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN") or \
 GROUP_ID = os.environ.get("TELEGRAM_GROUP_ID")
 ADMIN_ID = os.environ.get("TELEGRAM_ADMIN_ID")
 
-if not BOT_TOKEN:
-    logger.error("ERRO: Nenhum Token de Bot encontrado no .env (TELEGRAM_BOT_TOKEN, BOT_BIOMETRIA_TOKEN ou TELEGRAM_TOKEN)")
-    sys.exit(1)
+def is_valid_telegram_token(token: str | None) -> bool:
+    """Verifica se o token possui o formato básico exigido pelo Telegram (<bot_id>:<token>)."""
+    if not token:
+        return False
+    t = token.strip()
+    if t == "dummy_token" or t.startswith("dummy_"):
+        return False
+    return ":" in t and len(t) > 10
 
 # Estado do chat (FSM simplificada)
 estado_chat: dict[int, dict] = {}
@@ -620,45 +625,57 @@ async def handle_messages(message: Message):
 # ==========================
 
 async def main():
-    bot = Bot(BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
-    dp = Dispatcher()
+    if not is_valid_telegram_token(BOT_TOKEN):
+        logger.warning(
+            "⚠️ [AVISO] Token do Telegram não configurado ou em formato inválido/dummy ('%s'). "
+            "O bot permanecerá em modo de repouso para evitar consumo de CPU e crash loop no container.",
+            BOT_TOKEN
+        )
+        while True:
+            await asyncio.sleep(3600)
 
-    # Registro de Comandos de Texto
-    dp.message.register(cmd_start, Command("start", "help"))
-    dp.message.register(cmd_biometria, Command("biometria", "lancar_biometria"))
-    dp.message.register(cmd_agua, Command("agua", "lancar_agua"))
-    dp.message.register(cmd_novo_lote, Command("novo_lote"))
-    dp.message.register(cmd_fechar_lote, Command("fechar_lote"))
-    dp.message.register(cmd_suspender, Command("suspender"))
-    dp.message.register(cmd_reativar, Command("reativar"))
-    dp.message.register(cmd_cancel, Command("cancel"))
-    
-    # Comandos Legados (usando decorators acima ou registro explícito)
-    # Já registrados via decorators @Dispatcher().message... mas para garantir:
-    dp.message.register(handle_oxigenio, Command("oxigenio"))
-    dp.message.register(handle_temperatura, Command("temperatura"))
-    dp.message.register(handle_ox7d, Command("ox7d"))
-    dp.message.register(handle_ox15d, Command("ox15d"))
-    dp.message.register(handle_temp7d, Command("temp7d"))
-    dp.message.register(handle_temp15d, Command("temp15d"))
-    dp.message.register(handle_clima, Command("clima"))
-    dp.message.register(handle_previsao, Command("previsao"))
-    dp.message.register(handle_curvapeso, Command("curvapeso"))
-    dp.message.register(handle_backup, Command("backup"))
+    try:
+        bot = Bot(BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
+        dp = Dispatcher()
 
-    # Registro de Callbacks
-    dp.callback_query.register(callback_agua_uid, F.data.startswith("agua_uid:"))
-    dp.callback_query.register(callback_bio_uid, F.data.startswith("bio_uid:"))
-    dp.callback_query.register(callback_bio_loop, F.data.startswith("bio_loop:"))
-    dp.callback_query.register(callback_bio_finish, F.data == "bio_finish")
-    dp.callback_query.register(callback_novo_lote_uid, F.data.startswith("nl_uid:"))
-    dp.callback_query.register(callback_fechar_lote_uid, F.data.startswith("fl_uid:"))
-    
-    # Handler Genérico de Mensagens (Máquina de Estados)
-    dp.message.register(handle_messages, F.text)
+        # Registro de Comandos de Texto
+        dp.message.register(cmd_start, Command("start", "help"))
+        dp.message.register(cmd_biometria, Command("biometria", "lancar_biometria"))
+        dp.message.register(cmd_agua, Command("agua", "lancar_agua"))
+        dp.message.register(cmd_novo_lote, Command("novo_lote"))
+        dp.message.register(cmd_fechar_lote, Command("fechar_lote"))
+        dp.message.register(cmd_suspender, Command("suspender"))
+        dp.message.register(cmd_reativar, Command("reativar"))
+        dp.message.register(cmd_cancel, Command("cancel"))
+        
+        # Comandos Legados (usando decorators acima ou registro explícito)
+        dp.message.register(handle_oxigenio, Command("oxigenio"))
+        dp.message.register(handle_temperatura, Command("temperatura"))
+        dp.message.register(handle_ox7d, Command("ox7d"))
+        dp.message.register(handle_ox15d, Command("ox15d"))
+        dp.message.register(handle_temp7d, Command("temp7d"))
+        dp.message.register(handle_temp15d, Command("temp15d"))
+        dp.message.register(handle_clima, Command("clima"))
+        dp.message.register(handle_previsao, Command("previsao"))
+        dp.message.register(handle_curvapeso, Command("curvapeso"))
+        dp.message.register(handle_backup, Command("backup"))
 
-    logger.info("Iniciando Bot Unificado PeixePatelBot...")
-    await dp.start_polling(bot)
+        # Registro de Callbacks
+        dp.callback_query.register(callback_agua_uid, F.data.startswith("agua_uid:"))
+        dp.callback_query.register(callback_bio_uid, F.data.startswith("bio_uid:"))
+        dp.callback_query.register(callback_bio_loop, F.data.startswith("bio_loop:"))
+        dp.callback_query.register(callback_bio_finish, F.data == "bio_finish")
+        dp.callback_query.register(callback_novo_lote_uid, F.data.startswith("nl_uid:"))
+        dp.callback_query.register(callback_fechar_lote_uid, F.data.startswith("fl_uid:"))
+        
+        # Handler Genérico de Mensagens (Máquina de Estados)
+        dp.message.register(handle_messages, F.text)
+
+        logger.info("Iniciando Bot Unificado PeixePatelBot...")
+        await dp.start_polling(bot)
+    except Exception as e:
+        logger.error("Erro inesperado na execução do bot: %s. Aguardando 60 segundos...", e)
+        await asyncio.sleep(60)
 
 if __name__ == "__main__":
     asyncio.run(main())

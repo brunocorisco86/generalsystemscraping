@@ -227,18 +227,6 @@
       "source_location": "L21"
     },
     {
-      "id": "src_alerts_offline_check_check_last_reading",
-      "label": "check_last_reading()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "check_last_reading()",
-      "source_file": "src/alerts/offline_check.py",
-      "source_location": "L19"
-    },
-    {
       "id": "src_analysis_feed_prediction_run_production_logic",
       "label": "run_production_logic()",
       "_callable": true,
@@ -395,6 +383,18 @@
       "source_location": "L280"
     },
     {
+      "id": "src_bots_agent_ask_agent",
+      "label": "ask_agent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "ask_agent()",
+      "source_file": "src/bots/agent.py",
+      "source_location": "L132"
+    },
+    {
       "id": "src_bots_agent_get_agent_executor",
       "label": "get_agent_executor()",
       "_callable": true,
@@ -429,6 +429,30 @@
       "norm_label": "get_hourly_report()",
       "source_file": "src/jobs/hourly_report.py",
       "source_location": "L20"
+    },
+    {
+      "id": "src_jobs_morning_weather_report_format_morning_report",
+      "label": "format_morning_report()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "format_morning_report()",
+      "source_file": "src/jobs/morning_weather_report.py",
+      "source_location": "L12"
+    },
+    {
+      "id": "src_jobs_morning_weather_report_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "src/jobs/morning_weather_report.py",
+      "source_location": "L117"
     },
     {
       "id": "src_jobs_nightly_report_generate_nightly_report",
@@ -584,7 +608,7 @@
       "file_type": "code",
       "norm_label": "get_all_estruturas_map()",
       "source_file": "src/services/database.py",
-      "source_location": "L67"
+      "source_location": "L81"
     },
     {
       "id": "src_services_database_get_postgres_connection",
@@ -596,7 +620,7 @@
       "file_type": "code",
       "norm_label": "get_postgres_connection()",
       "source_file": "src/services/database.py",
-      "source_location": "L40"
+      "source_location": "L54"
     },
     {
       "id": "src_services_database_get_sqlite_connection",
@@ -608,7 +632,7 @@
       "file_type": "code",
       "norm_label": "get_sqlite_connection()",
       "source_file": "src/services/database.py",
-      "source_location": "L28"
+      "source_location": "L42"
     },
     {
       "id": "src_services_database_is_system_suspended",
@@ -620,7 +644,7 @@
       "file_type": "code",
       "norm_label": "is_system_suspended()",
       "source_file": "src/services/database.py",
-      "source_location": "L139"
+      "source_location": "L153"
     },
     {
       "id": "src_services_database_obter_ultimos_pareceres",
@@ -632,7 +656,7 @@
       "file_type": "code",
       "norm_label": "obter_ultimos_pareceres()",
       "source_file": "src/services/database.py",
-      "source_location": "L118"
+      "source_location": "L132"
     },
     {
       "id": "src_services_database_salvar_parecer_ia",
@@ -644,7 +668,7 @@
       "file_type": "code",
       "norm_label": "salvar_parecer_ia()",
       "source_file": "src/services/database.py",
-      "source_location": "L94"
+      "source_location": "L108"
     },
     {
       "id": "src_services_notification_send_telegram_message",
@@ -695,18 +719,6 @@
       "source_location": "L5"
     },
     {
-      "id": "tests_test_offline_check_filter_test_offline_check_filters_inactive_batches",
-      "label": "test_offline_check_filters_inactive_batches()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "test_offline_check_filters_inactive_batches()",
-      "source_file": "tests/test_offline_check_filter.py",
-      "source_location": "L6"
-    },
-    {
       "id": "tests_test_weather_sync_test_clima_historico_table_exists",
       "label": "test_clima_historico_table_exists()",
       "_callable": true,
@@ -729,18 +741,6 @@
       "norm_label": "test_hourly_report_includes_weather()",
       "source_file": "tests/test_weather_sync.py",
       "source_location": "L33"
-    },
-    {
-      "id": "src_bots_agent_ask_agent",
-      "label": "ask_agent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "main.py",
-      "file_type": "code",
-      "norm_label": "ask_agent()",
-      "source_file": "src/bots/agent.py",
-      "source_location": "L132"
     },
     {
       "id": "src_bots_db_criar_lote_completo",
@@ -1268,7 +1268,7 @@
       "file_type": "code",
       "norm_label": "set_system_suspended()",
       "source_file": "src/services/database.py",
-      "source_location": "L145"
+      "source_location": "L159"
     },
     {
       "id": "tests_test_bot_active_batch_test_inserir_biometria_lote_inativo",
@@ -1451,18 +1451,6 @@
       "source_location": "L220"
     },
     {
-      "id": "src_web_app_api_criar_lote",
-      "label": "api_criar_lote()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_criar_lote()",
-      "source_file": "src/web/app.py",
-      "source_location": "L497"
-    },
-    {
       "id": "src_web_app_api_endpoints_list",
       "label": "api_endpoints_list()",
       "_callable": true,
@@ -1487,6 +1475,18 @@
       "source_location": "L556"
     },
     {
+      "id": "src_web_app_api_get_endpoint",
+      "label": "api_get_endpoint()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 114,
+      "community_name": "route",
+      "file_type": "code",
+      "norm_label": "api_get_endpoint()",
+      "source_file": "src/web/app.py",
+      "source_location": "L280"
+    },
+    {
       "id": "src_web_app_api_mdm_dados",
       "label": "api_mdm_dados()",
       "_callable": true,
@@ -1499,16 +1499,16 @@
       "source_location": "L729"
     },
     {
-      "id": "src_web_app_api_mdm_salvar_propriedade",
-      "label": "api_mdm_salvar_propriedade()",
+      "id": "src_web_app_api_mdm_estruturas",
+      "label": "api_mdm_estruturas()",
       "_callable": true,
       "_origin": "ast",
       "community": 114,
       "community_name": "route",
       "file_type": "code",
-      "norm_label": "api_mdm_salvar_propriedade()",
+      "norm_label": "api_mdm_estruturas()",
       "source_file": "src/web/app.py",
-      "source_location": "L814"
+      "source_location": "L660"
     },
     {
       "id": "src_web_app_api_mdm_salvar_proprietario",
@@ -1559,6 +1559,18 @@
       "source_location": "L347"
     },
     {
+      "id": "src_web_app_api_settings_db_table",
+      "label": "api_settings_db_table()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 114,
+      "community_name": "route",
+      "file_type": "code",
+      "norm_label": "api_settings_db_table()",
+      "source_file": "src/web/app.py",
+      "source_location": "L882"
+    },
+    {
       "id": "src_web_app_api_sync",
       "label": "api_sync()",
       "_callable": true,
@@ -1569,18 +1581,6 @@
       "norm_label": "api_sync()",
       "source_file": "src/web/app.py",
       "source_location": "L258"
-    },
-    {
-      "id": "src_web_app_api_update_timers",
-      "label": "api_update_timers()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_update_timers()",
-      "source_file": "src/web/app.py",
-      "source_location": "L325"
     },
     {
       "id": "src_web_app_dashboard",
@@ -1775,18 +1775,6 @@
       "source_location": "L108"
     },
     {
-      "id": "src_web_app_api_get_endpoint",
-      "label": "api_get_endpoint()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 117,
-      "community_name": "api_get_endpoint",
-      "file_type": "code",
-      "norm_label": "api_get_endpoint()",
-      "source_file": "src/web/app.py",
-      "source_location": "L280"
-    },
-    {
       "id": "src_web_app_api_get_lotes",
       "label": "api_get_lotes()",
       "_callable": true,
@@ -1799,16 +1787,16 @@
       "source_location": "L380"
     },
     {
-      "id": "src_web_app_api_mdm_estruturas",
-      "label": "api_mdm_estruturas()",
+      "id": "src_web_app_api_criar_lote",
+      "label": "api_criar_lote()",
       "_callable": true,
       "_origin": "ast",
       "community": 119,
-      "community_name": "api_mdm_estruturas",
+      "community_name": "api_criar_lote",
       "file_type": "code",
-      "norm_label": "api_mdm_estruturas()",
+      "norm_label": "api_criar_lote()",
       "source_file": "src/web/app.py",
-      "source_location": "L660"
+      "source_location": "L497"
     },
     {
       "id": "src_bots_agent_tools_execute_python_report",
@@ -1816,7 +1804,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 12,
-      "community_name": "query_postgres",
+      "community_name": "agent_tools.py",
       "file_type": "code",
       "norm_label": "execute_python_report()",
       "source_file": "src/bots/agent_tools.py",
@@ -1828,7 +1816,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 12,
-      "community_name": "query_postgres",
+      "community_name": "agent_tools.py",
       "file_type": "code",
       "norm_label": "query_postgres()",
       "source_file": "src/bots/agent_tools.py",
@@ -1840,7 +1828,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 12,
-      "community_name": "query_postgres",
+      "community_name": "agent_tools.py",
       "file_type": "code",
       "norm_label": "run_migration()",
       "source_file": "src/bots/agent_tools.py",
@@ -1859,16 +1847,16 @@
       "source_location": "L851"
     },
     {
-      "id": "src_web_app_api_settings_db_table",
-      "label": "api_settings_db_table()",
+      "id": "src_web_app_api_mdm_salvar_propriedade",
+      "label": "api_mdm_salvar_propriedade()",
       "_callable": true,
       "_origin": "ast",
       "community": 121,
-      "community_name": "api_settings_db_table",
+      "community_name": "api_mdm_salvar_propriedade",
       "file_type": "code",
-      "norm_label": "api_settings_db_table()",
+      "norm_label": "api_mdm_salvar_propriedade()",
       "source_file": "src/web/app.py",
-      "source_location": "L882"
+      "source_location": "L814"
     },
     {
       "id": "src_web_app_api_update_thresholds",
@@ -1881,6 +1869,18 @@
       "norm_label": "api_update_thresholds()",
       "source_file": "src/web/app.py",
       "source_location": "L294"
+    },
+    {
+      "id": "src_web_app_api_update_timers",
+      "label": "api_update_timers()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 123,
+      "community_name": "api_update_timers",
+      "file_type": "code",
+      "norm_label": "api_update_timers()",
+      "source_file": "src/web/app.py",
+      "source_location": "L325"
     },
     {
       "id": "tests_test_web_dashboard_auth_client",
@@ -2387,78 +2387,6 @@
       "source_location": "L4"
     },
     {
-      "id": "src_database_postgres_migrate_data_migrate_data",
-      "label": "migrate_data()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "code",
-      "norm_label": "migrate_data()",
-      "source_file": "src/database/postgres/migrate_data.py",
-      "source_location": "L18"
-    },
-    {
-      "id": "src_jobs_collector_service_handle_shutdown",
-      "label": "handle_shutdown()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "code",
-      "norm_label": "handle_shutdown()",
-      "source_file": "src/jobs/collector_service.py",
-      "source_location": "L28"
-    },
-    {
-      "id": "src_jobs_collector_service_run_collector_loop",
-      "label": "run_collector_loop()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "code",
-      "norm_label": "run_collector_loop()",
-      "source_file": "src/jobs/collector_service.py",
-      "source_location": "L36"
-    },
-    {
-      "id": "src_jobs_hourly_weather_sync_sync_hourly_weather",
-      "label": "sync_hourly_weather()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "code",
-      "norm_label": "sync_hourly_weather()",
-      "source_file": "src/jobs/hourly_weather_sync.py",
-      "source_location": "L25"
-    },
-    {
-      "id": "src_jobs_morning_weather_report_format_morning_report",
-      "label": "format_morning_report()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "code",
-      "norm_label": "format_morning_report()",
-      "source_file": "src/jobs/morning_weather_report.py",
-      "source_location": "L12"
-    },
-    {
-      "id": "src_jobs_morning_weather_report_main",
-      "label": "main()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "code",
-      "norm_label": "main()",
-      "source_file": "src/jobs/morning_weather_report.py",
-      "source_location": "L117"
-    },
-    {
       "id": "src_services_weather_get_weather_forecast",
       "label": "get_weather_forecast()",
       "_callable": true,
@@ -2505,18 +2433,6 @@
       "norm_label": ".request()",
       "source_file": "src/services/weather.py",
       "source_location": "L18"
-    },
-    {
-      "id": "tests_test_weather_sync_test_sync_hourly_weather_persistence",
-      "label": "test_sync_hourly_weather_persistence()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "code",
-      "norm_label": "test_sync_hourly_weather_persistence()",
-      "source_file": "tests/test_weather_sync.py",
-      "source_location": "L17"
     },
     {
       "id": "tests_test_weather_test_get_weather_forecast",
@@ -2615,6 +2531,66 @@
       "source_location": "L14"
     },
     {
+      "id": "src_alerts_offline_check_check_last_reading",
+      "label": "check_last_reading()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "check_last_reading()",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L19"
+    },
+    {
+      "id": "src_database_postgres_migrate_data_migrate_data",
+      "label": "migrate_data()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "migrate_data()",
+      "source_file": "src/database/postgres/migrate_data.py",
+      "source_location": "L18"
+    },
+    {
+      "id": "src_jobs_collector_service_handle_shutdown",
+      "label": "handle_shutdown()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "handle_shutdown()",
+      "source_file": "src/jobs/collector_service.py",
+      "source_location": "L28"
+    },
+    {
+      "id": "src_jobs_collector_service_run_collector_loop",
+      "label": "run_collector_loop()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "run_collector_loop()",
+      "source_file": "src/jobs/collector_service.py",
+      "source_location": "L36"
+    },
+    {
+      "id": "src_jobs_hourly_weather_sync_sync_hourly_weather",
+      "label": "sync_hourly_weather()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "sync_hourly_weather()",
+      "source_file": "src/jobs/hourly_weather_sync.py",
+      "source_location": "L25"
+    },
+    {
       "id": "src_scrape_monitor_data_collect_via_api",
       "label": "collect_via_api()",
       "_callable": true,
@@ -2624,7 +2600,7 @@
       "file_type": "code",
       "norm_label": "collect_via_api()",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L45"
+      "source_location": "L46"
     },
     {
       "id": "src_scrape_monitor_data_ensure_leituras_table",
@@ -2636,7 +2612,7 @@
       "file_type": "code",
       "norm_label": "ensure_leituras_table()",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L24"
+      "source_location": "L25"
     },
     {
       "id": "src_scrape_monitor_data_scrape_and_save",
@@ -2648,7 +2624,7 @@
       "file_type": "code",
       "norm_label": "scrape_and_save()",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L135"
+      "source_location": "L136"
     },
     {
       "id": "src_services_database_generate_sha256",
@@ -2660,7 +2636,7 @@
       "file_type": "code",
       "norm_label": "generate_sha256()",
       "source_file": "src/services/database.py",
-      "source_location": "L59"
+      "source_location": "L73"
     },
     {
       "id": "src_services_database_get_default_estrutura_info",
@@ -2672,7 +2648,7 @@
       "file_type": "code",
       "norm_label": "get_default_estrutura_info()",
       "source_file": "src/services/database.py",
-      "source_location": "L86"
+      "source_location": "L100"
     },
     {
       "id": "src_services_database_get_estrutura_uid",
@@ -2684,7 +2660,19 @@
       "file_type": "code",
       "norm_label": "get_estrutura_uid()",
       "source_file": "src/services/database.py",
-      "source_location": "L63"
+      "source_location": "L77"
+    },
+    {
+      "id": "src_services_database_get_local_now",
+      "label": "get_local_now()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "get_local_now()",
+      "source_file": "src/services/database.py",
+      "source_location": "L27"
     },
     {
       "id": "tests_test_monitor_data_clean_db",
@@ -2733,6 +2721,66 @@
       "norm_label": "test_scrape_and_save_suspended()",
       "source_file": "tests/test_monitor_data.py",
       "source_location": "L100"
+    },
+    {
+      "id": "tests_test_offline_check_filter_test_offline_check_filters_inactive_batches",
+      "label": "test_offline_check_filters_inactive_batches()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "test_offline_check_filters_inactive_batches()",
+      "source_file": "tests/test_offline_check_filter.py",
+      "source_location": "L6"
+    },
+    {
+      "id": "tests_test_timezone_offline_test_dashboard_offline_calculation",
+      "label": "test_dashboard_offline_calculation()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "test_dashboard_offline_calculation()",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L12"
+    },
+    {
+      "id": "tests_test_timezone_offline_test_get_local_now_returns_datetime",
+      "label": "test_get_local_now_returns_datetime()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "test_get_local_now_returns_datetime()",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L6"
+    },
+    {
+      "id": "tests_test_timezone_offline_test_offline_check_timezone_resilience",
+      "label": "test_offline_check_timezone_resilience()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "test_offline_check_timezone_resilience()",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L34"
+    },
+    {
+      "id": "tests_test_weather_sync_test_sync_hourly_weather_persistence",
+      "label": "test_sync_hourly_weather_persistence()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "test_sync_hourly_weather_persistence()",
+      "source_file": "tests/test_weather_sync.py",
+      "source_location": "L17"
     },
     {
       "id": "scripts_05_init_sqlite_db_init_sqlite",
@@ -2854,6 +2902,17 @@
       "source_location": ""
     },
     {
+      "id": "datetime",
+      "label": "datetime",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "datetime",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "scripts_migrate_add_cloud_cover",
       "label": "migrate_add_cloud_cover.py",
       "_origin": "ast",
@@ -2931,14 +2990,14 @@
       "source_location": "L1"
     },
     {
-      "id": "src_bots_agent_tools",
-      "label": "agent_tools.py",
+      "id": "src_database_postgres_migrate_data",
+      "label": "migrate_data.py",
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "code",
-      "norm_label": "agent_tools.py",
-      "source_file": "src/bots/agent_tools.py",
+      "norm_label": "migrate_data.py",
+      "source_file": "src/database/postgres/migrate_data.py",
       "source_location": "L1"
     },
     {
@@ -2961,6 +3020,28 @@
       "file_type": "code",
       "norm_label": "hourly_report.py",
       "source_file": "src/jobs/hourly_report.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_jobs_hourly_weather_sync",
+      "label": "hourly_weather_sync.py",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "hourly_weather_sync.py",
+      "source_file": "src/jobs/hourly_weather_sync.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_jobs_morning_weather_report",
+      "label": "morning_weather_report.py",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "morning_weather_report.py",
+      "source_file": "src/jobs/morning_weather_report.py",
       "source_location": "L1"
     },
     {
@@ -3107,17 +3188,6 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_test_offline_check_filter",
-      "label": "test_offline_check_filter.py",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "test_offline_check_filter.py",
-      "source_file": "tests/test_offline_check_filter.py",
-      "source_location": "L1"
-    },
-    {
       "id": "tests_test_security_fixes",
       "label": "test_security_fixes.py",
       "_origin": "ast",
@@ -3151,17 +3221,6 @@
       "source_location": "L22"
     },
     {
-      "id": "src_alerts_offline_check_rationale_20",
-      "label": "Verifica o tempo da \u00faltima leitura dos tanques. Envia alerta se o atraso for\u2026",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "verifica o tempo da ultima leitura dos tanques. envia alerta se o atraso for...",
-      "source_file": "src/alerts/offline_check.py",
-      "source_location": "L20"
-    },
-    {
       "id": "src_analysis_plot_curva_rationale_78",
       "label": "Ajuste linear simples: y = a*x + b Retorna coeficientes a, b.",
       "_origin": "ast",
@@ -3171,6 +3230,17 @@
       "norm_label": "ajuste linear simples: y = a*x + b retorna coeficientes a, b.",
       "source_file": "src/analysis/plot_curva.py",
       "source_location": "L78"
+    },
+    {
+      "id": "src_bots_agent_rationale_133",
+      "label": "Fun\u00e7\u00e3o para bater papo livremente com o agente via bot do Telegram.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "funcao para bater papo livremente com o agente via bot do telegram.",
+      "source_file": "src/bots/agent.py",
+      "source_location": "L133"
     },
     {
       "id": "src_bots_agent_rationale_159",
@@ -3261,6 +3331,17 @@
       "source_location": "L21"
     },
     {
+      "id": "src_jobs_morning_weather_report_rationale_13",
+      "label": "Formata o relat\u00f3rio de bom dia com clima detalhado.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "formata o relatorio de bom dia com clima detalhado.",
+      "source_file": "src/jobs/morning_weather_report.py",
+      "source_location": "L13"
+    },
+    {
       "id": "src_jobs_nightly_report_rationale_27",
       "label": "Gera um relat\u00f3rio do per\u00edodo noturno (18h \u00e0s 08h) com um gr\u00e1fico do n\u00edvel de\u2026",
       "_origin": "ast",
@@ -3305,62 +3386,7 @@
       "source_location": "L47"
     },
     {
-      "id": "src_services_database_rationale_119",
-      "label": "Busca os \u00faltimos pareceres da IA no PostgreSQL para serem usados como contexto.",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "busca os ultimos pareceres da ia no postgresql para serem usados como contexto.",
-      "source_file": "src/services/database.py",
-      "source_location": "L119"
-    },
-    {
-      "id": "src_services_database_rationale_140",
-      "label": "Verifica se o arquivo de flag de suspens\u00e3o existe.",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "verifica se o arquivo de flag de suspensao existe.",
-      "source_file": "src/services/database.py",
-      "source_location": "L140"
-    },
-    {
-      "id": "src_services_database_rationale_29",
-      "label": "Retorna uma conex\u00e3o com o banco de dados SQLite.",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "retorna uma conexao com o banco de dados sqlite.",
-      "source_file": "src/services/database.py",
-      "source_location": "L29"
-    },
-    {
-      "id": "src_services_database_rationale_41",
-      "label": "Retorna uma conex\u00e3o com o banco de dados PostgreSQL.",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "retorna uma conexao com o banco de dados postgresql.",
-      "source_file": "src/services/database.py",
-      "source_location": "L41"
-    },
-    {
-      "id": "src_services_database_rationale_68",
-      "label": "Retorna um dicion\u00e1rio mapeando o nome amig\u00e1vel da estrutura para o seu UID.\u2026",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "retorna um dicionario mapeando o nome amigavel da estrutura para o seu uid....",
-      "source_file": "src/services/database.py",
-      "source_location": "L68"
-    },
-    {
-      "id": "src_services_database_rationale_95",
+      "id": "src_services_database_rationale_109",
       "label": "Salva o parecer da IA no PostgreSQL de forma compacta.",
       "_origin": "ast",
       "community": 0,
@@ -3368,7 +3394,62 @@
       "file_type": "rationale",
       "norm_label": "salva o parecer da ia no postgresql de forma compacta.",
       "source_file": "src/services/database.py",
-      "source_location": "L95"
+      "source_location": "L109"
+    },
+    {
+      "id": "src_services_database_rationale_133",
+      "label": "Busca os \u00faltimos pareceres da IA no PostgreSQL para serem usados como contexto.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "busca os ultimos pareceres da ia no postgresql para serem usados como contexto.",
+      "source_file": "src/services/database.py",
+      "source_location": "L133"
+    },
+    {
+      "id": "src_services_database_rationale_154",
+      "label": "Verifica se o arquivo de flag de suspens\u00e3o existe.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "verifica se o arquivo de flag de suspensao existe.",
+      "source_file": "src/services/database.py",
+      "source_location": "L154"
+    },
+    {
+      "id": "src_services_database_rationale_43",
+      "label": "Retorna uma conex\u00e3o com o banco de dados SQLite.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "retorna uma conexao com o banco de dados sqlite.",
+      "source_file": "src/services/database.py",
+      "source_location": "L43"
+    },
+    {
+      "id": "src_services_database_rationale_55",
+      "label": "Retorna uma conex\u00e3o com o banco de dados PostgreSQL.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "retorna uma conexao com o banco de dados postgresql.",
+      "source_file": "src/services/database.py",
+      "source_location": "L55"
+    },
+    {
+      "id": "src_services_database_rationale_82",
+      "label": "Retorna um dicion\u00e1rio mapeando o nome amig\u00e1vel da estrutura para o seu UID.\u2026",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "retorna um dicionario mapeando o nome amigavel da estrutura para o seu uid....",
+      "source_file": "src/services/database.py",
+      "source_location": "L82"
     },
     {
       "id": "src_services_notification_rationale_16",
@@ -3413,17 +3494,6 @@
       "norm_label": "garante que get_hourly_report exclui dados de tanques sem lote ativo no...",
       "source_file": "tests/test_hourly_report_filter.py",
       "source_location": "L6"
-    },
-    {
-      "id": "tests_test_offline_check_filter_rationale_7",
-      "label": "Garante que check_last_reading n\u00e3o gera alertas offline para tanques sem lote\u2026",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "garante que check_last_reading nao gera alertas offline para tanques sem lote...",
-      "source_file": "tests/test_offline_check_filter.py",
-      "source_location": "L7"
     },
     {
       "id": "tests_test_weather_sync_rationale_10",
@@ -3569,17 +3639,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_bots_agent_rationale_133",
-      "label": "Fun\u00e7\u00e3o para bater papo livremente com o agente via bot do Telegram.",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "main.py",
-      "file_type": "rationale",
-      "norm_label": "funcao para bater papo livremente com o agente via bot do telegram.",
-      "source_file": "src/bots/agent.py",
-      "source_location": "L133"
-    },
-    {
       "id": "src_bots_db_rationale_113",
       "label": "Verifica se a estrutura tem um lote ativo (data_abate IS NULL).",
       "_origin": "ast",
@@ -3679,7 +3738,7 @@
       "source_location": "L27"
     },
     {
-      "id": "src_services_database_rationale_146",
+      "id": "src_services_database_rationale_160",
       "label": "Ativa ou desativa a suspens\u00e3o criando/removendo o arquivo de flag.",
       "_origin": "ast",
       "community": 1,
@@ -3687,7 +3746,7 @@
       "file_type": "rationale",
       "norm_label": "ativa ou desativa a suspensao criando/removendo o arquivo de flag.",
       "source_file": "src/services/database.py",
-      "source_location": "L146"
+      "source_location": "L160"
     },
     {
       "id": "tests_test_bot_active_batch_rationale_13",
@@ -4999,15 +5058,15 @@
       "source_location": "L270"
     },
     {
-      "id": "src_web_app_rationale_326",
-      "label": "Atualiza a programa\u00e7\u00e3o hor\u00e1ria (timer) de um endpoint.",
+      "id": "src_web_app_rationale_281",
+      "label": "Consulta os dados atuais de configura\u00e7\u00e3o de um endpoint (thresholds, timers,\u2026",
       "_origin": "ast",
       "community": 114,
       "community_name": "route",
       "file_type": "rationale",
-      "norm_label": "atualiza a programacao horaria (timer) de um endpoint.",
+      "norm_label": "consulta os dados atuais de configuracao de um endpoint (thresholds, timers,...",
       "source_file": "src/web/app.py",
-      "source_location": "L326"
+      "source_location": "L281"
     },
     {
       "id": "src_web_app_rationale_348",
@@ -5030,17 +5089,6 @@
       "norm_label": "renderiza a interface de gestao de lotes e ficha verde.",
       "source_file": "src/web/app.py",
       "source_location": "L375"
-    },
-    {
-      "id": "src_web_app_rationale_498",
-      "label": "Cria um novo lote (ativo ou hist\u00f3rico) no PostgreSQL.",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "route",
-      "file_type": "rationale",
-      "norm_label": "cria um novo lote (ativo ou historico) no postgresql.",
-      "source_file": "src/web/app.py",
-      "source_location": "L498"
     },
     {
       "id": "src_web_app_rationale_557",
@@ -5076,6 +5124,17 @@
       "source_location": "L655"
     },
     {
+      "id": "src_web_app_rationale_661",
+      "label": "Lista ou cadastra estruturas f\u00edsicas.",
+      "_origin": "ast",
+      "community": 114,
+      "community_name": "route",
+      "file_type": "rationale",
+      "norm_label": "lista ou cadastra estruturas fisicas.",
+      "source_file": "src/web/app.py",
+      "source_location": "L661"
+    },
+    {
       "id": "src_web_app_rationale_730",
       "label": "Retorna dados consolidados de Propriet\u00e1rio, Propriedade e Estruturas.",
       "_origin": "ast",
@@ -5098,15 +5157,15 @@
       "source_location": "L783"
     },
     {
-      "id": "src_web_app_rationale_815",
-      "label": "Atualiza ou insere o registro da propriedade rural.",
+      "id": "src_web_app_rationale_883",
+      "label": "Inspeciona os registros de uma tabela com allowlist estrita.",
       "_origin": "ast",
       "community": 114,
       "community_name": "route",
       "file_type": "rationale",
-      "norm_label": "atualiza ou insere o registro da propriedade rural.",
+      "norm_label": "inspeciona os registros de uma tabela com allowlist estrita.",
       "source_file": "src/web/app.py",
-      "source_location": "L815"
+      "source_location": "L883"
     },
     {
       "id": "src_services_web_auth",
@@ -5285,15 +5344,124 @@
       "source_location": "L85"
     },
     {
-      "id": "src_web_app_rationale_281",
-      "label": "Consulta os dados atuais de configura\u00e7\u00e3o de um endpoint (thresholds, timers,\u2026",
+      "id": "knowledge_diario_diary_2026_09_29",
+      "label": "diary_2026_09_29.md",
       "_origin": "ast",
       "community": 117,
-      "community_name": "api_get_endpoint",
-      "file_type": "rationale",
-      "norm_label": "consulta os dados atuais de configuracao de um endpoint (thresholds, timers,...",
-      "source_file": "src/web/app.py",
-      "source_location": "L281"
+      "community_name": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "diary_2026_09_29.md",
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "knowledge_diario_diary_2026_09_29_1_front_end_layout_base_navega\u00e7\u00e3o",
+      "label": "1. Front-End: Layout Base & Navega\u00e7\u00e3o",
+      "_origin": "ast",
+      "community": 117,
+      "community_name": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "1. front-end: layout base & navegacao",
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L10"
+    },
+    {
+      "id": "knowledge_diario_diary_2026_09_29_2_front_end_interface_de_batch_management_lotes_html",
+      "label": "2. Front-End: Interface de Batch Management (`lotes.html`)",
+      "_origin": "ast",
+      "community": 117,
+      "community_name": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2. front-end: interface de batch management (`lotes.html`)",
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L15"
+    },
+    {
+      "id": "knowledge_diario_diary_2026_09_29_3_front_end_interface_de_mdm_settings_settings_html",
+      "label": "3. Front-End: Interface de MDM & Settings (`settings.html`)",
+      "_origin": "ast",
+      "community": 117,
+      "community_name": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "3. front-end: interface de mdm & settings (`settings.html`)",
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L26"
+    },
+    {
+      "id": "knowledge_diario_diary_2026_09_29_4_backend_flask_novas_rotas_em_src_web_app_py",
+      "label": "4. Backend Flask: Novas Rotas em `src/web/app.py`",
+      "_origin": "ast",
+      "community": 117,
+      "community_name": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "4. backend flask: novas rotas em `src/web/app.py`",
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L33"
+    },
+    {
+      "id": "knowledge_diario_diary_2026_09_29_5_su\u00edte_de_testes_de_concorr\u00eancia_estresse",
+      "label": "5. Su\u00edte de Testes de Concorr\u00eancia & Estresse",
+      "_origin": "ast",
+      "community": 117,
+      "community_name": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5. suite de testes de concorrencia & estresse",
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L45"
+    },
+    {
+      "id": "knowledge_diario_diary_2026_09_29_a\u00e7\u00f5es_executadas",
+      "label": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "_origin": "ast",
+      "community": 117,
+      "community_name": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "\ud83d\udee0\ufe0f acoes executadas",
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L8"
+    },
+    {
+      "id": "knowledge_diario_diary_2026_09_29_di\u00e1rio_de_bordo_29_09_2026",
+      "label": "Di\u00e1rio de Bordo - 29/09/2026",
+      "_origin": "ast",
+      "community": 117,
+      "community_name": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "diario de bordo - 29/09/2026",
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "knowledge_diario_diary_2026_09_29_objetivo_da_sess\u00e3o",
+      "label": "\ud83c\udfaf Objetivo da Sess\u00e3o",
+      "_origin": "ast",
+      "community": 117,
+      "community_name": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "\ud83c\udfaf objetivo da sessao",
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L3"
+    },
+    {
+      "id": "knowledge_diario_diary_2026_09_29_pr\u00f3ximos_passos",
+      "label": "\ud83d\udccc Pr\u00f3ximos Passos",
+      "_origin": "ast",
+      "community": 117,
+      "community_name": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "\ud83d\udccc proximos passos",
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L55"
     },
     {
       "id": "src_web_app_rationale_381",
@@ -5307,22 +5475,33 @@
       "source_location": "L381"
     },
     {
-      "id": "src_web_app_rationale_661",
-      "label": "Lista ou cadastra estruturas f\u00edsicas.",
+      "id": "src_web_app_rationale_498",
+      "label": "Cria um novo lote (ativo ou hist\u00f3rico) no PostgreSQL.",
       "_origin": "ast",
       "community": 119,
-      "community_name": "api_mdm_estruturas",
+      "community_name": "api_criar_lote",
       "file_type": "rationale",
-      "norm_label": "lista ou cadastra estruturas fisicas.",
+      "norm_label": "cria um novo lote (ativo ou historico) no postgresql.",
       "source_file": "src/web/app.py",
-      "source_location": "L661"
+      "source_location": "L498"
+    },
+    {
+      "id": "src_bots_agent_tools",
+      "label": "agent_tools.py",
+      "_origin": "ast",
+      "community": 12,
+      "community_name": "agent_tools.py",
+      "file_type": "code",
+      "norm_label": "agent_tools.py",
+      "source_file": "src/bots/agent_tools.py",
+      "source_location": "L1"
     },
     {
       "id": "tool",
       "label": "tool",
       "_origin": "ast",
       "community": 12,
-      "community_name": "query_postgres",
+      "community_name": "agent_tools.py",
       "file_type": "code",
       "norm_label": "tool",
       "source_file": "",
@@ -5333,7 +5512,7 @@
       "label": "Aciona o script de migra\u00e7\u00e3o de dados do SQLite (onde os dados brutos chegam)\u2026",
       "_origin": "ast",
       "community": 12,
-      "community_name": "query_postgres",
+      "community_name": "agent_tools.py",
       "file_type": "rationale",
       "norm_label": "aciona o script de migracao de dados do sqlite (onde os dados brutos chegam)...",
       "source_file": "src/bots/agent_tools.py",
@@ -5344,7 +5523,7 @@
       "label": "Executa uma consulta SELECT de leitura no banco de dados PostgreSQL e retorna\u2026",
       "_origin": "ast",
       "community": 12,
-      "community_name": "query_postgres",
+      "community_name": "agent_tools.py",
       "file_type": "rationale",
       "norm_label": "executa uma consulta select de leitura no banco de dados postgresql e retorna...",
       "source_file": "src/bots/agent_tools.py",
@@ -5355,7 +5534,7 @@
       "label": "Executa um script Python da pasta src/reports/ e retorna o resultado no\u2026",
       "_origin": "ast",
       "community": 12,
-      "community_name": "query_postgres",
+      "community_name": "agent_tools.py",
       "file_type": "rationale",
       "norm_label": "executa um script python da pasta src/reports/ e retorna o resultado no...",
       "source_file": "src/bots/agent_tools.py",
@@ -5373,15 +5552,15 @@
       "source_location": "L852"
     },
     {
-      "id": "src_web_app_rationale_883",
-      "label": "Inspeciona os registros de uma tabela com allowlist estrita.",
+      "id": "src_web_app_rationale_815",
+      "label": "Atualiza ou insere o registro da propriedade rural.",
       "_origin": "ast",
       "community": 121,
-      "community_name": "api_settings_db_table",
+      "community_name": "api_mdm_salvar_propriedade",
       "file_type": "rationale",
-      "norm_label": "inspeciona os registros de uma tabela com allowlist estrita.",
+      "norm_label": "atualiza ou insere o registro da propriedade rural.",
       "source_file": "src/web/app.py",
-      "source_location": "L883"
+      "source_location": "L815"
     },
     {
       "id": "src_web_app_rationale_295",
@@ -5393,6 +5572,17 @@
       "norm_label": "atualiza criticalo2, criticalo2max e autoon de um endpoint.",
       "source_file": "src/web/app.py",
       "source_location": "L295"
+    },
+    {
+      "id": "src_web_app_rationale_326",
+      "label": "Atualiza a programa\u00e7\u00e3o hor\u00e1ria (timer) de um endpoint.",
+      "_origin": "ast",
+      "community": 123,
+      "community_name": "api_update_timers",
+      "file_type": "rationale",
+      "norm_label": "atualiza a programacao horaria (timer) de um endpoint.",
+      "source_file": "src/web/app.py",
+      "source_location": "L326"
     },
     {
       "id": "scripts_11_backup_db",
@@ -6326,50 +6516,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_database_postgres_migrate_data",
-      "label": "migrate_data.py",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "code",
-      "norm_label": "migrate_data.py",
-      "source_file": "src/database/postgres/migrate_data.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_jobs_collector_service",
-      "label": "collector_service.py",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "code",
-      "norm_label": "collector_service.py",
-      "source_file": "src/jobs/collector_service.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_jobs_hourly_weather_sync",
-      "label": "hourly_weather_sync.py",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "code",
-      "norm_label": "hourly_weather_sync.py",
-      "source_file": "src/jobs/hourly_weather_sync.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_jobs_morning_weather_report",
-      "label": "morning_weather_report.py",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "code",
-      "norm_label": "morning_weather_report.py",
-      "source_file": "src/jobs/morning_weather_report.py",
-      "source_location": "L1"
-    },
-    {
       "id": "src_services_weather",
       "label": "weather.py",
       "_origin": "ast",
@@ -6401,39 +6547,6 @@
       "norm_label": "patch",
       "source_file": "",
       "source_location": ""
-    },
-    {
-      "id": "src_database_postgres_migrate_data_rationale_19",
-      "label": "Migra dados do SQLite para o PostgreSQL.",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "rationale",
-      "norm_label": "migra dados do sqlite para o postgresql.",
-      "source_file": "src/database/postgres/migrate_data.py",
-      "source_location": "L19"
-    },
-    {
-      "id": "src_jobs_hourly_weather_sync_rationale_26",
-      "label": "Obt\u00e9m o clima atual e salva na tabela clima_historico.",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "rationale",
-      "norm_label": "obtem o clima atual e salva na tabela clima_historico.",
-      "source_file": "src/jobs/hourly_weather_sync.py",
-      "source_location": "L26"
-    },
-    {
-      "id": "src_jobs_morning_weather_report_rationale_13",
-      "label": "Formata o relat\u00f3rio de bom dia com clima detalhado.",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "rationale",
-      "norm_label": "formata o relatorio de bom dia com clima detalhado.",
-      "source_file": "src/jobs/morning_weather_report.py",
-      "source_location": "L13"
     },
     {
       "id": "src_services_weather_rationale_13",
@@ -6478,17 +6591,6 @@
       "norm_label": "verifica se o servico utiliza as coordenadas do .env corretamente.",
       "source_file": "tests/test_weather.py",
       "source_location": "L98"
-    },
-    {
-      "id": "tests_test_weather_sync_rationale_18",
-      "label": "Verifica se o job de sincroniza\u00e7\u00e3o salva dados no banco.",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "get_weather_forecast",
-      "file_type": "rationale",
-      "norm_label": "verifica se o job de sincronizacao salva dados no banco.",
-      "source_file": "tests/test_weather_sync.py",
-      "source_location": "L18"
     },
     {
       "id": "scripts_06_install_cron",
@@ -6811,6 +6913,17 @@
       "source_location": "L1"
     },
     {
+      "id": "src_jobs_collector_service",
+      "label": "collector_service.py",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "collector_service.py",
+      "source_file": "src/jobs/collector_service.py",
+      "source_location": "L1"
+    },
+    {
       "id": "src_scrape_monitor_data",
       "label": "monitor_data.py",
       "_origin": "ast",
@@ -6844,6 +6957,28 @@
       "source_location": ""
     },
     {
+      "id": "tests_test_offline_check_filter",
+      "label": "test_offline_check_filter.py",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "test_offline_check_filter.py",
+      "source_file": "tests/test_offline_check_filter.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_timezone_offline",
+      "label": "test_timezone_offline.py",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "test_timezone_offline.py",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L1"
+    },
+    {
       "id": "scripts_15_auto_configure_macs_rationale_22",
       "label": "Atualiza as vari\u00e1veis STRUCT_MACS, STRUCT_NAME e STRUCT_PLUSCODE no arquivo\u2026",
       "_origin": "ast",
@@ -6855,7 +6990,40 @@
       "source_location": "L22"
     },
     {
-      "id": "src_scrape_monitor_data_rationale_136",
+      "id": "src_alerts_offline_check_rationale_20",
+      "label": "Verifica o tempo da \u00faltima leitura dos tanques. Envia alerta se o atraso for\u2026",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "verifica o tempo da ultima leitura dos tanques. envia alerta se o atraso for...",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L20"
+    },
+    {
+      "id": "src_database_postgres_migrate_data_rationale_19",
+      "label": "Migra dados do SQLite para o PostgreSQL.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "migra dados do sqlite para o postgresql.",
+      "source_file": "src/database/postgres/migrate_data.py",
+      "source_location": "L19"
+    },
+    {
+      "id": "src_jobs_hourly_weather_sync_rationale_26",
+      "label": "Obt\u00e9m o clima atual e salva na tabela clima_historico.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "obtem o clima atual e salva na tabela clima_historico.",
+      "source_file": "src/jobs/hourly_weather_sync.py",
+      "source_location": "L26"
+    },
+    {
+      "id": "src_scrape_monitor_data_rationale_137",
       "label": "Fun\u00e7\u00e3o principal de tomada de dados. Utiliza preferencialmente a API GraphQL\u2026",
       "_origin": "ast",
       "community": 5,
@@ -6863,10 +7031,10 @@
       "file_type": "rationale",
       "norm_label": "funcao principal de tomada de dados. utiliza preferencialmente a api graphql...",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L136"
+      "source_location": "L137"
     },
     {
-      "id": "src_scrape_monitor_data_rationale_25",
+      "id": "src_scrape_monitor_data_rationale_26",
       "label": "Garante que a tabela de leituras exista com o schema correto.",
       "_origin": "ast",
       "community": 5,
@@ -6874,10 +7042,10 @@
       "file_type": "rationale",
       "norm_label": "garante que a tabela de leituras exista com o schema correto.",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L25"
+      "source_location": "L26"
     },
     {
-      "id": "src_scrape_monitor_data_rationale_46",
+      "id": "src_scrape_monitor_data_rationale_47",
       "label": "Realiza a coleta das leituras dos tanques diretamente via AWS AppSync GraphQL\u2026",
       "_origin": "ast",
       "community": 5,
@@ -6885,32 +7053,10 @@
       "file_type": "rationale",
       "norm_label": "realiza a coleta das leituras dos tanques diretamente via aws appsync graphql...",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L46"
+      "source_location": "L47"
     },
     {
-      "id": "src_services_database_rationale_60",
-      "label": "Gera um hash SHA256 a partir de uma string.",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "monitor_data.py",
-      "file_type": "rationale",
-      "norm_label": "gera um hash sha256 a partir de uma string.",
-      "source_file": "src/services/database.py",
-      "source_location": "L60"
-    },
-    {
-      "id": "src_services_database_rationale_64",
-      "label": "Gera o UID para uma estrutura baseado no nome e pluscode.",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "monitor_data.py",
-      "file_type": "rationale",
-      "norm_label": "gera o uid para uma estrutura baseado no nome e pluscode.",
-      "source_file": "src/services/database.py",
-      "source_location": "L64"
-    },
-    {
-      "id": "src_services_database_rationale_87",
+      "id": "src_services_database_rationale_101",
       "label": "Retorna as informa\u00e7\u00f5es da estrutura configurada no .env.",
       "_origin": "ast",
       "community": 5,
@@ -6918,7 +7064,40 @@
       "file_type": "rationale",
       "norm_label": "retorna as informacoes da estrutura configurada no .env.",
       "source_file": "src/services/database.py",
-      "source_location": "L87"
+      "source_location": "L101"
+    },
+    {
+      "id": "src_services_database_rationale_28",
+      "label": "Retorna datetime ing\u00eanuo representando o hor\u00e1rio local de Bras\u00edlia\u2026",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "retorna datetime ingenuo representando o horario local de brasilia...",
+      "source_file": "src/services/database.py",
+      "source_location": "L28"
+    },
+    {
+      "id": "src_services_database_rationale_74",
+      "label": "Gera um hash SHA256 a partir de uma string.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "gera um hash sha256 a partir de uma string.",
+      "source_file": "src/services/database.py",
+      "source_location": "L74"
+    },
+    {
+      "id": "src_services_database_rationale_78",
+      "label": "Gera o UID para uma estrutura baseado no nome e pluscode.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "gera o uid para uma estrutura baseado no nome e pluscode.",
+      "source_file": "src/services/database.py",
+      "source_location": "L78"
     },
     {
       "id": "tests_test_monitor_data_rationale_1",
@@ -6930,6 +7109,61 @@
       "norm_label": "testes unitarios e de integracao para o modulo monitor_data refatorado para api...",
       "source_file": "tests/test_monitor_data.py",
       "source_location": "L1"
+    },
+    {
+      "id": "tests_test_offline_check_filter_rationale_7",
+      "label": "Garante que check_last_reading n\u00e3o gera alertas offline para tanques sem lote\u2026",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "garante que check_last_reading nao gera alertas offline para tanques sem lote...",
+      "source_file": "tests/test_offline_check_filter.py",
+      "source_location": "L7"
+    },
+    {
+      "id": "tests_test_timezone_offline_rationale_13",
+      "label": "Simula o c\u00e1lculo do dashboard para leituras recentes vs antigas.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "simula o calculo do dashboard para leituras recentes vs antigas.",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L13"
+    },
+    {
+      "id": "tests_test_timezone_offline_rationale_35",
+      "label": "Valida se offline_check usa get_local_now sem gerar falsos positivos para\u2026",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "valida se offline_check usa get_local_now sem gerar falsos positivos para...",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L35"
+    },
+    {
+      "id": "tests_test_timezone_offline_rationale_7",
+      "label": "Valida se get_local_now retorna datetime ing\u00eanuo e coerente.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "valida se get_local_now retorna datetime ingenuo e coerente.",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L7"
+    },
+    {
+      "id": "tests_test_weather_sync_rationale_18",
+      "label": "Verifica se o job de sincroniza\u00e7\u00e3o salva dados no banco.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "verifica se o job de sincronizacao salva dados no banco.",
+      "source_file": "tests/test_weather_sync.py",
+      "source_location": "L18"
     },
     {
       "id": "src_init",
@@ -9418,6 +9652,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_alerts_offline_check_check_last_reading",
+      "target": "src_services_database_get_local_now",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
       "source": "src_analysis_feed_prediction_run_production_logic",
       "target": "src_services_notification_send_telegram_message",
       "relation": "calls",
@@ -11250,7 +11496,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L105",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -11262,7 +11508,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L107",
+      "source_location": "L108",
       "weight": 1.0
     },
     {
@@ -11274,7 +11520,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L50",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -11286,7 +11532,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L62",
+      "source_location": "L63",
       "weight": 1.0
     },
     {
@@ -11298,7 +11544,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L67",
+      "source_location": "L68",
       "weight": 1.0
     },
     {
@@ -11310,7 +11556,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L69",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "src_scrape_monitor_data_collect_via_api",
+      "target": "src_services_database_get_local_now",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -11322,7 +11580,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L140",
+      "source_location": "L141",
       "weight": 1.0
     },
     {
@@ -11334,7 +11592,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L146",
+      "source_location": "L147",
       "weight": 1.0
     },
     {
@@ -11346,7 +11604,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/database.py",
-      "source_location": "L72",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -11358,7 +11616,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/database.py",
-      "source_location": "L65",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -11370,7 +11628,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/database.py",
-      "source_location": "L120",
+      "source_location": "L134",
       "weight": 1.0
     },
     {
@@ -11382,7 +11640,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/database.py",
-      "source_location": "L96",
+      "source_location": "L110",
       "weight": 1.0
     },
     {
@@ -11663,6 +11921,18 @@
     },
     {
       "source": "src_web_app_api_agent",
+      "target": "src_services_database_get_local_now",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/web/app.py",
+      "source_location": "L227",
+      "weight": 1.0
+    },
+    {
+      "source": "src_web_app_api_agent",
       "target": "src_bots_agent_analyze_custom_report_sync",
       "relation": "calls",
       "_origin": "ast",
@@ -11707,6 +11977,18 @@
       "context": "call",
       "source_file": "src/web/app.py",
       "source_location": "L382",
+      "weight": 1.0
+    },
+    {
+      "source": "src_web_app_api_get_lotes",
+      "target": "src_services_database_get_local_now",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/web/app.py",
+      "source_location": "L409",
       "weight": 1.0
     },
     {
@@ -11755,6 +12037,18 @@
       "context": "call",
       "source_file": "src/web/app.py",
       "source_location": "L794",
+      "weight": 1.0
+    },
+    {
+      "source": "src_web_app_api_salvar_biometria",
+      "target": "src_services_database_get_local_now",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/web/app.py",
+      "source_location": "L603",
       "weight": 1.0
     },
     {
@@ -11827,6 +12121,18 @@
       "context": "call",
       "source_file": "src/web/app.py",
       "source_location": "L105",
+      "weight": 1.0
+    },
+    {
+      "source": "src_web_app_dashboard",
+      "target": "src_services_database_get_local_now",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/web/app.py",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
@@ -12103,6 +12409,54 @@
       "context": "call",
       "source_file": "tests/test_security_fixes.py",
       "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline_test_dashboard_offline_calculation",
+      "target": "src_services_database_get_local_now",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline_test_get_local_now_returns_datetime",
+      "target": "src_services_database_get_local_now",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline_test_offline_check_timezone_resilience",
+      "target": "src_services_database_get_local_now",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline_test_offline_check_timezone_resilience",
+      "target": "src_alerts_offline_check_check_last_reading",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -13272,6 +13626,18 @@
     {
       "source": "src_alerts_offline_check",
       "target": "src_services_database_get_all_estruturas_map",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_alerts_offline_check",
+      "target": "src_services_database_get_local_now",
       "relation": "imports",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -14610,7 +14976,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L16",
+      "source_location": "L17",
       "weight": 1.0
     },
     {
@@ -14622,7 +14988,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L16",
+      "source_location": "L17",
       "weight": 1.0
     },
     {
@@ -14652,6 +15018,18 @@
     {
       "source": "src_scrape_monitor_data",
       "target": "src_services_database_get_estrutura_uid",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_scrape_monitor_data",
+      "target": "src_services_database_get_local_now",
       "relation": "imports",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -14731,6 +15109,18 @@
       "context": "import",
       "source_file": "src/web/app.py",
       "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_web_app",
+      "target": "src_services_database_get_local_now",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/web/app.py",
+      "source_location": "L17",
       "weight": 1.0
     },
     {
@@ -15046,6 +15436,30 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_timezone_offline",
+      "target": "src_alerts_offline_check_check_last_reading",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline",
+      "target": "src_services_database_get_local_now",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_weather",
       "target": "src_services_weather_get_weather_forecast",
       "relation": "imports",
@@ -15166,6 +15580,18 @@
       "weight": 1.0
     },
     {
+      "source": "scripts_noctua_diagnose",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "scripts/noctua_diagnose.py",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
       "source": "scripts_scrape_produtor",
       "target": "src_scrape_monitor_data",
       "relation": "imports_from",
@@ -15191,6 +15617,18 @@
     },
     {
       "source": "src_alerts_alert_check",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/alerts/alert_check.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_alerts_alert_check",
       "target": "src_services_database",
       "relation": "imports_from",
       "_origin": "ast",
@@ -15211,6 +15649,18 @@
       "context": "import",
       "source_file": "src/alerts/alert_check.py",
       "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_alerts_offline_check",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L3",
       "weight": 1.0
     },
     {
@@ -15274,6 +15724,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_analysis_feed_prediction",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/analysis/feed_prediction.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
       "source": "src_analysis_plot_curva",
       "target": "src_services_database",
       "relation": "imports_from",
@@ -15295,6 +15757,18 @@
       "context": "import",
       "source_file": "src/analysis/plot_curva.py",
       "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_analysis_plot_curva",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/analysis/plot_curva.py",
+      "source_location": "L4",
       "weight": 1.0
     },
     {
@@ -15322,6 +15796,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_analysis_predict_oxygen",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/analysis/predict_oxygen.py",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
       "source": "src_bots_agent",
       "target": "src_bots_agent_tools",
       "relation": "imports_from",
@@ -15342,6 +15828,30 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/bots/agent_tools.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_bots_db",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/bots/db.py",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_bots_main",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/bots/main.py",
       "source_location": "L11",
       "weight": 1.0
     },
@@ -15391,6 +15901,30 @@
       "context": "import",
       "source_file": "src/database/postgres/migrate_data.py",
       "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_database_postgres_migrate_data",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/database/postgres/migrate_data.py",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_jobs_collector_service",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/jobs/collector_service.py",
+      "source_location": "L11",
       "weight": 1.0
     },
     {
@@ -15490,6 +16024,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_jobs_evening_report",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/jobs/evening_report.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
       "source": "src_jobs_hourly_report",
       "target": "src_services_database",
       "relation": "imports_from",
@@ -15499,6 +16045,18 @@
       "context": "import",
       "source_file": "src/jobs/hourly_report.py",
       "source_location": "L150",
+      "weight": 1.0
+    },
+    {
+      "source": "src_jobs_hourly_report",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/jobs/hourly_report.py",
+      "source_location": "L4",
       "weight": 1.0
     },
     {
@@ -15538,6 +16096,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_jobs_hourly_weather_sync",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/jobs/hourly_weather_sync.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
       "source": "src_jobs_morning_weather_report",
       "target": "src_services_database",
       "relation": "imports_from",
@@ -15547,6 +16117,18 @@
       "context": "import",
       "source_file": "src/jobs/morning_weather_report.py",
       "source_location": "L137",
+      "weight": 1.0
+    },
+    {
+      "source": "src_jobs_morning_weather_report",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/jobs/morning_weather_report.py",
+      "source_location": "L3",
       "weight": 1.0
     },
     {
@@ -15610,6 +16192,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_jobs_nightly_report",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/jobs/nightly_report.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
       "source": "src_jobs_vigi_report",
       "target": "src_services_database",
       "relation": "imports_from",
@@ -15670,6 +16264,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_reports_bot_query_curva_peso",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/reports/bot_query_curva_peso.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
       "source": "src_reports_bot_query_ox_15d",
       "target": "src_services_database",
       "relation": "imports_from",
@@ -15706,6 +16312,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_reports_bot_query_ox_15d",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/reports/bot_query_ox_15d.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
       "source": "src_reports_bot_query_ox_7d",
       "target": "src_services_database",
       "relation": "imports_from",
@@ -15739,6 +16357,30 @@
       "context": "import",
       "source_file": "src/reports/bot_query_ox_7d.py",
       "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "src_reports_bot_query_ox_7d",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/reports/bot_query_ox_7d.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_reports_bot_query_oxygen",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/reports/bot_query_oxygen.py",
+      "source_location": "L10",
       "weight": 1.0
     },
     {
@@ -15779,6 +16421,18 @@
     },
     {
       "source": "src_reports_bot_query_temp",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/reports/bot_query_temp.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_reports_bot_query_temp",
       "target": "src_services_database",
       "relation": "imports_from",
       "_origin": "ast",
@@ -15850,6 +16504,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_reports_bot_query_temp_15d",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/reports/bot_query_temp_15d.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
       "source": "src_reports_bot_query_temp_7d",
       "target": "src_services_database",
       "relation": "imports_from",
@@ -15883,6 +16549,18 @@
       "context": "import",
       "source_file": "src/reports/bot_query_temp_7d.py",
       "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "src_reports_bot_query_temp_7d",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/reports/bot_query_temp_7d.py",
+      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -15894,7 +16572,19 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L16",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_scrape_monitor_data",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L4",
       "weight": 1.0
     },
     {
@@ -15907,6 +16597,18 @@
       "context": "import",
       "source_file": "src/scrape/monitor_data.py",
       "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/services/database.py",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -16006,6 +16708,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_web_app",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/web/app.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_alert_check_filter",
       "target": "src_alerts_alert_check",
       "relation": "imports_from",
@@ -16019,6 +16733,18 @@
     },
     {
       "source": "tests_test_bot_active_batch",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_bot_active_batch.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_bot_active_batch",
       "target": "src_bots_db",
       "relation": "imports_from",
       "_origin": "ast",
@@ -16027,6 +16753,18 @@
       "context": "import",
       "source_file": "tests/test_bot_active_batch.py",
       "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_feed_prediction_agent",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_feed_prediction_agent.py",
+      "source_location": "L7",
       "weight": 1.0
     },
     {
@@ -16079,6 +16817,18 @@
     },
     {
       "source": "tests_test_offline_check_filter",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_offline_check_filter.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_offline_check_filter",
       "target": "src_alerts_offline_check",
       "relation": "imports_from",
       "_origin": "ast",
@@ -16086,6 +16836,42 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "tests/test_offline_check_filter.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_postgres_concurrency",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_postgres_concurrency.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline",
+      "target": "src_services_database",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_timezone_offline.py",
       "source_location": "L4",
       "weight": 1.0
     },
@@ -16098,6 +16884,18 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "tests/test_weather.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_weather_sync",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_weather_sync.py",
       "source_location": "L4",
       "weight": 1.0
     },
@@ -16159,6 +16957,18 @@
       "context": "import",
       "source_file": "tests/test_web_dashboard.py",
       "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_web_dashboard",
+      "target": "datetime",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -16531,6 +17341,18 @@
       "context": "return_type",
       "source_file": "src/bots/main.py",
       "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database_get_local_now",
+      "target": "datetime",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "src/services/database.py",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -18206,6 +19028,105 @@
       "weight": 1.0
     },
     {
+      "source": "knowledge_diario_diary_2026_09_29",
+      "target": "knowledge_diario_diary_2026_09_29_di\u00e1rio_de_bordo_29_09_2026",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "knowledge_diario_diary_2026_09_29_a\u00e7\u00f5es_executadas",
+      "target": "knowledge_diario_diary_2026_09_29_1_front_end_layout_base_navega\u00e7\u00e3o",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "knowledge_diario_diary_2026_09_29_a\u00e7\u00f5es_executadas",
+      "target": "knowledge_diario_diary_2026_09_29_2_front_end_interface_de_batch_management_lotes_html",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "knowledge_diario_diary_2026_09_29_a\u00e7\u00f5es_executadas",
+      "target": "knowledge_diario_diary_2026_09_29_3_front_end_interface_de_mdm_settings_settings_html",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "knowledge_diario_diary_2026_09_29_a\u00e7\u00f5es_executadas",
+      "target": "knowledge_diario_diary_2026_09_29_4_backend_flask_novas_rotas_em_src_web_app_py",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "knowledge_diario_diary_2026_09_29_a\u00e7\u00f5es_executadas",
+      "target": "knowledge_diario_diary_2026_09_29_5_su\u00edte_de_testes_de_concorr\u00eancia_estresse",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "knowledge_diario_diary_2026_09_29_di\u00e1rio_de_bordo_29_09_2026",
+      "target": "knowledge_diario_diary_2026_09_29_objetivo_da_sess\u00e3o",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "knowledge_diario_diary_2026_09_29_di\u00e1rio_de_bordo_29_09_2026",
+      "target": "knowledge_diario_diary_2026_09_29_pr\u00f3ximos_passos",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "knowledge_diario_diary_2026_09_29_di\u00e1rio_de_bordo_29_09_2026",
+      "target": "knowledge_diario_diary_2026_09_29_a\u00e7\u00f5es_executadas",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "knowledge/diario/diary_2026_09_29.md",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
       "source": "knowledge_estrategia_backup_manus",
       "target": "knowledge_estrategia_backup_manus_estrat\u00e9gia_de_backup_mentoria_e_planejamento",
       "relation": "contains",
@@ -19797,7 +20718,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L135",
+      "source_location": "L136",
       "weight": 1.0
     },
     {
@@ -19808,7 +20729,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -19819,95 +20740,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L45",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database",
-      "target": "src_services_database_obter_ultimos_pareceres",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L118",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database",
-      "target": "src_services_database_is_system_suspended",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L139",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database",
-      "target": "src_services_database_set_system_suspended",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L145",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database",
-      "target": "src_services_database_get_sqlite_connection",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L28",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database",
-      "target": "src_services_database_get_postgres_connection",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L40",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database",
-      "target": "src_services_database_generate_sha256",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L59",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database",
-      "target": "src_services_database_get_estrutura_uid",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L63",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database",
-      "target": "src_services_database_get_all_estruturas_map",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L67",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -19918,7 +20751,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/database.py",
-      "source_location": "L86",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -19929,7 +20762,106 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/database.py",
-      "source_location": "L94",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database",
+      "target": "src_services_database_obter_ultimos_pareceres",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L132",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database",
+      "target": "src_services_database_is_system_suspended",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L153",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database",
+      "target": "src_services_database_set_system_suspended",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L159",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database",
+      "target": "src_services_database_get_local_now",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database",
+      "target": "src_services_database_get_sqlite_connection",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database",
+      "target": "src_services_database_get_postgres_connection",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database",
+      "target": "src_services_database_generate_sha256",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database",
+      "target": "src_services_database_get_estrutura_uid",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database",
+      "target": "src_services_database_get_all_estruturas_map",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L81",
       "weight": 1.0
     },
     {
@@ -20722,6 +21654,39 @@
       "confidence_score": 1.0,
       "source_file": "tests/test_security_fixes.py",
       "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline",
+      "target": "tests_test_timezone_offline_test_dashboard_offline_calculation",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline",
+      "target": "tests_test_timezone_offline_test_offline_check_timezone_resilience",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline",
+      "target": "tests_test_timezone_offline_test_get_local_now_returns_datetime",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L6",
       "weight": 1.0
     },
     {
@@ -21781,146 +22746,157 @@
       "weight": 1.0
     },
     {
-      "source": "src_scrape_monitor_data_rationale_136",
+      "source": "src_scrape_monitor_data_rationale_137",
       "target": "src_scrape_monitor_data_scrape_and_save",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L136",
+      "source_location": "L137",
       "weight": 1.0
     },
     {
-      "source": "src_scrape_monitor_data_rationale_25",
+      "source": "src_scrape_monitor_data_rationale_26",
       "target": "src_scrape_monitor_data_ensure_leituras_table",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
-      "source": "src_scrape_monitor_data_rationale_46",
+      "source": "src_scrape_monitor_data_rationale_47",
       "target": "src_scrape_monitor_data_collect_via_api",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0
     },
     {
-      "source": "src_services_database_rationale_119",
-      "target": "src_services_database_obter_ultimos_pareceres",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L119",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database_rationale_140",
-      "target": "src_services_database_is_system_suspended",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L140",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database_rationale_146",
-      "target": "src_services_database_set_system_suspended",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L146",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database_rationale_29",
-      "target": "src_services_database_get_sqlite_connection",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L29",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database_rationale_41",
-      "target": "src_services_database_get_postgres_connection",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L41",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database_rationale_60",
-      "target": "src_services_database_generate_sha256",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L60",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database_rationale_64",
-      "target": "src_services_database_get_estrutura_uid",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L64",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database_rationale_68",
-      "target": "src_services_database_get_all_estruturas_map",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/database.py",
-      "source_location": "L68",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_database_rationale_87",
+      "source": "src_services_database_rationale_101",
       "target": "src_services_database_get_default_estrutura_info",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/database.py",
-      "source_location": "L87",
+      "source_location": "L101",
       "weight": 1.0
     },
     {
-      "source": "src_services_database_rationale_95",
+      "source": "src_services_database_rationale_109",
       "target": "src_services_database_salvar_parecer_ia",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/database.py",
-      "source_location": "L95",
+      "source_location": "L109",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database_rationale_133",
+      "target": "src_services_database_obter_ultimos_pareceres",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L133",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database_rationale_154",
+      "target": "src_services_database_is_system_suspended",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L154",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database_rationale_160",
+      "target": "src_services_database_set_system_suspended",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L160",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database_rationale_28",
+      "target": "src_services_database_get_local_now",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database_rationale_43",
+      "target": "src_services_database_get_sqlite_connection",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database_rationale_55",
+      "target": "src_services_database_get_postgres_connection",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database_rationale_74",
+      "target": "src_services_database_generate_sha256",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L74",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database_rationale_78",
+      "target": "src_services_database_get_estrutura_uid",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_database_rationale_82",
+      "target": "src_services_database_get_all_estruturas_map",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/database.py",
+      "source_location": "L82",
       "weight": 1.0
     },
     {
@@ -22573,6 +23549,39 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_timezone_offline_rationale_13",
+      "target": "tests_test_timezone_offline_test_dashboard_offline_calculation",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline_rationale_35",
+      "target": "tests_test_timezone_offline_test_offline_check_timezone_resilience",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_timezone_offline_rationale_7",
+      "target": "tests_test_timezone_offline_test_get_local_now_returns_datetime",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_weather_rationale_98",
       "target": "tests_test_weather_test_get_weather_forecast_env_vars",
       "relation": "rationale_for",
@@ -23071,7 +24080,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L64",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -23433,5 +24442,5 @@
       "source_file": "docs/MER.md"
     }
   ],
-  "built_at_commit": "7609564f38d89c8f179964a81b9f5aa7b8a3c87e"
+  "built_at_commit": "6936c2a91c0514ba578d3740898a1206693eaa79"
 }
