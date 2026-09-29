@@ -22,7 +22,8 @@ DEFAULT_APPSYNC_URL = "https://qhurq5cthrd75ppzeyutzcclje.appsync-api.sa-east-1.
 DEFAULT_GATEWAY_ID = "10:20:BA:65:3A:B8"
 KNOWN_ENDPOINTS = {
     "10:20:BA:66:2E:C8": "Tanque 1",
-    "10:20:BA:6A:90:00": "Tanque 2"
+    "10:20:BA:6A:90:00": "Tanque 2",
+    "10:20:BA:6A:83:48": "Tanque 2"
 }
 
 # --- QUERIES GRAPHQL ---
