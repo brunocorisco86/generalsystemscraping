@@ -10,7 +10,7 @@ services:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
-      - PG_HOST=${DOCKER_PG_HOST:-postgres}
+      - PG_HOST=${PG_HOST:-192.168.1.7}
       - PG_PORT=${PG_PORT:-5432}
     ports:
       - "${WEB_PORT:-5000}:5000"
@@ -36,7 +36,7 @@ services:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
-      - PG_HOST=${DOCKER_PG_HOST:-postgres}
+      - PG_HOST=${PG_HOST:-192.168.1.7}
       - PG_PORT=${PG_PORT:-5432}
     volumes:
       - ./src:/app/src
@@ -59,7 +59,7 @@ services:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
-      - PG_HOST=${DOCKER_PG_HOST:-postgres}
+      - PG_HOST=${PG_HOST:-192.168.1.7}
       - PG_PORT=${PG_PORT:-5432}
     volumes:
       - ./src:/app/src
@@ -72,8 +72,10 @@ services:
         condition: service_started
         required: false
 
-  # 4. PostgreSQL Local (Opcional: Desative se na VPS já existir um PostgreSQL ativo)
+  # 4. PostgreSQL Local (Opcional: Ative com --profile local-db apenas se não houver Postgres externo)
   postgres:
+    profiles:
+      - local-db
     image: postgres:15-alpine
     container_name: piscicultura_postgres
     restart: unless-stopped
@@ -85,3 +87,4 @@ services:
       - "${PG_PORT:-5432}:5432"
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
+
