@@ -237,3 +237,40 @@ def test_crud_contatos_whatsapp_dynamic(auth_client):
         assert r_del.get_json()['status'] == 'ok'
 
 
+def test_mdm_uid_cascade_proprietario_and_propriedade(auth_client):
+    """Valida que alterar CPF ou CADPRO migra o UID nas tabelas filhas e remove duplicatas antigas."""
+    with patch("src.web.app.get_postgres_connection") as mock_conn:
+        mock_pg = MagicMock()
+        mock_cur = MagicMock()
+        mock_pg.cursor.return_value = mock_cur
+        mock_conn.return_value = mock_pg
+
+        # 1. Salvar proprietário com novo CPF
+        r_prop = auth_client.post('/api/mdm/proprietario', json={
+            "nome": "Dirceu Patel",
+            "cpf": "499.041.839-53"
+        })
+        assert r_prop.status_code == 200
+        new_prop_uid = r_prop.get_json()['uid']
+
+        executed_sqls = [call[0][0] for call in mock_cur.execute.call_args_list]
+        assert any("INSERT INTO proprietarios" in s for s in executed_sqls)
+        assert any("UPDATE propriedades SET proprietario_uid" in s for s in executed_sqls)
+        assert any("DELETE FROM proprietarios WHERE uid <>" in s for s in executed_sqls)
+
+        # 2. Salvar propriedade com novo CADPRO
+        mock_cur.reset_mock()
+        mock_cur.fetchone.return_value = (new_prop_uid,)
+        r_rural = auth_client.post('/api/mdm/propriedade', json={
+            "nome": "Sítio Patel",
+            "endereco": "Linha São Carlos, Palotina-PR",
+            "cadpro": "95105108-09"
+        })
+        assert r_rural.status_code == 200
+        executed_rural_sqls = [call[0][0] for call in mock_cur.execute.call_args_list]
+        assert any("INSERT INTO propriedades" in s for s in executed_rural_sqls)
+        assert any("UPDATE estruturas SET propriedade_uid" in s for s in executed_rural_sqls)
+        assert any("DELETE FROM propriedades WHERE uid <>" in s for s in executed_rural_sqls)
+
+
+

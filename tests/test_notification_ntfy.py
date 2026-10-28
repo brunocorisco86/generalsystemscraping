@@ -59,3 +59,26 @@ def test_send_whatsapp_message_evolution_api():
         assert kwargs["json"]["number"] == "5544997604925"
         assert kwargs["json"]["text"] == "Teste Piscicultura"
 
+
+def test_send_whatsapp_message_brazilian_ninth_digit_fallback_and_error():
+    """Valida fallback de 9º dígito (13 -> 12 dígitos) e mensagem clara quando exists=false."""
+    from src.services.notification import send_whatsapp_message, get_brazilian_phone_variants
+
+    assert get_brazilian_phone_variants("44999440454") == ["5544999440454", "554499440454"]
+    assert get_brazilian_phone_variants("554499440454") == ["554499440454", "5544999440454"]
+
+    resp_400 = MagicMock()
+    resp_400.status_code = 400
+    resp_400.json.return_value = {
+        "status": 400,
+        "error": "Bad Request",
+        "response": {"message": [{"jid": "554499047476@s.whatsapp.net", "exists": False, "number": "554499047476"}]}
+    }
+
+    with patch("requests.post", return_value=resp_400) as mock_post:
+        ok, err = send_whatsapp_message("Teste", phone="554499047476", return_error=True)
+        assert ok is False
+        assert "exists: false" in err
+        assert mock_post.call_count == 2
+
+

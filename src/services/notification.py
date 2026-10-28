@@ -35,20 +35,61 @@ def normalize_whatsapp_number(phone: str) -> str:
     return digits
 
 
+def get_brazilian_phone_variants(phone: str) -> list:
+    """
+    Retorna variantes de número brasileiro (com e sem o 9º dígito após o DDD)
+    para compatibilidade com contas antigas/novas no WhatsApp (Evolution API).
+    """
+    norm = normalize_whatsapp_number(phone)
+    if not norm:
+        return []
+    variants = [norm]
+    if norm.startswith("55"):
+        if len(norm) == 13 and norm[4] == "9":
+            without_nine = norm[:4] + norm[5:]
+            if without_nine not in variants:
+                variants.append(without_nine)
+        elif len(norm) == 12 and norm[4] in ("6", "7", "8", "9"):
+            with_nine = norm[:4] + "9" + norm[4:]
+            if with_nine not in variants:
+                variants.append(with_nine)
+    return variants
+
+
+def _extract_evolution_error(response) -> str:
+    """Extrai mensagem amigável de erro retornada pela Evolution API."""
+    if response is None:
+        return "Sem resposta da Evolution API."
+    try:
+        data = response.json()
+        msg_list = (data.get("response") or {}).get("message")
+        if isinstance(msg_list, list):
+            for item in msg_list:
+                if isinstance(item, dict) and item.get("exists") is False:
+                    num = item.get("number") or item.get("jid") or ""
+                    return f"O número {num} não possui conta ativa no WhatsApp (exists: false)."
+        return f"HTTP {response.status_code}: {response.text[:200]}"
+    except Exception:
+        return f"HTTP {response.status_code}: {getattr(response, 'text', '')[:200]}"
+
+
 def send_whatsapp_message(
     text: str,
     phone: str = None,
     only_alerts: bool = False,
-    only_reports: bool = False
-) -> bool:
+    only_reports: bool = False,
+    return_error: bool = False
+):
     """
     Envia mensagem de texto via Evolution API v2 (WhatsApp).
     Se 'phone' for informado, envia diretamente para aquele número (ex: teste individual).
     Caso contrário, consulta dinamicamente os contatos ativos na tabela 'contatos_whatsapp'.
+    Se 'return_error=True', retorna tupla (bool, str).
     """
     if not EVOLUTION_API_URL or not EVOLUTION_API_KEY or not EVOLUTION_INSTANCE:
-        logger.warning("Evolution API não configurada completamente. Mensagem WhatsApp ignorada.")
-        return False
+        msg = "Evolution API não configurada completamente. Mensagem WhatsApp ignorada."
+        logger.warning(msg)
+        return (False, msg) if return_error else False
 
     targets = []
     if phone:
@@ -68,12 +109,14 @@ def send_whatsapp_message(
                 if norm:
                     targets.append((c.get("nome", "Contato"), norm))
         except Exception as e:
-            logger.error("Erro ao consultar contatos_whatsapp: %s", e)
-            return False
+            err = f"Erro ao consultar contatos_whatsapp: {e}"
+            logger.error(err)
+            return (False, err) if return_error else False
 
     if not targets:
-        logger.info("Nenhum destinatário WhatsApp ativo encontrado para envio.")
-        return False
+        msg = "Nenhum destinatário WhatsApp ativo encontrado para envio."
+        logger.info(msg)
+        return (False, msg) if return_error else False
 
     url = f"{EVOLUTION_API_URL}/message/sendText/{EVOLUTION_INSTANCE}"
     headers = {
@@ -82,19 +125,37 @@ def send_whatsapp_message(
     }
 
     any_sent = False
+    last_error = ""
     for nome, numero in targets:
-        payload = {
-            "number": numero,
-            "text": text
-        }
-        try:
-            response = requests.post(url, json=payload, headers=headers, timeout=10)
-            response.raise_for_status()
-            logger.info("WhatsApp enviado com sucesso via Evolution API para %s (%s).", nome, numero)
-            any_sent = True
-        except Exception as e:
-            logger.error("Erro ao enviar WhatsApp via Evolution API para %s (%s): %s", nome, numero, e)
+        sent_for_target = False
+        for candidate in get_brazilian_phone_variants(numero):
+            payload = {
+                "number": candidate,
+                "text": text
+            }
+            try:
+                response = requests.post(url, json=payload, headers=headers, timeout=10)
+                if response.status_code == 400:
+                    last_error = _extract_evolution_error(response)
+                    logger.warning(
+                        "Tentativa WhatsApp falhou para %s (%s): %s",
+                        nome, candidate, last_error
+                    )
+                    continue
+                response.raise_for_status()
+                logger.info("WhatsApp enviado com sucesso via Evolution API para %s (%s).", nome, candidate)
+                any_sent = True
+                sent_for_target = True
+                break
+            except Exception as e:
+                resp_obj = getattr(e, "response", None)
+                last_error = _extract_evolution_error(resp_obj) if resp_obj is not None else str(e)
+                logger.error("Erro ao enviar WhatsApp via Evolution API para %s (%s): %s", nome, candidate, last_error)
+        if not sent_for_target and last_error:
+            logger.error("Envio WhatsApp não concluído para %s (%s): %s", nome, numero, last_error)
 
+    if return_error:
+        return any_sent, ("" if any_sent else last_error)
     return any_sent
 
 
@@ -149,21 +210,25 @@ def send_whatsapp_photo(
 
     any_sent = False
     for nome, numero in targets:
-        payload = {
-            "number": numero,
-            "mediatype": "image",
-            "mimetype": "image/png",
-            "caption": caption,
-            "media": b64_media,
-            "fileName": os.path.basename(photo_path) or "relatorio.png"
-        }
-        try:
-            response = requests.post(url, json=payload, headers=headers, timeout=20)
-            response.raise_for_status()
-            logger.info("Imagem WhatsApp enviada para %s (%s).", nome, numero)
-            any_sent = True
-        except Exception as e:
-            logger.error("Erro ao enviar imagem WhatsApp para %s (%s): %s", nome, numero, e)
+        for candidate in get_brazilian_phone_variants(numero):
+            payload = {
+                "number": candidate,
+                "mediatype": "image",
+                "mimetype": "image/png",
+                "caption": caption,
+                "media": b64_media,
+                "fileName": os.path.basename(photo_path) or "relatorio.png"
+            }
+            try:
+                response = requests.post(url, json=payload, headers=headers, timeout=20)
+                if response.status_code == 400:
+                    continue
+                response.raise_for_status()
+                logger.info("Imagem WhatsApp enviada para %s (%s).", nome, candidate)
+                any_sent = True
+                break
+            except Exception as e:
+                logger.error("Erro ao enviar imagem WhatsApp para %s (%s): %s", nome, candidate, e)
 
     return any_sent
 

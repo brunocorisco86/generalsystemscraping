@@ -3,8 +3,8 @@
   "1": "main.py",
   "2": "test_web_dashboard.py",
   "3": "get_weather_forecast",
-  "4": "agent.py",
-  "5": "monitor_data.py",
+  "4": "test_feed_prediction_agent.py",
+  "5": "get_local_now",
   "6": "Tabelas de Monitoramento (Operacional)",
   "7": "14-watchdog-resilience.sh",
   "8": "08-populate-initial-data.py",
@@ -123,5 +123,11 @@
   "121": "6. Infraestrutura, Containerização e Resiliência",
   "122": "commission_cron_jobs.sh",
   "123": "api_testar_contato_whatsapp",
-  "124": "api_get_endpoint"
+  "124": "sync_hourly_weather",
+  "125": "check_alerts",
+  "126": "collect_via_api",
+  "127": "monitor_data.py",
+  "128": "agent_tools.py",
+  "129": "get_estrutura_uid",
+  "130": "TestAgentFallback"
 }

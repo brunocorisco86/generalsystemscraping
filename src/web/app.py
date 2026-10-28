@@ -726,12 +726,52 @@ def api_mdm_estruturas():
             p_row = cur.fetchone()
             prop_uid = p_row[0] if p_row else None
 
+            # Verificar se já existe estrutura com o mesmo nome e UID diferente para migrar FKs
+            old_uid = (data.get('old_uid') or '').strip()
+            if not old_uid:
+                cur.execute("SELECT uid FROM estruturas WHERE LOWER(nome) = LOWER(%s) LIMIT 1;", (nome,))
+                existing_est = cur.fetchone()
+                if existing_est:
+                    old_uid = existing_est[0]
+
             cur.execute("""
                 INSERT INTO estruturas (uid, propriedade_uid, tipo_exploracao_id, nome, pluscode)
                 VALUES (%s, %s, 1, %s, %s)
-                ON CONFLICT (uid) DO UPDATE SET nome = EXCLUDED.nome, pluscode = EXCLUDED.pluscode;
+                ON CONFLICT (uid) DO UPDATE SET
+                    propriedade_uid = EXCLUDED.propriedade_uid,
+                    nome = EXCLUDED.nome,
+                    pluscode = EXCLUDED.pluscode;
             """, (uid, prop_uid, nome, pluscode))
+
+            if old_uid and old_uid != uid:
+                for child_tbl in (
+                    'lotes', 'leituras', 'biometria',
+                    'qualidade_agua_limnologia', 'qualidade_agua_consumo'
+                ):
+                    cur.execute(
+                        f"UPDATE {child_tbl} SET estrutura_uid = %s WHERE estrutura_uid = %s;",
+                        (uid, old_uid)
+                    )
+                cur.execute("DELETE FROM estruturas WHERE uid = %s;", (old_uid,))
+
             pg.commit()
+
+            # Sincronizar espelho no SQLite local se disponível
+            try:
+                sq_conn = get_sqlite_connection()
+                if sq_conn:
+                    sq_cur = sq_conn.cursor()
+                    sq_cur.execute(
+                        "INSERT OR REPLACE INTO estruturas (uid, propriedade_uid, tipo_exploracao_id, nome, pluscode) VALUES (?, ?, 1, ?, ?);",
+                        (uid, prop_uid, nome, pluscode)
+                    )
+                    if old_uid and old_uid != uid:
+                        sq_cur.execute("UPDATE leituras SET estrutura_uid = ? WHERE estrutura_uid = ?;", (uid, old_uid))
+                        sq_cur.execute("DELETE FROM estruturas WHERE uid = ?;", (old_uid,))
+                    sq_conn.commit()
+                    sq_conn.close()
+            except Exception as sq_err:
+                logger.debug(f"Sincronismo opcional SQLite (estruturas) ignorado: {sq_err}")
 
             # Se informou MAC, vincula em tempo de execução
             if mac:
@@ -801,7 +841,7 @@ def api_mdm_dados():
 @app.route('/api/mdm/proprietario', methods=['POST'])
 @login_required
 def api_mdm_salvar_proprietario():
-    """Atualiza ou insere o registro do produtor (proprietário)."""
+    """Atualiza ou insere o registro do produtor (proprietário), migrando o UID em cascata nas tabelas filhas."""
     data = request.get_json() or {}
     nome = (data.get('nome') or '').strip()
     cpf = (data.get('cpf') or '').strip()
@@ -818,14 +858,42 @@ def api_mdm_salvar_proprietario():
 
     try:
         cur = pg.cursor()
+        # 1. Insere ou atualiza o novo UID do proprietário
         cur.execute("""
             INSERT INTO proprietarios (uid, nome, cpf)
             VALUES (%s, %s, %s)
             ON CONFLICT (uid) DO UPDATE SET nome = EXCLUDED.nome, cpf = EXCLUDED.cpf;
         """, (uid, nome, cpf))
+
+        # 2. Migra FKs filhas (propriedades e usuarios_telegram) para o novo UID
+        cur.execute(
+            "UPDATE propriedades SET proprietario_uid = %s WHERE proprietario_uid IS NULL OR proprietario_uid <> %s;",
+            (uid, uid)
+        )
+        cur.execute(
+            "UPDATE usuarios_telegram SET proprietario_uid = %s WHERE proprietario_uid IS NULL OR proprietario_uid <> %s;",
+            (uid, uid)
+        )
+
+        # 3. Remove registros órfãos/antigos de proprietarios
+        cur.execute("DELETE FROM proprietarios WHERE uid <> %s;", (uid,))
         pg.commit()
         pg.close()
-        return jsonify({"status": "ok", "message": "Produtor salvo com sucesso!", "uid": uid})
+
+        # 4. Espelha a migração de UID no SQLite local caso aplicável
+        try:
+            sq_conn = get_sqlite_connection()
+            if sq_conn:
+                sq_cur = sq_conn.cursor()
+                sq_cur.execute("INSERT OR REPLACE INTO proprietarios (uid, nome, cpf) VALUES (?, ?, ?);", (uid, nome, cpf))
+                sq_cur.execute("UPDATE propriedades SET proprietario_uid = ? WHERE proprietario_uid IS NULL OR proprietario_uid <> ?;", (uid, uid))
+                sq_cur.execute("DELETE FROM proprietarios WHERE uid <> ?;", (uid,))
+                sq_conn.commit()
+                sq_conn.close()
+        except Exception as sq_err:
+            logger.debug(f"Sincronismo opcional SQLite (proprietarios) ignorado: {sq_err}")
+
+        return jsonify({"status": "ok", "message": "Produtor salvo e UID atualizado na base com sucesso!", "uid": uid})
     except Exception as e:
         if pg: pg.close()
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -833,7 +901,7 @@ def api_mdm_salvar_proprietario():
 @app.route('/api/mdm/propriedade', methods=['POST'])
 @login_required
 def api_mdm_salvar_propriedade():
-    """Atualiza ou insere o registro da propriedade rural."""
+    """Atualiza ou insere o registro da propriedade rural, migrando o UID em cascata nas estruturas filhas."""
     data = request.get_json() or {}
     nome = (data.get('nome') or '').strip()
     endereco = (data.get('endereco') or '').strip()
@@ -855,14 +923,45 @@ def api_mdm_salvar_propriedade():
         p_row = cur.fetchone()
         prop_uid = p_row[0] if p_row else None
 
+        # 1. Insere ou atualiza o novo UID da propriedade
         cur.execute("""
             INSERT INTO propriedades (uid, proprietario_uid, nome, endereco, cadpro)
             VALUES (%s, %s, %s, %s, %s)
-            ON CONFLICT (uid) DO UPDATE SET nome = EXCLUDED.nome, endereco = EXCLUDED.endereco, cadpro = EXCLUDED.cadpro;
+            ON CONFLICT (uid) DO UPDATE SET
+                proprietario_uid = EXCLUDED.proprietario_uid,
+                nome = EXCLUDED.nome,
+                endereco = EXCLUDED.endereco,
+                cadpro = EXCLUDED.cadpro;
         """, (uid, prop_uid, nome, endereco, cadpro))
+
+        # 2. Migra FKs filhas (estruturas) para o novo UID da propriedade
+        cur.execute(
+            "UPDATE estruturas SET propriedade_uid = %s WHERE propriedade_uid IS NULL OR propriedade_uid <> %s;",
+            (uid, uid)
+        )
+
+        # 3. Remove registros órfãos/antigos de propriedades
+        cur.execute("DELETE FROM propriedades WHERE uid <> %s;", (uid,))
         pg.commit()
         pg.close()
-        return jsonify({"status": "ok", "message": "Propriedade salva com sucesso!", "uid": uid})
+
+        # 4. Espelha a migração de UID no SQLite local caso aplicável
+        try:
+            sq_conn = get_sqlite_connection()
+            if sq_conn:
+                sq_cur = sq_conn.cursor()
+                sq_cur.execute(
+                    "INSERT OR REPLACE INTO propriedades (uid, proprietario_uid, nome, endereco, cadpro) VALUES (?, ?, ?, ?, ?);",
+                    (uid, prop_uid, nome, endereco, cadpro)
+                )
+                sq_cur.execute("UPDATE estruturas SET propriedade_uid = ? WHERE propriedade_uid IS NULL OR propriedade_uid <> ?;", (uid, uid))
+                sq_cur.execute("DELETE FROM propriedades WHERE uid <> ?;", (uid,))
+                sq_conn.commit()
+                sq_conn.close()
+        except Exception as sq_err:
+            logger.debug(f"Sincronismo opcional SQLite (propriedades) ignorado: {sq_err}")
+
+        return jsonify({"status": "ok", "message": "Propriedade salva e UID atualizado na base com sucesso!", "uid": uid})
     except Exception as e:
         if pg: pg.close()
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -998,10 +1097,19 @@ def api_testar_contato_whatsapp(contato_id):
         f"Olá, *{contato['nome']}* ({contato.get('papel', 'Gestor')})!\n"
         f"✅ Seu número está configurado corretamente para receber alertas da piscicultura via WhatsApp."
     )
-    ok = send_whatsapp_message(msg, phone=telefone)
+    res = send_whatsapp_message(msg, phone=telefone, return_error=True)
+    if isinstance(res, tuple):
+        ok, err_detail = res
+    else:
+        ok, err_detail = bool(res), ""
+
     if ok:
         return jsonify({"status": "ok", "message": f"Mensagem de teste enviada para {contato['nome']} ({telefone})!"})
-    return jsonify({"status": "error", "message": "Falha ao enviar via Evolution API. Verifique os logs ou o número."}), 502
+    status_code = 400 if "exists: false" in (err_detail or "") else 502
+    return jsonify({
+        "status": "error",
+        "message": err_detail or "Falha ao enviar via Evolution API. Verifique os logs ou o número."
+    }), status_code
 
 
 # ==============================================================================
