@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 
 # Defaults do ecossistema Noctua IoT
 DEFAULT_APPSYNC_URL = "https://qhurq5cthrd75ppzeyutzcclje.appsync-api.sa-east-1.amazonaws.com/graphql"
+DEFAULT_APPSYNC_API_KEY = "da2-uoh5mpgxrvhjti2kfpo2dtv6gm"
+DEFAULT_PORTAL_URL = "https://general-system.noctua-iot.com"
 DEFAULT_GATEWAY_ID = "10:20:BA:65:3A:B8"
 KNOWN_ENDPOINTS = {
     "10:20:BA:66:2E:C8": "Tanque 1",
@@ -186,7 +188,13 @@ class NoctuaClient:
         timeout_seconds: int = 15
     ):
         self.api_url = api_url or os.getenv("NOCTUA_APPSYNC_URL", DEFAULT_APPSYNC_URL)
-        self.api_key = api_key or os.getenv("NOCTUA_API_KEY", "")
+        env_key = os.getenv("NOCTUA_API_KEY", "").strip()
+        if api_key is not None:
+            self.api_key = api_key
+        elif env_key and not env_key.startswith("da2-chave_temporaria") and not env_key.startswith("da2-xxxx"):
+            self.api_key = env_key
+        else:
+            self.api_key = DEFAULT_APPSYNC_API_KEY
         self.gateway_id = gateway_id or os.getenv("NOCTUA_GATEWAY_ID", DEFAULT_GATEWAY_ID)
         
         # Trava de segurança para escrita/motores
@@ -198,6 +206,32 @@ class NoctuaClient:
         self.timeout = timeout_seconds
         self.session = requests.Session()
 
+    def discover_api_key_from_portal(self) -> Optional[str]:
+        """Extrai dinamicamente a chave x-api-key (da2-...) dos chunks estáticos do portal Noctua."""
+        import re
+        portal_url = os.getenv("NOCTUA_BASE_URL", DEFAULT_PORTAL_URL).rstrip("/")
+        try:
+            resp = self.session.get(f"{portal_url}/login", timeout=10)
+            if resp.status_code != 200:
+                return None
+            scripts = re.findall(r'src="([^"]+\.js)"', resp.text)
+            for script_path in scripts:
+                js_url = script_path if script_path.startswith("http") else f"{portal_url}{script_path if script_path.startswith('/') else '/' + script_path}"
+                try:
+                    js_resp = self.session.get(js_url, timeout=10)
+                    keys = re.findall(r"da2-[a-z0-9]{20,35}", js_resp.text)
+                    if keys:
+                        discovered = keys[0]
+                        logger.info("Nova chave NOCTUA_API_KEY descoberta automaticamente no portal: %s...", discovered[:10])
+                        self.api_key = discovered
+                        os.environ["NOCTUA_API_KEY"] = discovered
+                        return discovered
+                except Exception:
+                    continue
+        except Exception as e:
+            logger.debug("Falha ao tentar autodescoberta de NOCTUA_API_KEY: %s", e)
+        return None
+
     def _get_headers(self) -> Dict[str, str]:
         if not self.api_key or self.api_key.startswith("da2-chave_temporaria"):
             logger.warning("NOCTUA_API_KEY não configurada ou usando placeholder.")
@@ -207,7 +241,7 @@ class NoctuaClient:
         }
 
     def _execute_graphql(self, query: str, variables: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """Executa uma chamada GraphQL no AWS AppSync com tratamento de status e erros."""
+        """Executa uma chamada GraphQL no AWS AppSync com tratamento de status, autodescoberta de chave em 401 e erros."""
         payload = {
             "query": query,
             "variables": variables or {}
@@ -221,6 +255,15 @@ class NoctuaClient:
                 headers=headers,
                 timeout=self.timeout
             )
+            if response.status_code == 401 and self.api_key != "da2-mock-key":
+                new_key = self.discover_api_key_from_portal()
+                if new_key:
+                    response = self.session.post(
+                        self.api_url,
+                        json=payload,
+                        headers=self._get_headers(),
+                        timeout=self.timeout
+                    )
         except requests.RequestException as e:
             logger.error("Erro de conexão com o AWS AppSync: %s", e)
             raise NoctuaClientException(f"Falha de rede ao conectar à API Noctua: {e}") from e

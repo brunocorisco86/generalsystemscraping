@@ -366,9 +366,9 @@
     "semantic_hash": "a7cc751f4c179d3b8ed6e390caad803b"
   },
   "src/web/app.py": {
-    "mtime": 1793230239.033161,
-    "seen": 1793230443.7802699,
-    "ast_hash": "3f6bbdef07851fd4dd3be4b7890f93e1",
+    "mtime": 1793230538.5942085,
+    "seen": 1793230558.9723077,
+    "ast_hash": "91b405f359f13fc34c93a5ceae2a0a64",
     "semantic_hash": ""
   },
   "tests/__init__.py": {

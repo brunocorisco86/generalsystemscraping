@@ -37,19 +37,18 @@ def check_last_reading():
             return
 
         cursor = conn.cursor()
-
-        # Busca a última leitura de cada tanque em uma única consulta
-        cursor.execute("""
-            SELECT nome_estrutura, MAX(timestamp_site) as last_reading
-            FROM leituras
-            GROUP BY nome_estrutura
-        """)
-        results = cursor.fetchall()
-
-        if not results:
-            logger.warning("Nenhum data de tanque encontrado na tabela 'leituras'.")
-            send_telegram_message("🚫 *Atenção:* Nenhum dado de tanque encontrado para monitoramento offline.")
-            return
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS leituras (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                estrutura_uid TEXT,
+                nome_estrutura TEXT,
+                oxigenio REAL,
+                temperatura REAL,
+                timestamp_site TIMESTAMP,
+                data_coleta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                aeradores_ativos INTEGER DEFAULT 0
+            )
+        ''')
 
         # --- FILTRAGEM DE LOTES ATIVOS (PostgreSQL) ---
         estruturas_ativas = None
@@ -63,6 +62,37 @@ def check_last_reading():
                 logger.error(f"Erro ao buscar estruturas ativas no Postgres para offline_check: {e}")
             finally:
                 pg_conn.close()
+
+        if estruturas_ativas is not None and len(estruturas_ativas) == 0:
+            logger.info("Nenhum lote ativo encontrado no PostgreSQL. Ignorando verificação offline.")
+            return
+
+        # Busca a última leitura de cada tanque em uma única consulta
+        cursor.execute("""
+            SELECT nome_estrutura, MAX(timestamp_site) as last_reading
+            FROM leituras
+            GROUP BY nome_estrutura
+        """)
+        results = cursor.fetchall()
+
+        if not results:
+            logger.info("Tabela 'leituras' vazia na partida. Acionando coleta sob demanda antes de alertar...")
+            try:
+                from src.scrape.monitor_data import scrape_and_save
+                scrape_and_save()
+                cursor.execute("""
+                    SELECT nome_estrutura, MAX(timestamp_site) as last_reading
+                    FROM leituras
+                    GROUP BY nome_estrutura
+                """)
+                results = cursor.fetchall()
+            except Exception as scrape_err:
+                logger.warning("Coleta sob demanda no offline_check falhou: %s", scrape_err)
+
+        if not results:
+            logger.warning("Nenhum dado de tanque encontrado na tabela 'leituras'.")
+            send_telegram_message("🚫 *Atenção:* Nenhum dado de tanque encontrado para monitoramento offline.")
+            return
 
         estruturas_map = get_all_estruturas_map()
 

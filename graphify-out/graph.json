@@ -84,7 +84,7 @@
       "file_type": "code",
       "norm_label": "noctuaclientexception",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L167"
+      "source_location": "L169"
     },
     {
       "id": "src_services_noctua_client_noctuareadonlyexception",
@@ -97,7 +97,7 @@
       "file_type": "code",
       "norm_label": "noctuareadonlyexception",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L172"
+      "source_location": "L174"
     },
     {
       "id": "tests_test_postgres_concurrency_testpostgresconcurrency",
@@ -113,19 +113,6 @@
       "source_location": "L81"
     },
     {
-      "id": "src_web_app_user",
-      "label": "User",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 119,
-      "community_name": "User",
-      "file_type": "code",
-      "norm_label": "user",
-      "source_file": "src/web/app.py",
-      "source_location": "L116"
-    },
-    {
       "id": "tests_test_agent_fallback_testagentfallback",
       "label": "TestAgentFallback",
       "_callable": true,
@@ -139,6 +126,19 @@
       "source_location": "L8"
     },
     {
+      "id": "src_web_app_user",
+      "label": "User",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "test_web_dashboard.py",
+      "file_type": "code",
+      "norm_label": "user",
+      "source_file": "src/web/app.py",
+      "source_location": "L116"
+    },
+    {
       "id": "src_services_noctua_client_noctuaclient",
       "label": "NoctuaClient",
       "_callable": true,
@@ -149,7 +149,7 @@
       "file_type": "code",
       "norm_label": "noctuaclient",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L177"
+      "source_location": "L179"
     },
     {
       "id": "src_services_weather_timeoutcachedsession",
@@ -213,6 +213,30 @@
       "norm_label": "migrate_sqlite()",
       "source_file": "scripts/migrate_add_cloud_cover.py",
       "source_location": "L21"
+    },
+    {
+      "id": "src_alerts_alert_check_check_alerts",
+      "label": "check_alerts()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "check_alerts()",
+      "source_file": "src/alerts/alert_check.py",
+      "source_location": "L21"
+    },
+    {
+      "id": "src_alerts_offline_check_check_last_reading",
+      "label": "check_last_reading()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "check_last_reading()",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L19"
     },
     {
       "id": "src_analysis_feed_prediction_run_production_logic",
@@ -371,18 +395,6 @@
       "source_location": "L290"
     },
     {
-      "id": "src_bots_agent_ask_agent",
-      "label": "ask_agent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "ask_agent()",
-      "source_file": "src/bots/agent.py",
-      "source_location": "L142"
-    },
-    {
       "id": "src_bots_agent_get_agent_executor",
       "label": "get_agent_executor()",
       "_callable": true,
@@ -393,6 +405,42 @@
       "norm_label": "get_agent_executor()",
       "source_file": "src/bots/agent.py",
       "source_location": "L58"
+    },
+    {
+      "id": "src_database_postgres_migrate_data_migrate_data",
+      "label": "migrate_data()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "migrate_data()",
+      "source_file": "src/database/postgres/migrate_data.py",
+      "source_location": "L18"
+    },
+    {
+      "id": "src_jobs_collector_service_handle_shutdown",
+      "label": "handle_shutdown()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "handle_shutdown()",
+      "source_file": "src/jobs/collector_service.py",
+      "source_location": "L28"
+    },
+    {
+      "id": "src_jobs_collector_service_run_collector_loop",
+      "label": "run_collector_loop()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "run_collector_loop()",
+      "source_file": "src/jobs/collector_service.py",
+      "source_location": "L36"
     },
     {
       "id": "src_jobs_evening_report_generate_evening_report",
@@ -551,6 +599,42 @@
       "source_location": "L43"
     },
     {
+      "id": "src_scrape_monitor_data_collect_via_api",
+      "label": "collect_via_api()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "collect_via_api()",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L46"
+    },
+    {
+      "id": "src_scrape_monitor_data_ensure_leituras_table",
+      "label": "ensure_leituras_table()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "ensure_leituras_table()",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L25"
+    },
+    {
+      "id": "src_scrape_monitor_data_scrape_and_save",
+      "label": "scrape_and_save()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "scrape_and_save()",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L136"
+    },
+    {
       "id": "src_services_database_ensure_contatos_whatsapp_table",
       "label": "ensure_contatos_whatsapp_table()",
       "_callable": true,
@@ -575,6 +659,18 @@
       "source_location": "L416"
     },
     {
+      "id": "src_services_database_generate_sha256",
+      "label": "generate_sha256()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "generate_sha256()",
+      "source_file": "src/services/database.py",
+      "source_location": "L75"
+    },
+    {
       "id": "src_services_database_get_all_estruturas_map",
       "label": "get_all_estruturas_map()",
       "_callable": true,
@@ -585,6 +681,30 @@
       "norm_label": "get_all_estruturas_map()",
       "source_file": "src/services/database.py",
       "source_location": "L83"
+    },
+    {
+      "id": "src_services_database_get_default_estrutura_info",
+      "label": "get_default_estrutura_info()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "get_default_estrutura_info()",
+      "source_file": "src/services/database.py",
+      "source_location": "L102"
+    },
+    {
+      "id": "src_services_database_get_estrutura_uid",
+      "label": "get_estrutura_uid()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "get_estrutura_uid()",
+      "source_file": "src/services/database.py",
+      "source_location": "L79"
     },
     {
       "id": "src_services_database_get_postgres_connection",
@@ -623,18 +743,6 @@
       "source_location": "L155"
     },
     {
-      "id": "src_services_database_listar_contatos_whatsapp",
-      "label": "listar_contatos_whatsapp()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "listar_contatos_whatsapp()",
-      "source_file": "src/services/database.py",
-      "source_location": "L252"
-    },
-    {
       "id": "src_services_database_obter_ultimos_pareceres",
       "label": "obter_ultimos_pareceres()",
       "_callable": true,
@@ -671,54 +779,6 @@
       "source_location": "L110"
     },
     {
-      "id": "src_services_notification_extract_evolution_error",
-      "label": "_extract_evolution_error()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "_extract_evolution_error()",
-      "source_file": "src/services/notification.py",
-      "source_location": "L59"
-    },
-    {
-      "id": "src_services_notification_get_brazilian_phone_variants",
-      "label": "get_brazilian_phone_variants()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "get_brazilian_phone_variants()",
-      "source_file": "src/services/notification.py",
-      "source_location": "L38"
-    },
-    {
-      "id": "src_services_notification_normalize_whatsapp_number",
-      "label": "normalize_whatsapp_number()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "normalize_whatsapp_number()",
-      "source_file": "src/services/notification.py",
-      "source_location": "L28"
-    },
-    {
-      "id": "src_services_notification_send_ntfy_message",
-      "label": "send_ntfy_message()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "send_ntfy_message()",
-      "source_file": "src/services/notification.py",
-      "source_location": "L236"
-    },
-    {
       "id": "src_services_notification_send_telegram_message",
       "label": "send_telegram_message()",
       "_callable": true,
@@ -743,76 +803,112 @@
       "source_location": "L321"
     },
     {
-      "id": "src_services_notification_send_whatsapp_message",
-      "label": "send_whatsapp_message()",
+      "id": "src_web_app_background_scheduler_loop",
+      "label": "_background_scheduler_loop()",
       "_callable": true,
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "code",
-      "norm_label": "send_whatsapp_message()",
-      "source_file": "src/services/notification.py",
-      "source_location": "L76"
+      "norm_label": "_background_scheduler_loop()",
+      "source_file": "src/web/app.py",
+      "source_location": "L1118"
     },
     {
-      "id": "src_services_notification_send_whatsapp_photo",
-      "label": "send_whatsapp_photo()",
+      "id": "tests_test_alert_check_filter_test_alert_check_filters_inactive_batches",
+      "label": "test_alert_check_filters_inactive_batches()",
       "_callable": true,
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "code",
-      "norm_label": "send_whatsapp_photo()",
-      "source_file": "src/services/notification.py",
-      "source_location": "L162"
+      "norm_label": "test_alert_check_filters_inactive_batches()",
+      "source_file": "tests/test_alert_check_filter.py",
+      "source_location": "L8"
     },
     {
-      "id": "tests_test_notification_ntfy_test_send_ntfy_message_success",
-      "label": "test_send_ntfy_message_success()",
+      "id": "tests_test_monitor_data_clean_db",
+      "label": "clean_db()",
       "_callable": true,
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "code",
-      "norm_label": "test_send_ntfy_message_success()",
-      "source_file": "tests/test_notification_ntfy.py",
-      "source_location": "L5"
+      "norm_label": "clean_db()",
+      "source_file": "tests/test_monitor_data.py",
+      "source_location": "L11"
     },
     {
-      "id": "tests_test_notification_ntfy_test_send_telegram_mirrors_to_ntfy",
-      "label": "test_send_telegram_mirrors_to_ntfy()",
+      "id": "tests_test_monitor_data_test_collect_via_api_ignores_zeroed_and_invalid",
+      "label": "test_collect_via_api_ignores_zeroed_and_invalid()",
       "_callable": true,
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "code",
-      "norm_label": "test_send_telegram_mirrors_to_ntfy()",
-      "source_file": "tests/test_notification_ntfy.py",
-      "source_location": "L25"
+      "norm_label": "test_collect_via_api_ignores_zeroed_and_invalid()",
+      "source_file": "tests/test_monitor_data.py",
+      "source_location": "L68"
     },
     {
-      "id": "tests_test_notification_ntfy_test_send_whatsapp_message_brazilian_ninth_digit_fallback_and_error",
-      "label": "test_send_whatsapp_message_brazilian_ninth_digit_fallback_and_error()",
+      "id": "tests_test_monitor_data_test_collect_via_api_success",
+      "label": "test_collect_via_api_success()",
       "_callable": true,
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "code",
-      "norm_label": "test_send_whatsapp_message_brazilian_ninth_digit_fallback_and_error()",
-      "source_file": "tests/test_notification_ntfy.py",
-      "source_location": "L63"
+      "norm_label": "test_collect_via_api_success()",
+      "source_file": "tests/test_monitor_data.py",
+      "source_location": "L27"
     },
     {
-      "id": "tests_test_notification_ntfy_test_send_whatsapp_message_evolution_api",
-      "label": "test_send_whatsapp_message_evolution_api()",
+      "id": "tests_test_monitor_data_test_scrape_and_save_suspended",
+      "label": "test_scrape_and_save_suspended()",
       "_callable": true,
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "code",
-      "norm_label": "test_send_whatsapp_message_evolution_api()",
-      "source_file": "tests/test_notification_ntfy.py",
-      "source_location": "L43"
+      "norm_label": "test_scrape_and_save_suspended()",
+      "source_file": "tests/test_monitor_data.py",
+      "source_location": "L100"
+    },
+    {
+      "id": "tests_test_offline_check_filter_test_offline_check_filters_inactive_batches",
+      "label": "test_offline_check_filters_inactive_batches()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "test_offline_check_filters_inactive_batches()",
+      "source_file": "tests/test_offline_check_filter.py",
+      "source_location": "L6"
+    },
+    {
+      "id": "tests_test_weather_sync_test_clima_historico_table_exists",
+      "label": "test_clima_historico_table_exists()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "test_clima_historico_table_exists()",
+      "source_file": "tests/test_weather_sync.py",
+      "source_location": "L9"
+    },
+    {
+      "id": "src_bots_agent_ask_agent",
+      "label": "ask_agent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "main.py",
+      "file_type": "code",
+      "norm_label": "ask_agent()",
+      "source_file": "src/bots/agent.py",
+      "source_location": "L142"
     },
     {
       "id": "src_bots_db_criar_lote_completo",
@@ -1784,7 +1880,7 @@
       "file_type": "code",
       "norm_label": ".send_motor_command()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L416"
+      "source_location": "L459"
     },
     {
       "id": "src_web_app_api_send_motor_command",
@@ -2027,40 +2123,16 @@
       "source_location": "L108"
     },
     {
-      "id": "src_web_app_load_user",
-      "label": "load_user()",
+      "id": "scripts_scrape_produtor_main",
+      "label": "main()",
       "_callable": true,
       "_origin": "ast",
       "community": 119,
-      "community_name": "User",
+      "community_name": "scrape_produtor.py",
       "file_type": "code",
-      "norm_label": "load_user()",
-      "source_file": "src/web/app.py",
-      "source_location": "L122"
-    },
-    {
-      "id": "src_web_app_login",
-      "label": "login()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 119,
-      "community_name": "User",
-      "file_type": "code",
-      "norm_label": "login()",
-      "source_file": "src/web/app.py",
-      "source_location": "L131"
-    },
-    {
-      "id": "src_web_app_user_init",
-      "label": ".__init__()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 119,
-      "community_name": "User",
-      "file_type": "code",
-      "norm_label": ".__init__()",
-      "source_file": "src/web/app.py",
-      "source_location": "L117"
+      "norm_label": "main()",
+      "source_file": "scripts/scrape_produtor.py",
+      "source_location": "L14"
     },
     {
       "id": "src_services_database_obter_contato_whatsapp",
@@ -2092,7 +2164,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "code",
       "norm_label": "get_hourly_report()",
       "source_file": "src/jobs/hourly_report.py",
@@ -2104,7 +2176,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "code",
       "norm_label": "fetch_openmeteo_json()",
       "source_file": "src/jobs/hourly_weather_sync.py",
@@ -2116,11 +2188,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "code",
       "norm_label": "sync_hourly_weather()",
       "source_file": "src/jobs/hourly_weather_sync.py",
       "source_location": "L111"
+    },
+    {
+      "id": "src_services_database_get_local_now",
+      "label": "get_local_now()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 124,
+      "community_name": "get_local_now",
+      "file_type": "code",
+      "norm_label": "get_local_now()",
+      "source_file": "src/services/database.py",
+      "source_location": "L27"
     },
     {
       "id": "tests_test_hourly_report_filter_test_hourly_report_filters_inactive_batches",
@@ -2128,23 +2212,47 @@
       "_callable": true,
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "code",
       "norm_label": "test_hourly_report_filters_inactive_batches()",
       "source_file": "tests/test_hourly_report_filter.py",
       "source_location": "L5"
     },
     {
-      "id": "tests_test_weather_sync_test_clima_historico_table_exists",
-      "label": "test_clima_historico_table_exists()",
+      "id": "tests_test_timezone_offline_test_dashboard_offline_calculation",
+      "label": "test_dashboard_offline_calculation()",
       "_callable": true,
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "code",
-      "norm_label": "test_clima_historico_table_exists()",
-      "source_file": "tests/test_weather_sync.py",
-      "source_location": "L9"
+      "norm_label": "test_dashboard_offline_calculation()",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L12"
+    },
+    {
+      "id": "tests_test_timezone_offline_test_get_local_now_returns_datetime",
+      "label": "test_get_local_now_returns_datetime()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 124,
+      "community_name": "get_local_now",
+      "file_type": "code",
+      "norm_label": "test_get_local_now_returns_datetime()",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L6"
+    },
+    {
+      "id": "tests_test_timezone_offline_test_offline_check_timezone_resilience",
+      "label": "test_offline_check_timezone_resilience()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 124,
+      "community_name": "get_local_now",
+      "file_type": "code",
+      "norm_label": "test_offline_check_timezone_resilience()",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L34"
     },
     {
       "id": "tests_test_weather_sync_test_hourly_report_includes_weather",
@@ -2152,7 +2260,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "code",
       "norm_label": "test_hourly_report_includes_weather()",
       "source_file": "tests/test_weather_sync.py",
@@ -2164,71 +2272,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "code",
       "norm_label": "test_sync_hourly_weather_persistence()",
       "source_file": "tests/test_weather_sync.py",
       "source_location": "L17"
-    },
-    {
-      "id": "src_alerts_alert_check_check_alerts",
-      "label": "check_alerts()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "code",
-      "norm_label": "check_alerts()",
-      "source_file": "src/alerts/alert_check.py",
-      "source_location": "L21"
-    },
-    {
-      "id": "src_database_postgres_migrate_data_migrate_data",
-      "label": "migrate_data()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "code",
-      "norm_label": "migrate_data()",
-      "source_file": "src/database/postgres/migrate_data.py",
-      "source_location": "L18"
-    },
-    {
-      "id": "src_jobs_collector_service_handle_shutdown",
-      "label": "handle_shutdown()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "code",
-      "norm_label": "handle_shutdown()",
-      "source_file": "src/jobs/collector_service.py",
-      "source_location": "L28"
-    },
-    {
-      "id": "src_jobs_collector_service_run_collector_loop",
-      "label": "run_collector_loop()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "code",
-      "norm_label": "run_collector_loop()",
-      "source_file": "src/jobs/collector_service.py",
-      "source_location": "L36"
-    },
-    {
-      "id": "src_web_app_background_scheduler_loop",
-      "label": "_background_scheduler_loop()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "code",
-      "norm_label": "_background_scheduler_loop()",
-      "source_file": "src/web/app.py",
-      "source_location": "L1118"
     },
     {
       "id": "src_web_app_start_background_scheduler",
@@ -2236,95 +2284,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 125,
-      "community_name": "check_alerts",
+      "community_name": "start_background_scheduler",
       "file_type": "code",
       "norm_label": "start_background_scheduler()",
       "source_file": "src/web/app.py",
       "source_location": "L1164"
-    },
-    {
-      "id": "tests_test_alert_check_filter_test_alert_check_filters_inactive_batches",
-      "label": "test_alert_check_filters_inactive_batches()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "code",
-      "norm_label": "test_alert_check_filters_inactive_batches()",
-      "source_file": "tests/test_alert_check_filter.py",
-      "source_location": "L8"
-    },
-    {
-      "id": "src_scrape_monitor_data_collect_via_api",
-      "label": "collect_via_api()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "code",
-      "norm_label": "collect_via_api()",
-      "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L46"
-    },
-    {
-      "id": "src_scrape_monitor_data_scrape_and_save",
-      "label": "scrape_and_save()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "code",
-      "norm_label": "scrape_and_save()",
-      "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L136"
-    },
-    {
-      "id": "tests_test_monitor_data_clean_db",
-      "label": "clean_db()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "code",
-      "norm_label": "clean_db()",
-      "source_file": "tests/test_monitor_data.py",
-      "source_location": "L11"
-    },
-    {
-      "id": "tests_test_monitor_data_test_collect_via_api_ignores_zeroed_and_invalid",
-      "label": "test_collect_via_api_ignores_zeroed_and_invalid()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "code",
-      "norm_label": "test_collect_via_api_ignores_zeroed_and_invalid()",
-      "source_file": "tests/test_monitor_data.py",
-      "source_location": "L68"
-    },
-    {
-      "id": "tests_test_monitor_data_test_collect_via_api_success",
-      "label": "test_collect_via_api_success()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "code",
-      "norm_label": "test_collect_via_api_success()",
-      "source_file": "tests/test_monitor_data.py",
-      "source_location": "L27"
-    },
-    {
-      "id": "tests_test_monitor_data_test_scrape_and_save_suspended",
-      "label": "test_scrape_and_save_suspended()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "code",
-      "norm_label": "test_scrape_and_save_suspended()",
-      "source_file": "tests/test_monitor_data.py",
-      "source_location": "L100"
     },
     {
       "id": "scripts_15_auto_configure_macs_main",
@@ -2332,7 +2296,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 127,
-      "community_name": "monitor_data.py",
+      "community_name": "15-auto-configure-macs.py",
       "file_type": "code",
       "norm_label": "main()",
       "source_file": "scripts/15-auto-configure-macs.py",
@@ -2344,47 +2308,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 127,
-      "community_name": "monitor_data.py",
+      "community_name": "15-auto-configure-macs.py",
       "file_type": "code",
       "norm_label": "update_env_file()",
       "source_file": "scripts/15-auto-configure-macs.py",
       "source_location": "L21"
-    },
-    {
-      "id": "scripts_scrape_produtor_main",
-      "label": "main()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 127,
-      "community_name": "monitor_data.py",
-      "file_type": "code",
-      "norm_label": "main()",
-      "source_file": "scripts/scrape_produtor.py",
-      "source_location": "L14"
-    },
-    {
-      "id": "src_scrape_monitor_data_ensure_leituras_table",
-      "label": "ensure_leituras_table()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 127,
-      "community_name": "monitor_data.py",
-      "file_type": "code",
-      "norm_label": "ensure_leituras_table()",
-      "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L25"
-    },
-    {
-      "id": "src_services_database_get_default_estrutura_info",
-      "label": "get_default_estrutura_info()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 127,
-      "community_name": "monitor_data.py",
-      "file_type": "code",
-      "norm_label": "get_default_estrutura_info()",
-      "source_file": "src/services/database.py",
-      "source_location": "L102"
     },
     {
       "id": "src_bots_agent_tools_execute_python_report",
@@ -2433,30 +2361,6 @@
       "norm_label": "tool()",
       "source_file": "src/bots/agent_tools.py",
       "source_location": "L8"
-    },
-    {
-      "id": "src_services_database_generate_sha256",
-      "label": "generate_sha256()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 129,
-      "community_name": "get_estrutura_uid",
-      "file_type": "code",
-      "norm_label": "generate_sha256()",
-      "source_file": "src/services/database.py",
-      "source_location": "L75"
-    },
-    {
-      "id": "src_services_database_get_estrutura_uid",
-      "label": "get_estrutura_uid()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 129,
-      "community_name": "get_estrutura_uid",
-      "file_type": "code",
-      "norm_label": "get_estrutura_uid()",
-      "source_file": "src/services/database.py",
-      "source_location": "L79"
     },
     {
       "id": "tests_test_agent_fallback_testagentfallback_test_get_agent_executor_fallback_logic",
@@ -2517,6 +2421,42 @@
       "norm_label": "validate_user()",
       "source_file": "src/services/web_auth.py",
       "source_location": "L44"
+    },
+    {
+      "id": "src_web_app_load_user",
+      "label": "load_user()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "test_web_dashboard.py",
+      "file_type": "code",
+      "norm_label": "load_user()",
+      "source_file": "src/web/app.py",
+      "source_location": "L122"
+    },
+    {
+      "id": "src_web_app_login",
+      "label": "login()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "test_web_dashboard.py",
+      "file_type": "code",
+      "norm_label": "login()",
+      "source_file": "src/web/app.py",
+      "source_location": "L131"
+    },
+    {
+      "id": "src_web_app_user_init",
+      "label": ".__init__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "test_web_dashboard.py",
+      "file_type": "code",
+      "norm_label": ".__init__()",
+      "source_file": "src/web/app.py",
+      "source_location": "L117"
     },
     {
       "id": "tests_test_web_dashboard_auth_client",
@@ -2744,7 +2684,19 @@
       "file_type": "code",
       "norm_label": "main()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L459"
+      "source_location": "L502"
+    },
+    {
+      "id": "src_services_noctua_client_noctuaclient_discover_api_key_from_portal",
+      "label": ".discover_api_key_from_portal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "NoctuaClient",
+      "file_type": "code",
+      "norm_label": ".discover_api_key_from_portal()",
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L209"
     },
     {
       "id": "src_services_noctua_client_noctuaclient_execute_graphql",
@@ -2756,7 +2708,7 @@
       "file_type": "code",
       "norm_label": "._execute_graphql()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L209"
+      "source_location": "L243"
     },
     {
       "id": "src_services_noctua_client_noctuaclient_get_command_status",
@@ -2768,7 +2720,7 @@
       "file_type": "code",
       "norm_label": ".get_command_status()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L451"
+      "source_location": "L494"
     },
     {
       "id": "src_services_noctua_client_noctuaclient_get_endpoint_config",
@@ -2780,7 +2732,7 @@
       "file_type": "code",
       "norm_label": ".get_endpoint_config()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L340"
+      "source_location": "L383"
     },
     {
       "id": "src_services_noctua_client_noctuaclient_get_headers",
@@ -2792,7 +2744,7 @@
       "file_type": "code",
       "norm_label": "._get_headers()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L201"
+      "source_location": "L235"
     },
     {
       "id": "src_services_noctua_client_noctuaclient_get_hourly_sensor_data",
@@ -2804,7 +2756,7 @@
       "file_type": "code",
       "norm_label": ".get_hourly_sensor_data()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L325"
+      "source_location": "L368"
     },
     {
       "id": "src_services_noctua_client_noctuaclient_get_latest_readings_by_tanque",
@@ -2816,7 +2768,7 @@
       "file_type": "code",
       "norm_label": ".get_latest_readings_by_tanque()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L271"
+      "source_location": "L314"
     },
     {
       "id": "src_services_noctua_client_noctuaclient_get_latest_sensor_data",
@@ -2828,7 +2780,7 @@
       "file_type": "code",
       "norm_label": ".get_latest_sensor_data()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L260"
+      "source_location": "L303"
     },
     {
       "id": "src_services_noctua_client_noctuaclient_init",
@@ -2840,7 +2792,7 @@
       "file_type": "code",
       "norm_label": ".__init__()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L180"
+      "source_location": "L182"
     },
     {
       "id": "src_services_noctua_client_noctuaclient_test_connection",
@@ -2852,7 +2804,7 @@
       "file_type": "code",
       "norm_label": ".test_connection()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L241"
+      "source_location": "L284"
     },
     {
       "id": "src_services_noctua_client_noctuaclient_update_endpoint_thresholds",
@@ -2864,7 +2816,7 @@
       "file_type": "code",
       "norm_label": ".update_endpoint_thresholds()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L349"
+      "source_location": "L392"
     },
     {
       "id": "src_services_noctua_client_noctuaclient_update_endpoint_timer",
@@ -2876,7 +2828,7 @@
       "file_type": "code",
       "norm_label": ".update_endpoint_timer()",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L384"
+      "source_location": "L427"
     },
     {
       "id": "tests_test_env_test_environment_is_isolated",
@@ -3023,76 +2975,136 @@
       "source_location": "L23"
     },
     {
-      "id": "src_alerts_offline_check_check_last_reading",
-      "label": "check_last_reading()",
+      "id": "src_services_database_listar_contatos_whatsapp",
+      "label": "listar_contatos_whatsapp()",
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "get_local_now",
+      "community_name": "send_whatsapp_message",
       "file_type": "code",
-      "norm_label": "check_last_reading()",
-      "source_file": "src/alerts/offline_check.py",
-      "source_location": "L19"
-    },
-    {
-      "id": "src_services_database_get_local_now",
-      "label": "get_local_now()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "get_local_now",
-      "file_type": "code",
-      "norm_label": "get_local_now()",
+      "norm_label": "listar_contatos_whatsapp()",
       "source_file": "src/services/database.py",
-      "source_location": "L27"
+      "source_location": "L252"
     },
     {
-      "id": "tests_test_offline_check_filter_test_offline_check_filters_inactive_batches",
-      "label": "test_offline_check_filters_inactive_batches()",
+      "id": "src_services_notification_extract_evolution_error",
+      "label": "_extract_evolution_error()",
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "get_local_now",
+      "community_name": "send_whatsapp_message",
       "file_type": "code",
-      "norm_label": "test_offline_check_filters_inactive_batches()",
-      "source_file": "tests/test_offline_check_filter.py",
-      "source_location": "L6"
+      "norm_label": "_extract_evolution_error()",
+      "source_file": "src/services/notification.py",
+      "source_location": "L59"
     },
     {
-      "id": "tests_test_timezone_offline_test_dashboard_offline_calculation",
-      "label": "test_dashboard_offline_calculation()",
+      "id": "src_services_notification_get_brazilian_phone_variants",
+      "label": "get_brazilian_phone_variants()",
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "get_local_now",
+      "community_name": "send_whatsapp_message",
       "file_type": "code",
-      "norm_label": "test_dashboard_offline_calculation()",
-      "source_file": "tests/test_timezone_offline.py",
-      "source_location": "L12"
+      "norm_label": "get_brazilian_phone_variants()",
+      "source_file": "src/services/notification.py",
+      "source_location": "L38"
     },
     {
-      "id": "tests_test_timezone_offline_test_get_local_now_returns_datetime",
-      "label": "test_get_local_now_returns_datetime()",
+      "id": "src_services_notification_normalize_whatsapp_number",
+      "label": "normalize_whatsapp_number()",
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "get_local_now",
+      "community_name": "send_whatsapp_message",
       "file_type": "code",
-      "norm_label": "test_get_local_now_returns_datetime()",
-      "source_file": "tests/test_timezone_offline.py",
-      "source_location": "L6"
+      "norm_label": "normalize_whatsapp_number()",
+      "source_file": "src/services/notification.py",
+      "source_location": "L28"
     },
     {
-      "id": "tests_test_timezone_offline_test_offline_check_timezone_resilience",
-      "label": "test_offline_check_timezone_resilience()",
+      "id": "src_services_notification_send_ntfy_message",
+      "label": "send_ntfy_message()",
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "get_local_now",
+      "community_name": "send_whatsapp_message",
       "file_type": "code",
-      "norm_label": "test_offline_check_timezone_resilience()",
-      "source_file": "tests/test_timezone_offline.py",
-      "source_location": "L34"
+      "norm_label": "send_ntfy_message()",
+      "source_file": "src/services/notification.py",
+      "source_location": "L236"
+    },
+    {
+      "id": "src_services_notification_send_whatsapp_message",
+      "label": "send_whatsapp_message()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "code",
+      "norm_label": "send_whatsapp_message()",
+      "source_file": "src/services/notification.py",
+      "source_location": "L76"
+    },
+    {
+      "id": "src_services_notification_send_whatsapp_photo",
+      "label": "send_whatsapp_photo()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "code",
+      "norm_label": "send_whatsapp_photo()",
+      "source_file": "src/services/notification.py",
+      "source_location": "L162"
+    },
+    {
+      "id": "tests_test_notification_ntfy_test_send_ntfy_message_success",
+      "label": "test_send_ntfy_message_success()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "code",
+      "norm_label": "test_send_ntfy_message_success()",
+      "source_file": "tests/test_notification_ntfy.py",
+      "source_location": "L5"
+    },
+    {
+      "id": "tests_test_notification_ntfy_test_send_telegram_mirrors_to_ntfy",
+      "label": "test_send_telegram_mirrors_to_ntfy()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "code",
+      "norm_label": "test_send_telegram_mirrors_to_ntfy()",
+      "source_file": "tests/test_notification_ntfy.py",
+      "source_location": "L25"
+    },
+    {
+      "id": "tests_test_notification_ntfy_test_send_whatsapp_message_brazilian_ninth_digit_fallback_and_error",
+      "label": "test_send_whatsapp_message_brazilian_ninth_digit_fallback_and_error()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "code",
+      "norm_label": "test_send_whatsapp_message_brazilian_ninth_digit_fallback_and_error()",
+      "source_file": "tests/test_notification_ntfy.py",
+      "source_location": "L63"
+    },
+    {
+      "id": "tests_test_notification_ntfy_test_send_whatsapp_message_evolution_api",
+      "label": "test_send_whatsapp_message_evolution_api()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "code",
+      "norm_label": "test_send_whatsapp_message_evolution_api()",
+      "source_file": "tests/test_notification_ntfy.py",
+      "source_location": "L43"
     },
     {
       "id": "scripts_05_init_sqlite_db_init_sqlite",
@@ -3313,6 +3325,17 @@
       "source_location": "L1"
     },
     {
+      "id": "src_jobs_collector_service",
+      "label": "collector_service.py",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "collector_service.py",
+      "source_file": "src/jobs/collector_service.py",
+      "source_location": "L1"
+    },
+    {
       "id": "src_jobs_evening_report",
       "label": "evening_report.py",
       "_origin": "ast",
@@ -3332,17 +3355,6 @@
       "file_type": "code",
       "norm_label": "hourly_report.py",
       "source_file": "src/jobs/hourly_report.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_jobs_morning_weather_report",
-      "label": "morning_weather_report.py",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "morning_weather_report.py",
-      "source_file": "src/jobs/morning_weather_report.py",
       "source_location": "L1"
     },
     {
@@ -3445,6 +3457,17 @@
       "source_location": "L1"
     },
     {
+      "id": "src_scrape_monitor_data",
+      "label": "monitor_data.py",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "monitor_data.py",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L1"
+    },
+    {
       "id": "src_services_database",
       "label": "database.py",
       "_origin": "ast",
@@ -3467,14 +3490,47 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_test_notification_ntfy",
-      "label": "test_notification_ntfy.py",
+      "id": "tests_test_alert_check_filter",
+      "label": "test_alert_check_filter.py",
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "code",
-      "norm_label": "test_notification_ntfy.py",
-      "source_file": "tests/test_notification_ntfy.py",
+      "norm_label": "test_alert_check_filter.py",
+      "source_file": "tests/test_alert_check_filter.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_monitor_data",
+      "label": "test_monitor_data.py",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "test_monitor_data.py",
+      "source_file": "tests/test_monitor_data.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_monitor_data_py_fixture",
+      "label": "fixture",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "fixture",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_test_offline_check_filter",
+      "label": "test_offline_check_filter.py",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "code",
+      "norm_label": "test_offline_check_filter.py",
+      "source_file": "tests/test_offline_check_filter.py",
       "source_location": "L1"
     },
     {
@@ -3489,6 +3545,28 @@
       "source_location": "L1"
     },
     {
+      "id": "src_alerts_alert_check_rationale_22",
+      "label": "Verifica as \u00faltimas leituras no banco de dados e dispara alertas se necess\u00e1rio.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "verifica as ultimas leituras no banco de dados e dispara alertas se necessario.",
+      "source_file": "src/alerts/alert_check.py",
+      "source_location": "L22"
+    },
+    {
+      "id": "src_alerts_offline_check_rationale_20",
+      "label": "Verifica o tempo da \u00faltima leitura dos tanques. Envia alerta se o atraso for\u2026",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "verifica o tempo da ultima leitura dos tanques. envia alerta se o atraso for...",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L20"
+    },
+    {
       "id": "src_analysis_plot_curva_rationale_78",
       "label": "Ajuste linear simples: y = a*x + b Retorna coeficientes a, b.",
       "_origin": "ast",
@@ -3498,17 +3576,6 @@
       "norm_label": "ajuste linear simples: y = a*x + b retorna coeficientes a, b.",
       "source_file": "src/analysis/plot_curva.py",
       "source_location": "L78"
-    },
-    {
-      "id": "src_bots_agent_rationale_143",
-      "label": "Fun\u00e7\u00e3o para bater papo livremente com o agente via bot do Telegram.",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "funcao para bater papo livremente com o agente via bot do telegram.",
-      "source_file": "src/bots/agent.py",
-      "source_location": "L143"
     },
     {
       "id": "src_bots_agent_rationale_169",
@@ -3577,6 +3644,17 @@
       "source_location": "L59"
     },
     {
+      "id": "src_database_postgres_migrate_data_rationale_19",
+      "label": "Migra dados do SQLite para o PostgreSQL.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "migra dados do sqlite para o postgresql.",
+      "source_file": "src/database/postgres/migrate_data.py",
+      "source_location": "L19"
+    },
+    {
       "id": "src_jobs_evening_report_rationale_31",
       "label": "Gera um relat\u00f3rio de final de tarde com um gr\u00e1fico do n\u00edvel de oxig\u00eanio e envia\u2026",
       "_origin": "ast",
@@ -3632,6 +3710,50 @@
       "source_location": "L47"
     },
     {
+      "id": "src_scrape_monitor_data_rationale_137",
+      "label": "Fun\u00e7\u00e3o principal de tomada de dados. Utiliza preferencialmente a API GraphQL\u2026",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "funcao principal de tomada de dados. utiliza preferencialmente a api graphql...",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L137"
+    },
+    {
+      "id": "src_scrape_monitor_data_rationale_26",
+      "label": "Garante que a tabela de leituras exista com o schema correto.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "garante que a tabela de leituras exista com o schema correto.",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L26"
+    },
+    {
+      "id": "src_scrape_monitor_data_rationale_47",
+      "label": "Realiza a coleta das leituras dos tanques diretamente via AWS AppSync GraphQL\u2026",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "realiza a coleta das leituras dos tanques diretamente via aws appsync graphql...",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L47"
+    },
+    {
+      "id": "src_services_database_rationale_103",
+      "label": "Retorna as informa\u00e7\u00f5es da estrutura configurada no .env.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "retorna as informacoes da estrutura configurada no .env.",
+      "source_file": "src/services/database.py",
+      "source_location": "L103"
+    },
+    {
       "id": "src_services_database_rationale_111",
       "label": "Salva o parecer da IA no PostgreSQL de forma compacta.",
       "_origin": "ast",
@@ -3674,17 +3796,6 @@
       "norm_label": "garante a criacao da tabela contatos_whatsapp no postgresql (primario) e no...",
       "source_file": "src/services/database.py",
       "source_location": "L185"
-    },
-    {
-      "id": "src_services_database_rationale_257",
-      "label": "Retorna lista de contatos WhatsApp do PostgreSQL (ou SQLite em fallback).",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "retorna lista de contatos whatsapp do postgresql (ou sqlite em fallback).",
-      "source_file": "src/services/database.py",
-      "source_location": "L257"
     },
     {
       "id": "src_services_database_rationale_342",
@@ -3731,6 +3842,28 @@
       "source_location": "L57"
     },
     {
+      "id": "src_services_database_rationale_76",
+      "label": "Gera um hash SHA256 a partir de uma string.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "gera um hash sha256 a partir de uma string.",
+      "source_file": "src/services/database.py",
+      "source_location": "L76"
+    },
+    {
+      "id": "src_services_database_rationale_80",
+      "label": "Gera o UID para uma estrutura baseado no nome e pluscode.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "get_sqlite_connection",
+      "file_type": "rationale",
+      "norm_label": "gera o uid para uma estrutura baseado no nome e pluscode.",
+      "source_file": "src/services/database.py",
+      "source_location": "L80"
+    },
+    {
       "id": "src_services_database_rationale_84",
       "label": "Retorna um dicion\u00e1rio mapeando o nome amig\u00e1vel da estrutura para o seu UID.\u2026",
       "_origin": "ast",
@@ -3740,28 +3873,6 @@
       "norm_label": "retorna um dicionario mapeando o nome amigavel da estrutura para o seu uid....",
       "source_file": "src/services/database.py",
       "source_location": "L84"
-    },
-    {
-      "id": "src_services_notification_rationale_169",
-      "label": "Envia uma imagem com legenda via Evolution API v2 (WhatsApp) para contatos\u2026",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "envia uma imagem com legenda via evolution api v2 (whatsapp) para contatos...",
-      "source_file": "src/services/notification.py",
-      "source_location": "L169"
-    },
-    {
-      "id": "src_services_notification_rationale_243",
-      "label": "Envia uma notifica\u00e7\u00e3o push via ntfy.sh para o t\u00f3pico configurado. Ultraleve,\u2026",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "envia uma notificacao push via ntfy.sh para o topico configurado. ultraleve,...",
-      "source_file": "src/services/notification.py",
-      "source_location": "L243"
     },
     {
       "id": "src_services_notification_rationale_276",
@@ -3775,17 +3886,6 @@
       "source_location": "L276"
     },
     {
-      "id": "src_services_notification_rationale_29",
-      "label": "Higieniza o n\u00famero de telefone e adiciona DDI 55 caso possua apenas DDD +\u2026",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "higieniza o numero de telefone e adiciona ddi 55 caso possua apenas ddd +...",
-      "source_file": "src/services/notification.py",
-      "source_location": "L29"
-    },
-    {
       "id": "src_services_notification_rationale_322",
       "label": "Envia uma imagem com legenda via WhatsApp (Evolution API) e opcionalmente\u2026",
       "_origin": "ast",
@@ -3797,81 +3897,59 @@
       "source_location": "L322"
     },
     {
-      "id": "src_services_notification_rationale_39",
-      "label": "Retorna variantes de n\u00famero brasileiro (com e sem o 9\u00ba d\u00edgito ap\u00f3s o DDD) para\u2026",
+      "id": "src_web_app_rationale_1119",
+      "label": "Executa coleta Noctua, checagem de alertas/offline, clima e sync em background.",
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "rationale",
-      "norm_label": "retorna variantes de numero brasileiro (com e sem o 9o digito apos o ddd) para...",
-      "source_file": "src/services/notification.py",
-      "source_location": "L39"
+      "norm_label": "executa coleta noctua, checagem de alertas/offline, clima e sync em background.",
+      "source_file": "src/web/app.py",
+      "source_location": "L1119"
     },
     {
-      "id": "src_services_notification_rationale_60",
-      "label": "Extrai mensagem amig\u00e1vel de erro retornada pela Evolution API.",
+      "id": "tests_test_alert_check_filter_rationale_9",
+      "label": "Garante que check_alerts n\u00e3o gera alertas de oxig\u00eanio para tanques sem lote\u2026",
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "rationale",
-      "norm_label": "extrai mensagem amigavel de erro retornada pela evolution api.",
-      "source_file": "src/services/notification.py",
-      "source_location": "L60"
+      "norm_label": "garante que check_alerts nao gera alertas de oxigenio para tanques sem lote...",
+      "source_file": "tests/test_alert_check_filter.py",
+      "source_location": "L9"
     },
     {
-      "id": "src_services_notification_rationale_83",
-      "label": "Envia mensagem de texto via Evolution API v2 (WhatsApp). Se 'phone' for\u2026",
+      "id": "tests_test_monitor_data_rationale_1",
+      "label": "Testes unit\u00e1rios e de integra\u00e7\u00e3o para o m\u00f3dulo monitor_data refatorado para API\u2026",
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "rationale",
-      "norm_label": "envia mensagem de texto via evolution api v2 (whatsapp). se 'phone' for...",
-      "source_file": "src/services/notification.py",
-      "source_location": "L83"
+      "norm_label": "testes unitarios e de integracao para o modulo monitor_data refatorado para api...",
+      "source_file": "tests/test_monitor_data.py",
+      "source_location": "L1"
     },
     {
-      "id": "tests_test_notification_ntfy_rationale_26",
-      "label": "Valida se alertas do Telegram disparam automaticamente push para o ntfy.sh.",
+      "id": "tests_test_offline_check_filter_rationale_7",
+      "label": "Garante que check_last_reading n\u00e3o gera alertas offline para tanques sem lote\u2026",
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "rationale",
-      "norm_label": "valida se alertas do telegram disparam automaticamente push para o ntfy.sh.",
-      "source_file": "tests/test_notification_ntfy.py",
-      "source_location": "L26"
+      "norm_label": "garante que check_last_reading nao gera alertas offline para tanques sem lote...",
+      "source_file": "tests/test_offline_check_filter.py",
+      "source_location": "L7"
     },
     {
-      "id": "tests_test_notification_ntfy_rationale_44",
-      "label": "Valida se o envio via Evolution API formata o n\u00famero (DDI 55) e chama o\u2026",
+      "id": "tests_test_weather_sync_rationale_10",
+      "label": "Verifica se a tabela clima_historico foi criada no SQLite.",
       "_origin": "ast",
       "community": 0,
       "community_name": "get_sqlite_connection",
       "file_type": "rationale",
-      "norm_label": "valida se o envio via evolution api formata o numero (ddi 55) e chama o...",
-      "source_file": "tests/test_notification_ntfy.py",
-      "source_location": "L44"
-    },
-    {
-      "id": "tests_test_notification_ntfy_rationale_6",
-      "label": "Valida se o payload e headers do ntfy.sh s\u00e3o montados e enviados corretamente.",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "valida se o payload e headers do ntfy.sh sao montados e enviados corretamente.",
-      "source_file": "tests/test_notification_ntfy.py",
-      "source_location": "L6"
-    },
-    {
-      "id": "tests_test_notification_ntfy_rationale_64",
-      "label": "Valida fallback de 9\u00ba d\u00edgito (13 -> 12 d\u00edgitos) e mensagem clara quando\u2026",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "valida fallback de 9o digito (13 -> 12 digitos) e mensagem clara quando...",
-      "source_file": "tests/test_notification_ntfy.py",
-      "source_location": "L64"
+      "norm_label": "verifica se a tabela clima_historico foi criada no sqlite.",
+      "source_file": "tests/test_weather_sync.py",
+      "source_location": "L10"
     },
     {
       "id": "asyncio",
@@ -3892,6 +3970,17 @@
       "community_name": "main.py",
       "file_type": "code",
       "norm_label": "callbackquery",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "exception",
+      "label": "Exception",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "main.py",
+      "file_type": "code",
+      "norm_label": "exception",
       "source_file": "",
       "source_location": ""
     },
@@ -3993,6 +4082,17 @@
       "norm_label": "test_bot_active_batch.py",
       "source_file": "tests/test_bot_active_batch.py",
       "source_location": "L1"
+    },
+    {
+      "id": "src_bots_agent_rationale_143",
+      "label": "Fun\u00e7\u00e3o para bater papo livremente com o agente via bot do Telegram.",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "main.py",
+      "file_type": "rationale",
+      "norm_label": "funcao para bater papo livremente com o agente via bot do telegram.",
+      "source_file": "src/bots/agent.py",
+      "source_location": "L143"
     },
     {
       "id": "src_bots_db_rationale_113",
@@ -5548,7 +5648,7 @@
       "source_location": ""
     },
     {
-      "id": "src_services_noctua_client_rationale_168",
+      "id": "src_services_noctua_client_rationale_170",
       "label": "Exce\u00e7\u00e3o base para erros de comunica\u00e7\u00e3o ou regra de neg\u00f3cio com Noctua IoT.",
       "_origin": "ast",
       "community": 115,
@@ -5556,10 +5656,10 @@
       "file_type": "rationale",
       "norm_label": "excecao base para erros de comunicacao ou regra de negocio com noctua iot.",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L168"
+      "source_location": "L170"
     },
     {
-      "id": "src_services_noctua_client_rationale_173",
+      "id": "src_services_noctua_client_rationale_175",
       "label": "Disparada quando uma opera\u00e7\u00e3o de escrita \u00e9 tentada sob NOCTUA_READ_ONLY=true.",
       "_origin": "ast",
       "community": 115,
@@ -5567,10 +5667,10 @@
       "file_type": "rationale",
       "norm_label": "disparada quando uma operacao de escrita e tentada sob noctua_read_only=true.",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L173"
+      "source_location": "L175"
     },
     {
-      "id": "src_services_noctua_client_rationale_423",
+      "id": "src_services_noctua_client_rationale_466",
       "label": "Envia mensagem de comando para o gateway/endpoint do tanque. Bloqueado\u2026",
       "_origin": "ast",
       "community": 115,
@@ -5578,7 +5678,7 @@
       "file_type": "rationale",
       "norm_label": "envia mensagem de comando para o gateway/endpoint do tanque. bloqueado...",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L423"
+      "source_location": "L466"
     },
     {
       "id": "src_web_app_rationale_369",
@@ -5997,26 +6097,15 @@
       "source_location": "L54"
     },
     {
-      "id": "user_loader",
-      "label": "user_loader",
+      "id": "scripts_scrape_produtor",
+      "label": "scrape_produtor.py",
       "_origin": "ast",
       "community": 119,
-      "community_name": "User",
+      "community_name": "scrape_produtor.py",
       "file_type": "code",
-      "norm_label": "user_loader",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "usermixin",
-      "label": "UserMixin",
-      "_origin": "ast",
-      "community": 119,
-      "community_name": "User",
-      "file_type": "code",
-      "norm_label": "usermixin",
-      "source_file": "",
-      "source_location": ""
+      "norm_label": "scrape_produtor.py",
+      "source_file": "scripts/scrape_produtor.py",
+      "source_location": "L1"
     },
     {
       "id": "knowledge_diario_diary_2026_10_28",
@@ -6088,7 +6177,7 @@
       "node_kind": "heading",
       "norm_label": "5. testes automatizados",
       "source_file": "knowledge/diario/diary_2026_10_28.md",
-      "source_location": "L31"
+      "source_location": "L32"
     },
     {
       "id": "knowledge_diario_diary_2026_10_28_a\u00e7\u00f5es_executadas",
@@ -6279,7 +6368,7 @@
       "label": "hourly_weather_sync.py",
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "code",
       "norm_label": "hourly_weather_sync.py",
       "source_file": "src/jobs/hourly_weather_sync.py",
@@ -6290,10 +6379,21 @@
       "label": "test_hourly_report_filter.py",
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "code",
       "norm_label": "test_hourly_report_filter.py",
       "source_file": "tests/test_hourly_report_filter.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_timezone_offline",
+      "label": "test_timezone_offline.py",
+      "_origin": "ast",
+      "community": 124,
+      "community_name": "get_local_now",
+      "file_type": "code",
+      "norm_label": "test_timezone_offline.py",
+      "source_file": "tests/test_timezone_offline.py",
       "source_location": "L1"
     },
     {
@@ -6301,7 +6401,7 @@
       "label": "test_weather_sync.py",
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "code",
       "norm_label": "test_weather_sync.py",
       "source_file": "tests/test_weather_sync.py",
@@ -6312,7 +6412,7 @@
       "label": "Gera o relat\u00f3rio estat\u00edstico das \u00faltimas leituras para cada tanque.",
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "rationale",
       "norm_label": "gera o relatorio estatistico das ultimas leituras para cada tanque.",
       "source_file": "src/jobs/hourly_report.py",
@@ -6323,7 +6423,7 @@
       "label": "Obt\u00e9m o clima atual e salva na tabela clima_historico e no cache JSON.",
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "rationale",
       "norm_label": "obtem o clima atual e salva na tabela clima_historico e no cache json.",
       "source_file": "src/jobs/hourly_weather_sync.py",
@@ -6334,40 +6434,73 @@
       "label": "Busca previs\u00e3o do tempo da Open-Meteo via HTTP JSON puro (0 MB de overhead de\u2026",
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "rationale",
       "norm_label": "busca previsao do tempo da open-meteo via http json puro (0 mb de overhead de...",
       "source_file": "src/jobs/hourly_weather_sync.py",
       "source_location": "L31"
     },
     {
+      "id": "src_services_database_rationale_28",
+      "label": "Retorna datetime ing\u00eanuo representando o hor\u00e1rio local de Bras\u00edlia\u2026",
+      "_origin": "ast",
+      "community": 124,
+      "community_name": "get_local_now",
+      "file_type": "rationale",
+      "norm_label": "retorna datetime ingenuo representando o horario local de brasilia...",
+      "source_file": "src/services/database.py",
+      "source_location": "L28"
+    },
+    {
       "id": "tests_test_hourly_report_filter_rationale_6",
       "label": "Garante que get_hourly_report exclui dados de tanques sem lote ativo no\u2026",
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "rationale",
       "norm_label": "garante que get_hourly_report exclui dados de tanques sem lote ativo no...",
       "source_file": "tests/test_hourly_report_filter.py",
       "source_location": "L6"
     },
     {
-      "id": "tests_test_weather_sync_rationale_10",
-      "label": "Verifica se a tabela clima_historico foi criada no SQLite.",
+      "id": "tests_test_timezone_offline_rationale_13",
+      "label": "Simula o c\u00e1lculo do dashboard para leituras recentes vs antigas.",
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "rationale",
-      "norm_label": "verifica se a tabela clima_historico foi criada no sqlite.",
-      "source_file": "tests/test_weather_sync.py",
-      "source_location": "L10"
+      "norm_label": "simula o calculo do dashboard para leituras recentes vs antigas.",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L13"
+    },
+    {
+      "id": "tests_test_timezone_offline_rationale_35",
+      "label": "Valida se offline_check usa get_local_now sem gerar falsos positivos para\u2026",
+      "_origin": "ast",
+      "community": 124,
+      "community_name": "get_local_now",
+      "file_type": "rationale",
+      "norm_label": "valida se offline_check usa get_local_now sem gerar falsos positivos para...",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L35"
+    },
+    {
+      "id": "tests_test_timezone_offline_rationale_7",
+      "label": "Valida se get_local_now retorna datetime ing\u00eanuo e coerente.",
+      "_origin": "ast",
+      "community": 124,
+      "community_name": "get_local_now",
+      "file_type": "rationale",
+      "norm_label": "valida se get_local_now retorna datetime ingenuo e coerente.",
+      "source_file": "tests/test_timezone_offline.py",
+      "source_location": "L7"
     },
     {
       "id": "tests_test_weather_sync_rationale_18",
       "label": "Verifica se o job de sincroniza\u00e7\u00e3o salva dados no banco.",
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "rationale",
       "norm_label": "verifica se o job de sincronizacao salva dados no banco.",
       "source_file": "tests/test_weather_sync.py",
@@ -6378,186 +6511,32 @@
       "label": "Verifica se o relat\u00f3rio hor\u00e1rio cont\u00e9m a linha de clima.",
       "_origin": "ast",
       "community": 124,
-      "community_name": "sync_hourly_weather",
+      "community_name": "get_local_now",
       "file_type": "rationale",
       "norm_label": "verifica se o relatorio horario contem a linha de clima.",
       "source_file": "tests/test_weather_sync.py",
       "source_location": "L34"
     },
     {
-      "id": "src_jobs_collector_service",
-      "label": "collector_service.py",
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "code",
-      "norm_label": "collector_service.py",
-      "source_file": "src/jobs/collector_service.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_alert_check_filter",
-      "label": "test_alert_check_filter.py",
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "code",
-      "norm_label": "test_alert_check_filter.py",
-      "source_file": "tests/test_alert_check_filter.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_alerts_alert_check_rationale_22",
-      "label": "Verifica as \u00faltimas leituras no banco de dados e dispara alertas se necess\u00e1rio.",
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "rationale",
-      "norm_label": "verifica as ultimas leituras no banco de dados e dispara alertas se necessario.",
-      "source_file": "src/alerts/alert_check.py",
-      "source_location": "L22"
-    },
-    {
-      "id": "src_database_postgres_migrate_data_rationale_19",
-      "label": "Migra dados do SQLite para o PostgreSQL.",
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "rationale",
-      "norm_label": "migra dados do sqlite para o postgresql.",
-      "source_file": "src/database/postgres/migrate_data.py",
-      "source_location": "L19"
-    },
-    {
-      "id": "src_web_app_rationale_1119",
-      "label": "Executa coleta Noctua, checagem de alertas/offline, clima e sync em background.",
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "rationale",
-      "norm_label": "executa coleta noctua, checagem de alertas/offline, clima e sync em background.",
-      "source_file": "src/web/app.py",
-      "source_location": "L1119"
-    },
-    {
       "id": "src_web_app_rationale_1165",
       "label": "Inicia a thread daemon de coleta e alertas se ENABLE_INTERNAL_SCHEDULER=true.",
       "_origin": "ast",
       "community": 125,
-      "community_name": "check_alerts",
+      "community_name": "start_background_scheduler",
       "file_type": "rationale",
       "norm_label": "inicia a thread daemon de coleta e alertas se enable_internal_scheduler=true.",
       "source_file": "src/web/app.py",
       "source_location": "L1165"
     },
     {
-      "id": "tests_test_alert_check_filter_rationale_9",
-      "label": "Garante que check_alerts n\u00e3o gera alertas de oxig\u00eanio para tanques sem lote\u2026",
-      "_origin": "ast",
-      "community": 125,
-      "community_name": "check_alerts",
-      "file_type": "rationale",
-      "norm_label": "garante que check_alerts nao gera alertas de oxigenio para tanques sem lote...",
-      "source_file": "tests/test_alert_check_filter.py",
-      "source_location": "L9"
-    },
-    {
-      "id": "exception",
-      "label": "Exception",
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "code",
-      "norm_label": "exception",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "tests_test_monitor_data",
-      "label": "test_monitor_data.py",
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "code",
-      "norm_label": "test_monitor_data.py",
-      "source_file": "tests/test_monitor_data.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_monitor_data_py_fixture",
-      "label": "fixture",
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "code",
-      "norm_label": "fixture",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_scrape_monitor_data_rationale_137",
-      "label": "Fun\u00e7\u00e3o principal de tomada de dados. Utiliza preferencialmente a API GraphQL\u2026",
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "rationale",
-      "norm_label": "funcao principal de tomada de dados. utiliza preferencialmente a api graphql...",
-      "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L137"
-    },
-    {
-      "id": "src_scrape_monitor_data_rationale_47",
-      "label": "Realiza a coleta das leituras dos tanques diretamente via AWS AppSync GraphQL\u2026",
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "rationale",
-      "norm_label": "realiza a coleta das leituras dos tanques diretamente via aws appsync graphql...",
-      "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L47"
-    },
-    {
-      "id": "tests_test_monitor_data_rationale_1",
-      "label": "Testes unit\u00e1rios e de integra\u00e7\u00e3o para o m\u00f3dulo monitor_data refatorado para API\u2026",
-      "_origin": "ast",
-      "community": 126,
-      "community_name": "collect_via_api",
-      "file_type": "rationale",
-      "norm_label": "testes unitarios e de integracao para o modulo monitor_data refatorado para api...",
-      "source_file": "tests/test_monitor_data.py",
-      "source_location": "L1"
-    },
-    {
       "id": "scripts_15_auto_configure_macs_py_scripts_15_auto_configure_macs",
       "label": "15-auto-configure-macs.py",
       "_origin": "ast",
       "community": 127,
-      "community_name": "monitor_data.py",
+      "community_name": "15-auto-configure-macs.py",
       "file_type": "code",
       "norm_label": "15-auto-configure-macs.py",
       "source_file": "scripts/15-auto-configure-macs.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "scripts_scrape_produtor",
-      "label": "scrape_produtor.py",
-      "_origin": "ast",
-      "community": 127,
-      "community_name": "monitor_data.py",
-      "file_type": "code",
-      "norm_label": "scrape_produtor.py",
-      "source_file": "scripts/scrape_produtor.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_scrape_monitor_data",
-      "label": "monitor_data.py",
-      "_origin": "ast",
-      "community": 127,
-      "community_name": "monitor_data.py",
-      "file_type": "code",
-      "norm_label": "monitor_data.py",
-      "source_file": "src/scrape/monitor_data.py",
       "source_location": "L1"
     },
     {
@@ -6565,33 +6544,11 @@
       "label": "Atualiza as vari\u00e1veis STRUCT_MACS, STRUCT_NAME e STRUCT_PLUSCODE no arquivo\u2026",
       "_origin": "ast",
       "community": 127,
-      "community_name": "monitor_data.py",
+      "community_name": "15-auto-configure-macs.py",
       "file_type": "rationale",
       "norm_label": "atualiza as variaveis struct_macs, struct_name e struct_pluscode no arquivo...",
       "source_file": "scripts/15-auto-configure-macs.py",
       "source_location": "L22"
-    },
-    {
-      "id": "src_scrape_monitor_data_rationale_26",
-      "label": "Garante que a tabela de leituras exista com o schema correto.",
-      "_origin": "ast",
-      "community": 127,
-      "community_name": "monitor_data.py",
-      "file_type": "rationale",
-      "norm_label": "garante que a tabela de leituras exista com o schema correto.",
-      "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L26"
-    },
-    {
-      "id": "src_services_database_rationale_103",
-      "label": "Retorna as informa\u00e7\u00f5es da estrutura configurada no .env.",
-      "_origin": "ast",
-      "community": 127,
-      "community_name": "monitor_data.py",
-      "file_type": "rationale",
-      "norm_label": "retorna as informacoes da estrutura configurada no .env.",
-      "source_file": "src/services/database.py",
-      "source_location": "L103"
     },
     {
       "id": "src_bots_agent_tools",
@@ -6636,28 +6593,6 @@
       "norm_label": "executa um script python da pasta src/reports/ e retorna o resultado no...",
       "source_file": "src/bots/agent_tools.py",
       "source_location": "L85"
-    },
-    {
-      "id": "src_services_database_rationale_76",
-      "label": "Gera um hash SHA256 a partir de uma string.",
-      "_origin": "ast",
-      "community": 129,
-      "community_name": "get_estrutura_uid",
-      "file_type": "rationale",
-      "norm_label": "gera um hash sha256 a partir de uma string.",
-      "source_file": "src/services/database.py",
-      "source_location": "L76"
-    },
-    {
-      "id": "src_services_database_rationale_80",
-      "label": "Gera o UID para uma estrutura baseado no nome e pluscode.",
-      "_origin": "ast",
-      "community": 129,
-      "community_name": "get_estrutura_uid",
-      "file_type": "rationale",
-      "norm_label": "gera o uid para uma estrutura baseado no nome e pluscode.",
-      "source_file": "src/services/database.py",
-      "source_location": "L80"
     },
     {
       "id": "scripts_11_backup_db",
@@ -6953,6 +6888,28 @@
       "source_location": ""
     },
     {
+      "id": "user_loader",
+      "label": "user_loader",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "test_web_dashboard.py",
+      "file_type": "code",
+      "norm_label": "user_loader",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "usermixin",
+      "label": "UserMixin",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "test_web_dashboard.py",
+      "file_type": "code",
+      "norm_label": "usermixin",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "src_services_web_auth_rationale_10",
       "label": "Inicializa a tabela de usu\u00e1rios web no SQLite.",
       "_origin": "ast",
@@ -7174,7 +7131,7 @@
       "source_location": ""
     },
     {
-      "id": "src_services_noctua_client_rationale_178",
+      "id": "src_services_noctua_client_rationale_180",
       "label": "Cliente HTTP s\u00edncrono para o AWS AppSync do Noctua IoT.",
       "_origin": "ast",
       "community": 21,
@@ -7182,21 +7139,32 @@
       "file_type": "rationale",
       "norm_label": "cliente http sincrono para o aws appsync do noctua iot.",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L178"
+      "source_location": "L180"
     },
     {
       "id": "src_services_noctua_client_rationale_210",
-      "label": "Executa uma chamada GraphQL no AWS AppSync com tratamento de status e erros.",
+      "label": "Extrai dinamicamente a chave x-api-key (da2-...) dos chunks est\u00e1ticos do portal\u2026",
       "_origin": "ast",
       "community": 21,
       "community_name": "NoctuaClient",
       "file_type": "rationale",
-      "norm_label": "executa uma chamada graphql no aws appsync com tratamento de status e erros.",
+      "norm_label": "extrai dinamicamente a chave x-api-key (da2-...) dos chunks estaticos do portal...",
       "source_file": "src/services/noctua_client.py",
       "source_location": "L210"
     },
     {
-      "id": "src_services_noctua_client_rationale_242",
+      "id": "src_services_noctua_client_rationale_244",
+      "label": "Executa uma chamada GraphQL no AWS AppSync com tratamento de status,\u2026",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "NoctuaClient",
+      "file_type": "rationale",
+      "norm_label": "executa uma chamada graphql no aws appsync com tratamento de status,...",
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L244"
+    },
+    {
+      "id": "src_services_noctua_client_rationale_285",
       "label": "Testa se as credenciais e o endpoint GraphQL respondem com sucesso.",
       "_origin": "ast",
       "community": 21,
@@ -7204,10 +7172,10 @@
       "file_type": "rationale",
       "norm_label": "testa se as credenciais e o endpoint graphql respondem com sucesso.",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L242"
+      "source_location": "L285"
     },
     {
-      "id": "src_services_noctua_client_rationale_261",
+      "id": "src_services_noctua_client_rationale_304",
       "label": "Consulta as leituras mais recentes registradas para o gateway.",
       "_origin": "ast",
       "community": 21,
@@ -7215,10 +7183,10 @@
       "file_type": "rationale",
       "norm_label": "consulta as leituras mais recentes registradas para o gateway.",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L261"
+      "source_location": "L304"
     },
     {
-      "id": "src_services_noctua_client_rationale_272",
+      "id": "src_services_noctua_client_rationale_315",
       "label": "Consulta os dados recentes e extrai a leitura mais atual de cada tanque\u2026",
       "_origin": "ast",
       "community": 21,
@@ -7226,10 +7194,10 @@
       "file_type": "rationale",
       "norm_label": "consulta os dados recentes e extrai a leitura mais atual de cada tanque...",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L272"
+      "source_location": "L315"
     },
     {
-      "id": "src_services_noctua_client_rationale_326",
+      "id": "src_services_noctua_client_rationale_369",
       "label": "Consulta o hist\u00f3rico de dados agregados por hora para um endpoint espec\u00edfico.",
       "_origin": "ast",
       "community": 21,
@@ -7237,10 +7205,10 @@
       "file_type": "rationale",
       "norm_label": "consulta o historico de dados agregados por hora para um endpoint especifico.",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L326"
+      "source_location": "L369"
     },
     {
-      "id": "src_services_noctua_client_rationale_341",
+      "id": "src_services_noctua_client_rationale_384",
       "label": "Consulta as configura\u00e7\u00f5es e par\u00e2metros de um tanque/endpoint.",
       "_origin": "ast",
       "community": 21,
@@ -7248,10 +7216,10 @@
       "file_type": "rationale",
       "norm_label": "consulta as configuracoes e parametros de um tanque/endpoint.",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L341"
+      "source_location": "L384"
     },
     {
-      "id": "src_services_noctua_client_rationale_356",
+      "id": "src_services_noctua_client_rationale_399",
       "label": "Atualiza os limiares de oxig\u00eanio cr\u00edtico e o modo de automa\u00e7\u00e3o. Garante limites\u2026",
       "_origin": "ast",
       "community": 21,
@@ -7259,10 +7227,10 @@
       "file_type": "rationale",
       "norm_label": "atualiza os limiares de oxigenio critico e o modo de automacao. garante limites...",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L356"
+      "source_location": "L399"
     },
     {
-      "id": "src_services_noctua_client_rationale_385",
+      "id": "src_services_noctua_client_rationale_428",
       "label": "Atualiza a programa\u00e7\u00e3o de janelas hor\u00e1rias (timer). timer_data pode ser um\u2026",
       "_origin": "ast",
       "community": 21,
@@ -7270,10 +7238,10 @@
       "file_type": "rationale",
       "norm_label": "atualiza a programacao de janelas horarias (timer). timer_data pode ser um...",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L385"
+      "source_location": "L428"
     },
     {
-      "id": "src_services_noctua_client_rationale_452",
+      "id": "src_services_noctua_client_rationale_495",
       "label": "Consulta o status de entrega do comando (SENT, DELIVERED, GATEWAY_OFFLINE,\u2026",
       "_origin": "ast",
       "community": 21,
@@ -7281,7 +7249,7 @@
       "file_type": "rationale",
       "norm_label": "consulta o status de entrega do comando (sent, delivered, gateway_offline,...",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L452"
+      "source_location": "L495"
     },
     {
       "id": "tests_test_env",
@@ -7511,6 +7479,17 @@
       },
       "norm_label": "04-setup-env-file.sh script",
       "source_file": "scripts/04-setup-env-file.sh",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_jobs_morning_weather_report",
+      "label": "morning_weather_report.py",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "get_weather_forecast",
+      "file_type": "code",
+      "norm_label": "morning_weather_report.py",
+      "source_file": "src/jobs/morning_weather_report.py",
       "source_location": "L1"
     },
     {
@@ -7900,92 +7879,136 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_test_offline_check_filter",
-      "label": "test_offline_check_filter.py",
+      "id": "tests_test_notification_ntfy",
+      "label": "test_notification_ntfy.py",
       "_origin": "ast",
       "community": 5,
-      "community_name": "get_local_now",
+      "community_name": "send_whatsapp_message",
       "file_type": "code",
-      "norm_label": "test_offline_check_filter.py",
-      "source_file": "tests/test_offline_check_filter.py",
+      "norm_label": "test_notification_ntfy.py",
+      "source_file": "tests/test_notification_ntfy.py",
       "source_location": "L1"
     },
     {
-      "id": "tests_test_timezone_offline",
-      "label": "test_timezone_offline.py",
+      "id": "src_services_database_rationale_257",
+      "label": "Retorna lista de contatos WhatsApp do PostgreSQL (ou SQLite em fallback).",
       "_origin": "ast",
       "community": 5,
-      "community_name": "get_local_now",
-      "file_type": "code",
-      "norm_label": "test_timezone_offline.py",
-      "source_file": "tests/test_timezone_offline.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_alerts_offline_check_rationale_20",
-      "label": "Verifica o tempo da \u00faltima leitura dos tanques. Envia alerta se o atraso for\u2026",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "get_local_now",
+      "community_name": "send_whatsapp_message",
       "file_type": "rationale",
-      "norm_label": "verifica o tempo da ultima leitura dos tanques. envia alerta se o atraso for...",
-      "source_file": "src/alerts/offline_check.py",
-      "source_location": "L20"
-    },
-    {
-      "id": "src_services_database_rationale_28",
-      "label": "Retorna datetime ing\u00eanuo representando o hor\u00e1rio local de Bras\u00edlia\u2026",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "get_local_now",
-      "file_type": "rationale",
-      "norm_label": "retorna datetime ingenuo representando o horario local de brasilia...",
+      "norm_label": "retorna lista de contatos whatsapp do postgresql (ou sqlite em fallback).",
       "source_file": "src/services/database.py",
-      "source_location": "L28"
+      "source_location": "L257"
     },
     {
-      "id": "tests_test_offline_check_filter_rationale_7",
-      "label": "Garante que check_last_reading n\u00e3o gera alertas offline para tanques sem lote\u2026",
+      "id": "src_services_notification_rationale_169",
+      "label": "Envia uma imagem com legenda via Evolution API v2 (WhatsApp) para contatos\u2026",
       "_origin": "ast",
       "community": 5,
-      "community_name": "get_local_now",
+      "community_name": "send_whatsapp_message",
       "file_type": "rationale",
-      "norm_label": "garante que check_last_reading nao gera alertas offline para tanques sem lote...",
-      "source_file": "tests/test_offline_check_filter.py",
-      "source_location": "L7"
+      "norm_label": "envia uma imagem com legenda via evolution api v2 (whatsapp) para contatos...",
+      "source_file": "src/services/notification.py",
+      "source_location": "L169"
     },
     {
-      "id": "tests_test_timezone_offline_rationale_13",
-      "label": "Simula o c\u00e1lculo do dashboard para leituras recentes vs antigas.",
+      "id": "src_services_notification_rationale_243",
+      "label": "Envia uma notifica\u00e7\u00e3o push via ntfy.sh para o t\u00f3pico configurado. Ultraleve,\u2026",
       "_origin": "ast",
       "community": 5,
-      "community_name": "get_local_now",
+      "community_name": "send_whatsapp_message",
       "file_type": "rationale",
-      "norm_label": "simula o calculo do dashboard para leituras recentes vs antigas.",
-      "source_file": "tests/test_timezone_offline.py",
-      "source_location": "L13"
+      "norm_label": "envia uma notificacao push via ntfy.sh para o topico configurado. ultraleve,...",
+      "source_file": "src/services/notification.py",
+      "source_location": "L243"
     },
     {
-      "id": "tests_test_timezone_offline_rationale_35",
-      "label": "Valida se offline_check usa get_local_now sem gerar falsos positivos para\u2026",
+      "id": "src_services_notification_rationale_29",
+      "label": "Higieniza o n\u00famero de telefone e adiciona DDI 55 caso possua apenas DDD +\u2026",
       "_origin": "ast",
       "community": 5,
-      "community_name": "get_local_now",
+      "community_name": "send_whatsapp_message",
       "file_type": "rationale",
-      "norm_label": "valida se offline_check usa get_local_now sem gerar falsos positivos para...",
-      "source_file": "tests/test_timezone_offline.py",
-      "source_location": "L35"
+      "norm_label": "higieniza o numero de telefone e adiciona ddi 55 caso possua apenas ddd +...",
+      "source_file": "src/services/notification.py",
+      "source_location": "L29"
     },
     {
-      "id": "tests_test_timezone_offline_rationale_7",
-      "label": "Valida se get_local_now retorna datetime ing\u00eanuo e coerente.",
+      "id": "src_services_notification_rationale_39",
+      "label": "Retorna variantes de n\u00famero brasileiro (com e sem o 9\u00ba d\u00edgito ap\u00f3s o DDD) para\u2026",
       "_origin": "ast",
       "community": 5,
-      "community_name": "get_local_now",
+      "community_name": "send_whatsapp_message",
       "file_type": "rationale",
-      "norm_label": "valida se get_local_now retorna datetime ingenuo e coerente.",
-      "source_file": "tests/test_timezone_offline.py",
-      "source_location": "L7"
+      "norm_label": "retorna variantes de numero brasileiro (com e sem o 9o digito apos o ddd) para...",
+      "source_file": "src/services/notification.py",
+      "source_location": "L39"
+    },
+    {
+      "id": "src_services_notification_rationale_60",
+      "label": "Extrai mensagem amig\u00e1vel de erro retornada pela Evolution API.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "rationale",
+      "norm_label": "extrai mensagem amigavel de erro retornada pela evolution api.",
+      "source_file": "src/services/notification.py",
+      "source_location": "L60"
+    },
+    {
+      "id": "src_services_notification_rationale_83",
+      "label": "Envia mensagem de texto via Evolution API v2 (WhatsApp). Se 'phone' for\u2026",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "rationale",
+      "norm_label": "envia mensagem de texto via evolution api v2 (whatsapp). se 'phone' for...",
+      "source_file": "src/services/notification.py",
+      "source_location": "L83"
+    },
+    {
+      "id": "tests_test_notification_ntfy_rationale_26",
+      "label": "Valida se alertas do Telegram disparam automaticamente push para o ntfy.sh.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "rationale",
+      "norm_label": "valida se alertas do telegram disparam automaticamente push para o ntfy.sh.",
+      "source_file": "tests/test_notification_ntfy.py",
+      "source_location": "L26"
+    },
+    {
+      "id": "tests_test_notification_ntfy_rationale_44",
+      "label": "Valida se o envio via Evolution API formata o n\u00famero (DDI 55) e chama o\u2026",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "rationale",
+      "norm_label": "valida se o envio via evolution api formata o numero (ddi 55) e chama o...",
+      "source_file": "tests/test_notification_ntfy.py",
+      "source_location": "L44"
+    },
+    {
+      "id": "tests_test_notification_ntfy_rationale_6",
+      "label": "Valida se o payload e headers do ntfy.sh s\u00e3o montados e enviados corretamente.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "rationale",
+      "norm_label": "valida se o payload e headers do ntfy.sh sao montados e enviados corretamente.",
+      "source_file": "tests/test_notification_ntfy.py",
+      "source_location": "L6"
+    },
+    {
+      "id": "tests_test_notification_ntfy_rationale_64",
+      "label": "Valida fallback de 9\u00ba d\u00edgito (13 -> 12 d\u00edgitos) e mensagem clara quando\u2026",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "send_whatsapp_message",
+      "file_type": "rationale",
+      "norm_label": "valida fallback de 9o digito (13 -> 12 digitos) e mensagem clara quando...",
+      "source_file": "tests/test_notification_ntfy.py",
+      "source_location": "L64"
     },
     {
       "id": "src_init",
@@ -10449,6 +10472,18 @@
     },
     {
       "source": "src_alerts_offline_check_check_last_reading",
+      "target": "src_services_database_get_local_now",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L113",
+      "weight": 1.0
+    },
+    {
+      "source": "src_alerts_offline_check_check_last_reading",
       "target": "src_services_database_is_system_suspended",
       "relation": "calls",
       "_origin": "ast",
@@ -10473,18 +10508,6 @@
     },
     {
       "source": "src_alerts_offline_check_check_last_reading",
-      "target": "src_services_notification_send_telegram_message",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/alerts/offline_check.py",
-      "source_location": "L51",
-      "weight": 1.0
-    },
-    {
-      "source": "src_alerts_offline_check_check_last_reading",
       "target": "src_services_database_get_postgres_connection",
       "relation": "calls",
       "_origin": "ast",
@@ -10492,7 +10515,31 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/alerts/offline_check.py",
-      "source_location": "L56",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "src_alerts_offline_check_check_last_reading",
+      "target": "src_scrape_monitor_data_scrape_and_save",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L82",
+      "weight": 1.0
+    },
+    {
+      "source": "src_alerts_offline_check_check_last_reading",
+      "target": "src_services_notification_send_telegram_message",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -10504,19 +10551,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/alerts/offline_check.py",
-      "source_location": "L67",
-      "weight": 1.0
-    },
-    {
-      "source": "src_alerts_offline_check_check_last_reading",
-      "target": "src_services_database_get_local_now",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/alerts/offline_check.py",
-      "source_location": "L83",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -12676,7 +12711,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L468",
+      "source_location": "L511",
       "weight": 1.0
     },
     {
@@ -12688,7 +12723,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L215",
+      "source_location": "L249",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_noctua_client_noctuaclient_execute_graphql",
+      "target": "src_services_noctua_client_noctuaclient_discover_api_key_from_portal",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L259",
       "weight": 1.0
     },
     {
@@ -12700,7 +12747,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L226",
+      "source_location": "L269",
       "weight": 1.0
     },
     {
@@ -12712,7 +12759,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L453",
+      "source_location": "L496",
       "weight": 1.0
     },
     {
@@ -12724,7 +12771,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L343",
+      "source_location": "L386",
       "weight": 1.0
     },
     {
@@ -12736,7 +12783,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L346",
+      "source_location": "L389",
       "weight": 1.0
     },
     {
@@ -12748,7 +12795,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L332",
+      "source_location": "L375",
       "weight": 1.0
     },
     {
@@ -12760,7 +12807,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L280",
+      "source_location": "L323",
       "weight": 1.0
     },
     {
@@ -12772,7 +12819,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L268",
+      "source_location": "L311",
       "weight": 1.0
     },
     {
@@ -12784,7 +12831,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L428",
+      "source_location": "L471",
       "weight": 1.0
     },
     {
@@ -12796,7 +12843,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L434",
+      "source_location": "L477",
       "weight": 1.0
     },
     {
@@ -12808,7 +12855,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L448",
+      "source_location": "L491",
       "weight": 1.0
     },
     {
@@ -12820,7 +12867,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L244",
+      "source_location": "L287",
       "weight": 1.0
     },
     {
@@ -12832,7 +12879,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L361",
+      "source_location": "L404",
       "weight": 1.0
     },
     {
@@ -12844,7 +12891,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L381",
+      "source_location": "L424",
       "weight": 1.0
     },
     {
@@ -12856,7 +12903,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L390",
+      "source_location": "L433",
       "weight": 1.0
     },
     {
@@ -12868,7 +12915,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L409",
+      "source_location": "L452",
       "weight": 1.0
     },
     {
@@ -14788,7 +14835,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L209",
+      "source_location": "L243",
       "weight": 1.0
     },
     {
@@ -14800,7 +14847,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L451",
+      "source_location": "L494",
       "weight": 1.0
     },
     {
@@ -14812,7 +14859,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L340",
+      "source_location": "L383",
       "weight": 1.0
     },
     {
@@ -14824,7 +14871,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L325",
+      "source_location": "L368",
       "weight": 1.0
     },
     {
@@ -14836,7 +14883,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L271",
+      "source_location": "L314",
       "weight": 1.0
     },
     {
@@ -14848,7 +14895,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L260",
+      "source_location": "L303",
       "weight": 1.0
     },
     {
@@ -14860,7 +14907,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L416",
+      "source_location": "L459",
       "weight": 1.0
     },
     {
@@ -14872,7 +14919,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L241",
+      "source_location": "L284",
       "weight": 1.0
     },
     {
@@ -14884,7 +14931,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L349",
+      "source_location": "L392",
       "weight": 1.0
     },
     {
@@ -14896,7 +14943,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L384",
+      "source_location": "L427",
       "weight": 1.0
     },
     {
@@ -15089,6 +15136,18 @@
       "context": "import",
       "source_file": "src/alerts/offline_check.py",
       "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_alerts_offline_check",
+      "target": "src_scrape_monitor_data_scrape_and_save",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L81",
       "weight": 1.0
     },
     {
@@ -20827,7 +20886,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "knowledge/diario/diary_2026_10_28.md",
-      "source_location": "L31",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -22697,7 +22756,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L167",
+      "source_location": "L169",
       "weight": 1.0
     },
     {
@@ -22708,7 +22767,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L172",
+      "source_location": "L174",
       "weight": 1.0
     },
     {
@@ -22719,7 +22778,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L177",
+      "source_location": "L179",
       "weight": 1.0
     },
     {
@@ -22730,7 +22789,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L459",
+      "source_location": "L502",
       "weight": 1.0
     },
     {
@@ -24072,7 +24131,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L167",
+      "source_location": "L169",
       "weight": 1.0
     },
     {
@@ -24083,7 +24142,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L172",
+      "source_location": "L174",
       "weight": 1.0
     },
     {
@@ -24105,23 +24164,12 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L180",
+      "source_location": "L182",
       "weight": 1.0
     },
     {
       "source": "src_services_noctua_client_noctuaclient",
-      "target": "src_services_noctua_client_noctuaclient_get_headers",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/services/noctua_client.py",
-      "source_location": "L201",
-      "weight": 1.0
-    },
-    {
-      "source": "src_services_noctua_client_noctuaclient",
-      "target": "src_services_noctua_client_noctuaclient_execute_graphql",
+      "target": "src_services_noctua_client_noctuaclient_discover_api_key_from_portal",
       "relation": "method",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -24132,13 +24180,35 @@
     },
     {
       "source": "src_services_noctua_client_noctuaclient",
+      "target": "src_services_noctua_client_noctuaclient_get_headers",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L235",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_noctua_client_noctuaclient",
+      "target": "src_services_noctua_client_noctuaclient_execute_graphql",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L243",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_noctua_client_noctuaclient",
       "target": "src_services_noctua_client_noctuaclient_test_connection",
       "relation": "method",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L241",
+      "source_location": "L284",
       "weight": 1.0
     },
     {
@@ -24149,7 +24219,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L260",
+      "source_location": "L303",
       "weight": 1.0
     },
     {
@@ -24160,7 +24230,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L271",
+      "source_location": "L314",
       "weight": 1.0
     },
     {
@@ -24171,7 +24241,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L325",
+      "source_location": "L368",
       "weight": 1.0
     },
     {
@@ -24182,7 +24252,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L340",
+      "source_location": "L383",
       "weight": 1.0
     },
     {
@@ -24193,7 +24263,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L349",
+      "source_location": "L392",
       "weight": 1.0
     },
     {
@@ -24204,7 +24274,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L384",
+      "source_location": "L427",
       "weight": 1.0
     },
     {
@@ -24215,7 +24285,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L416",
+      "source_location": "L459",
       "weight": 1.0
     },
     {
@@ -24226,7 +24296,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L451",
+      "source_location": "L494",
       "weight": 1.0
     },
     {
@@ -25000,41 +25070,41 @@
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_168",
+      "source": "src_services_noctua_client_rationale_170",
       "target": "src_services_noctua_client_noctuaclientexception",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L168",
+      "source_location": "L170",
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_173",
+      "source": "src_services_noctua_client_rationale_175",
       "target": "src_services_noctua_client_noctuareadonlyexception",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L173",
+      "source_location": "L175",
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_178",
+      "source": "src_services_noctua_client_rationale_180",
       "target": "src_services_noctua_client_noctuaclient",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L178",
+      "source_location": "L180",
       "weight": 1.0
     },
     {
       "source": "src_services_noctua_client_rationale_210",
-      "target": "src_services_noctua_client_noctuaclient_execute_graphql",
+      "target": "src_services_noctua_client_noctuaclient_discover_api_key_from_portal",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -25044,102 +25114,113 @@
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_242",
+      "source": "src_services_noctua_client_rationale_244",
+      "target": "src_services_noctua_client_noctuaclient_execute_graphql",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L244",
+      "weight": 1.0
+    },
+    {
+      "source": "src_services_noctua_client_rationale_285",
       "target": "src_services_noctua_client_noctuaclient_test_connection",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L242",
+      "source_location": "L285",
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_261",
+      "source": "src_services_noctua_client_rationale_304",
       "target": "src_services_noctua_client_noctuaclient_get_latest_sensor_data",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L261",
+      "source_location": "L304",
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_272",
+      "source": "src_services_noctua_client_rationale_315",
       "target": "src_services_noctua_client_noctuaclient_get_latest_readings_by_tanque",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L272",
+      "source_location": "L315",
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_326",
+      "source": "src_services_noctua_client_rationale_369",
       "target": "src_services_noctua_client_noctuaclient_get_hourly_sensor_data",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L326",
+      "source_location": "L369",
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_341",
+      "source": "src_services_noctua_client_rationale_384",
       "target": "src_services_noctua_client_noctuaclient_get_endpoint_config",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L341",
+      "source_location": "L384",
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_356",
+      "source": "src_services_noctua_client_rationale_399",
       "target": "src_services_noctua_client_noctuaclient_update_endpoint_thresholds",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L356",
+      "source_location": "L399",
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_385",
+      "source": "src_services_noctua_client_rationale_428",
       "target": "src_services_noctua_client_noctuaclient_update_endpoint_timer",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L385",
+      "source_location": "L428",
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_423",
+      "source": "src_services_noctua_client_rationale_466",
       "target": "src_services_noctua_client_noctuaclient_send_motor_command",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L423",
+      "source_location": "L466",
       "weight": 1.0
     },
     {
-      "source": "src_services_noctua_client_rationale_452",
+      "source": "src_services_noctua_client_rationale_495",
       "target": "src_services_noctua_client_noctuaclient_get_command_status",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/services/noctua_client.py",
-      "source_location": "L452",
+      "source_location": "L495",
       "weight": 1.0
     },
     {
@@ -26410,7 +26491,7 @@
       "confidence_score": 0.85,
       "context": "assignment",
       "source_file": "src/alerts/offline_check.py",
-      "source_location": "L117",
+      "source_location": "L147",
       "weight": 1.0
     },
     {
@@ -26796,5 +26877,5 @@
       "source_file": "docs/MER.md"
     }
   ],
-  "built_at_commit": "64cf82cc02ed364043b8de5a437b6d04907d8bbc"
+  "built_at_commit": "dff74d67b7379922b314820d2378a769b4f3a27d"
 }
