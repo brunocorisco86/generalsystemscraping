@@ -865,13 +865,9 @@ def api_mdm_salvar_proprietario():
             ON CONFLICT (uid) DO UPDATE SET nome = EXCLUDED.nome, cpf = EXCLUDED.cpf;
         """, (uid, nome, cpf))
 
-        # 2. Migra FKs filhas (propriedades e usuarios_telegram) para o novo UID
+        # 2. Migra FKs filhas (propriedades) para o novo UID
         cur.execute(
             "UPDATE propriedades SET proprietario_uid = %s WHERE proprietario_uid IS NULL OR proprietario_uid <> %s;",
-            (uid, uid)
-        )
-        cur.execute(
-            "UPDATE usuarios_telegram SET proprietario_uid = %s WHERE proprietario_uid IS NULL OR proprietario_uid <> %s;",
             (uid, uid)
         )
 
