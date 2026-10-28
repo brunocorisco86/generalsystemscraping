@@ -201,6 +201,28 @@ async def init_postgres():
             );
         ''')
 
+        await conn.execute('''
+            CREATE TABLE IF NOT EXISTS contatos_whatsapp (
+                id SERIAL PRIMARY KEY,
+                nome VARCHAR(150) NOT NULL,
+                papel VARCHAR(100) DEFAULT 'Familiar / Gestor',
+                telefone VARCHAR(30) NOT NULL DEFAULT '',
+                ativo BOOLEAN DEFAULT TRUE,
+                receber_alertas BOOLEAN DEFAULT TRUE,
+                receber_relatorios BOOLEAN DEFAULT TRUE,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        ''')
+
+        cnt_contatos = await conn.fetchval('SELECT COUNT(*) FROM contatos_whatsapp;')
+        if cnt_contatos == 0:
+            await conn.execute('''
+                INSERT INTO contatos_whatsapp (nome, papel, telefone, ativo, receber_alertas, receber_relatorios)
+                VALUES
+                    ('Dirceu Patel', 'Sogro / Gestor', '', FALSE, TRUE, TRUE),
+                    ('Joceli Patel', 'Sogra / Gestora', '', FALSE, TRUE, TRUE);
+            ''')
+
         # Índices para performance
         await conn.execute('CREATE INDEX IF NOT EXISTS idx_leituras_estrutura ON leituras(estrutura_uid);')
         await conn.execute('CREATE INDEX IF NOT EXISTS idx_lotes_estrutura ON lotes(estrutura_uid);')

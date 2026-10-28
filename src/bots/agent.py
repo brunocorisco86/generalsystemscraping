@@ -8,9 +8,16 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..
 if project_root not in sys.path:
     sys.path.append(project_root)
 
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder  # noqa: E402
-from langchain_google_genai import ChatGoogleGenerativeAI  # noqa: E402
-from langchain.agents import create_tool_calling_agent, AgentExecutor  # noqa: E402
+try:
+    from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder  # noqa: E402
+    from langchain_google_genai import ChatGoogleGenerativeAI  # noqa: E402
+    from langchain.agents import create_tool_calling_agent, AgentExecutor  # noqa: E402
+except ImportError:
+    ChatPromptTemplate = None
+    MessagesPlaceholder = None
+    ChatGoogleGenerativeAI = None
+    create_tool_calling_agent = None
+    AgentExecutor = None
 from src.bots.agent_tools import AGENT_TOOLS  # noqa: E402
 
 logger = logging.getLogger(__name__)
@@ -92,11 +99,14 @@ def get_agent_executor() -> Optional[AgentExecutor]:
         
         dynamic_system_prompt = SYSTEM_PROMPT + contexto_recente
 
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", dynamic_system_prompt),
-            ("user", "{input}"),
-            MessagesPlaceholder(variable_name="agent_scratchpad"),
-        ])
+        if ChatPromptTemplate is not None:
+            prompt = ChatPromptTemplate.from_messages([
+                ("system", dynamic_system_prompt),
+                ("user", "{input}"),
+                MessagesPlaceholder(variable_name="agent_scratchpad"),
+            ])
+        else:
+            prompt = dynamic_system_prompt
 
         # Criar agentes para cada modelo
         agents = []

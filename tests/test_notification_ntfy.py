@@ -38,3 +38,24 @@ def test_send_telegram_mirrors_to_ntfy():
         assert "🚨" in args[0]
         assert kwargs["priority"] == "urgent"
         assert "rotating_light" in kwargs["tags"]
+
+
+def test_send_whatsapp_message_evolution_api():
+    """Valida se o envio via Evolution API formata o número (DDI 55) e chama o endpoint correto."""
+    from src.services.notification import send_whatsapp_message, normalize_whatsapp_number
+
+    assert normalize_whatsapp_number("(44) 99760-4925") == "5544997604925"
+    assert normalize_whatsapp_number("5544997604925") == "5544997604925"
+
+    mock_resp = MagicMock()
+    mock_resp.raise_for_status.return_value = None
+
+    with patch("requests.post", return_value=mock_resp) as mock_post:
+        ok = send_whatsapp_message("Teste Piscicultura", phone="44997604925")
+        assert ok is True
+        mock_post.assert_called_once()
+        args, kwargs = mock_post.call_args
+        assert "/message/sendText/" in args[0]
+        assert kwargs["json"]["number"] == "5544997604925"
+        assert kwargs["json"]["text"] == "Teste Piscicultura"
+

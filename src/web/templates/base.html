@@ -29,10 +29,19 @@
         .navbar-brand { font-weight: bold; letter-spacing: -0.5px; }
         .nav-link { font-weight: 500; font-size: 0.95rem; }
         .nav-link.active { font-weight: 700; border-bottom: 2px solid #fff; }
-        .btn-purple { background-color: #6f42c1; color: white; }
-        .btn-purple:hover { background-color: #59359a; color: white; }
         .badge-status { font-size: 0.8rem; padding: 0.35em 0.65em; }
     </style>
+    <script>
+        // Suporte transparente a Reverse Proxy em subpath (ex: /psicultura via Caddy)
+        const APP_BASE_URL = "{{ request.script_root }}";
+        const _origFetch = window.fetch;
+        window.fetch = function(input, init) {
+            if (typeof input === 'string' && input.startsWith('/') && !input.startsWith('//') && APP_BASE_URL && !input.startsWith(APP_BASE_URL + '/')) {
+                input = APP_BASE_URL + input;
+            }
+            return _origFetch.call(this, input, init);
+        };
+    </script>
 </head>
 <body>
     <div id="loading" class="loading-overlay">
@@ -70,15 +79,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'settings_view' %}active{% endif %}" href="{{ url_for('settings_view') }}">
-                            <i class="bi bi-gear-wide-connected me-1"></i> Configurações & MDM
+                            <i class="bi bi-whatsapp me-1 text-success"></i> Contatos WhatsApp & MDM
                         </a>
                     </li>
                 </ul>
 
                 <div class="d-flex align-items-center text-white">
-                    <span class="badge bg-secondary me-3 d-none d-md-inline" id="pgStatusBadge">
-                        <i class="bi bi-database me-1"></i> Postgres: <span id="pgStatusText">verificando...</span>
-                    </span>
                     <span class="me-3 text-light d-none d-sm-inline">
                         <i class="bi bi-person-circle me-1"></i> {{ current_user.username }}
                     </span>
@@ -107,7 +113,7 @@
     </main>
 
     <footer class="text-center py-4 text-muted border-top mt-auto">
-        &copy; 2026 Piscicultura PeixePatel - Rodando em Raspberry Pi
+        &copy; 2026 Piscicultura PeixePatel - Monitoramento IoT & WhatsApp Evolution API
     </footer>
 
     <!-- Bootstrap 5 JS Bundle -->
@@ -119,37 +125,6 @@
         function hideLoading() {
             document.getElementById('loading').style.display = 'none';
         }
-        
-        // Checar saúde do Postgres
-        function checkPgHealth() {
-            fetch('/api/settings/db/status')
-                .then(r => r.json())
-                .then(data => {
-                    const badge = document.getElementById('pgStatusBadge');
-                    const text = document.getElementById('pgStatusText');
-                    if (!badge || !text) return;
-                    if (data.status === 'ok') {
-                        badge.className = 'badge bg-success me-3 d-none d-md-inline';
-                        text.textContent = 'Online';
-                    } else {
-                        badge.className = 'badge bg-danger me-3 d-none d-md-inline';
-                        text.textContent = 'Erro';
-                    }
-                })
-                .catch(() => {
-                    const badge = document.getElementById('pgStatusBadge');
-                    const text = document.getElementById('pgStatusText');
-                    if (badge && text) {
-                        badge.className = 'badge bg-danger me-3 d-none d-md-inline';
-                        text.textContent = 'Offline';
-                    }
-                });
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-            checkPgHealth();
-            setInterval(checkPgHealth, 30000);
-        });
     </script>
 </body>
 </html>
-

@@ -2,7 +2,11 @@ import os
 import sys
 import subprocess
 import logging
-from langchain.tools import tool
+try:
+    from langchain.tools import tool
+except ImportError:
+    def tool(func):
+        return func
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if project_root not in sys.path:

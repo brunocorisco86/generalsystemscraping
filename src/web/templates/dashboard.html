@@ -19,9 +19,9 @@
                         <button onclick="runAction('/api/sync', 'Sincronização')" class="btn btn-primary text-start d-flex justify-content-between align-items-center">
                             <span>⇄ Sincronizar DB</span>
                         </button>
-                        <button onclick="runAiAnalysis()" class="btn btn-purple text-start d-flex justify-content-between align-items-center">
-                            <span>✨ Consultar IA</span>
-                        </button>
+                        <a href="{{ url_for('settings_view') }}" class="btn btn-outline-success text-start d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-whatsapp me-1"></i> Contatos WhatsApp</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -282,26 +282,6 @@
 </div>
 
 
-<!-- Modal para Parecer da IA -->
-<div class="modal fade" id="aiModal" tabindex="-1" aria-labelledby="aiModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header bg-light border-bottom">
-                <h5 class="modal-title fw-bold text-primary" id="aiModalLabel">✨ Parecer do Especialista (IA)</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-light">
-                <div id="aiContent" class="p-3 bg-white border rounded shadow-sm overflow-auto" style="max-height: 400px; white-space: pre-line;">
-                    Processando análise...
-                </div>
-            </div>
-            <div class="modal-footer border-top">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
     async function runAction(endpoint, label) {
         if (!confirm(`Deseja iniciar a ${label}?`)) return;
@@ -316,27 +296,6 @@
             }
         } catch (error) {
             alert(`Erro ao executar ${label}: ${error}`);
-        } finally {
-            hideLoading();
-        }
-    }
-
-    async function runAiAnalysis() {
-        showLoading();
-        const modal = new bootstrap.Modal(document.getElementById('aiModal'));
-        modal.show();
-        document.getElementById('aiContent').innerText = "Analisando dados das últimas 24h... por favor aguarde.";
-        
-        try {
-            const response = await fetch('/api/agent', { method: 'POST' });
-            const data = await response.json();
-            if (data.status === 'success') {
-                document.getElementById('aiContent').innerText = data.parecer;
-            } else {
-                document.getElementById('aiContent').innerText = "Erro na análise: " + data.message;
-            }
-        } catch (error) {
-            document.getElementById('aiContent').innerText = "Erro de conexão: " + error;
         } finally {
             hideLoading();
         }

@@ -186,3 +186,54 @@ def test_api_settings_db_status_route(auth_client):
         assert 'counts' in data
         assert data['counts']['lotes'] == 10
 
+
+def test_subpath_reverse_proxy_support(client):
+    """Valida se o ProxyFix respeita o header X-Forwarded-Prefix: /psicultura do Caddy."""
+    resp = client.get('/', headers={'X-Forwarded-Prefix': '/psicultura'})
+    assert resp.status_code == 302
+    assert '/psicultura/login' in resp.headers['Location']
+
+    login_resp = client.get('/login', headers={'X-Forwarded-Prefix': '/psicultura'})
+    assert login_resp.status_code == 200
+    assert b'const APP_BASE_URL = "/psicultura";' in login_resp.data
+
+
+def test_crud_contatos_whatsapp_dynamic(auth_client):
+    """Testa listagem do seed (Dirceu/Joceli), adição, edição, teste WhatsApp e remoção de contatos."""
+    with patch("src.services.database.get_postgres_connection", return_value=None):
+        # 1. Listar contatos (deve conter o seed inicial no SQLite fallback)
+        r_list = auth_client.get('/api/contatos')
+        assert r_list.status_code == 200
+        contatos = r_list.get_json()['contatos']
+        nomes = [c['nome'] for c in contatos]
+        assert "Dirceu Patel" in nomes
+        assert "Joceli Patel" in nomes
+
+        # 2. Adicionar novo contato dinâmico
+        r_add = auth_client.post('/api/contatos', json={
+            "nome": "Bruno Conter",
+            "papel": "Genro / Admin",
+            "telefone": "44997604925",
+            "ativo": True,
+            "receber_alertas": True,
+            "receber_relatorios": True
+        })
+        assert r_add.status_code == 200
+        novo = r_add.get_json()['contato']
+        novo_id = novo['id']
+        assert novo['nome'] == "Bruno Conter"
+        assert novo['telefone'] == "44997604925"
+
+        # 3. Testar disparo via Evolution API para esse contato
+        with patch("src.web.app.send_whatsapp_message", return_value=True) as mock_wpp:
+            r_test = auth_client.post(f'/api/contatos/{novo_id}/test')
+            assert r_test.status_code == 200
+            assert r_test.get_json()['status'] == 'ok'
+            mock_wpp.assert_called_once()
+
+        # 4. Excluir contato dinâmico
+        r_del = auth_client.delete(f'/api/contatos/{novo_id}')
+        assert r_del.status_code == 200
+        assert r_del.get_json()['status'] == 'ok'
+
+

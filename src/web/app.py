@@ -1,12 +1,14 @@
 import os
 import sys
+import time
+import threading
 import logging
 import json
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.middleware.proxy_fix import ProxyFix
 from dotenv import load_dotenv
-import pandas as pd
 
 # Adicionar o caminho do projeto ao sys.path para permitir importações do src
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -14,8 +16,17 @@ if project_root not in sys.path:
     sys.path.append(project_root)
 
 from src.services.web_auth import init_web_auth_db, validate_user, get_user_by_id
-from src.services.database import get_sqlite_connection, get_postgres_connection, get_local_now
-from src.services.weather import get_weather_forecast
+from src.services.database import (
+    get_sqlite_connection,
+    get_postgres_connection,
+    get_local_now,
+    ensure_contatos_whatsapp_table,
+    listar_contatos_whatsapp,
+    obter_contato_whatsapp,
+    salvar_contato_whatsapp,
+    excluir_contato_whatsapp,
+)
+from src.services.notification import send_whatsapp_message
 from src.services.noctua_client import (
     NoctuaClient,
     KNOWN_ENDPOINTS,
@@ -25,12 +36,13 @@ from src.services.noctua_client import (
 # Importar funções adaptadas para modo silencioso
 from src.scrape.monitor_data import scrape_and_save
 from src.database.postgres.migrate_data import migrate_data
-from src.bots.agent import analyze_custom_report_sync
 
 # Carregar variáveis de ambiente
 load_dotenv()
 
 app = Flask(__name__)
+# Suporte nativo a Reverse Proxy em subpath (ex: https://brunoconter.duckdns.org/psicultura via Caddy)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-key-piscicultura")
 
 # Configuração do Logging
@@ -51,8 +63,54 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Garantir tabela e usuário admin criados (tanto em standalone quanto sob Gunicorn)
+# Garantir tabelas de usuários e contatos WhatsApp criadas
 init_web_auth_db()
+ensure_contatos_whatsapp_table()
+
+
+def get_cached_weather() -> dict | None:
+    """
+    Lê a previsão do tempo a partir do cache JSON local (logs/latest_weather.json)
+    gerado pelo job horário, sem carregar Pandas e sem chamadas HTTP bloqueantes na UI.
+    """
+    log_path = os.path.join(project_root, os.environ.get("LOGS_DIR", "logs"), "latest_weather.json")
+    if not os.path.exists(log_path):
+        return None
+
+    try:
+        with open(log_path, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+
+        hourly_raw = raw.get("hourly", [])
+        if isinstance(hourly_raw, list):
+            raw["hourly"] = {
+                "rain": [float(r.get("rain") or 0.0) for r in hourly_raw],
+                "precipitation_probability": [float(r.get("precipitation_probability") or 0.0) for r in hourly_raw],
+            }
+
+        daily_raw = raw.get("daily", [])
+        if isinstance(daily_raw, list):
+            dates_parsed = []
+            for r in daily_raw:
+                d_str = str(r.get("date", ""))[:10]
+                try:
+                    dates_parsed.append(datetime.strptime(d_str, "%Y-%m-%d"))
+                except Exception:
+                    dates_parsed.append(get_local_now())
+
+            raw["daily"] = {
+                "date": dates_parsed,
+                "temperature_2m_max": [float(r.get("temperature_2m_max") or 0.0) for r in daily_raw],
+                "temperature_2m_min": [float(r.get("temperature_2m_min") or 0.0) for r in daily_raw],
+                "cloud_cover_mean": [float(r.get("cloud_cover_mean") or 0.0) for r in daily_raw],
+                "precipitation_sum": [float(r.get("precipitation_sum") or 0.0) for r in daily_raw],
+                "precipitation_probability_max": [float(r.get("precipitation_probability_max") or 0.0) for r in daily_raw],
+            }
+
+        return raw
+    except Exception as e:
+        logger.warning(f"Erro ao ler cache local de clima: {e}")
+        return None
 
 
 class User(UserMixin):
@@ -194,18 +252,8 @@ def dashboard():
         finally:
             conn.close()
 
-    # 3. Obter Previsão do Tempo
-    weather_data = None
-    try:
-        weather_data = get_weather_forecast()
-        if weather_data:
-            # Converter DataFrames para dicionários para evitar erros no Jinja2
-            if hasattr(weather_data.get('hourly'), 'to_dict'):
-                weather_data['hourly'] = weather_data['hourly'].to_dict(orient='list')
-            if hasattr(weather_data.get('daily'), 'to_dict'):
-                weather_data['daily'] = weather_data['daily'].to_dict(orient='list')
-    except Exception as e:
-        logger.error(f"Erro ao carregar previsão do tempo: {e}")
+    # 3. Obter Previsão do Tempo a partir do Cache Local (Zero Pandas / Zero bloqueio de rede)
+    weather_data = get_cached_weather()
 
     return render_template('dashboard.html', 
                            leituras=leituras, 
@@ -214,33 +262,6 @@ def dashboard():
                            chart_data_temp=json.dumps(chart_data_temp))
 
 # --- ENDPOINTS DE API (AÇÕES) ---
-
-@app.route('/api/agent', methods=['POST'])
-@login_required
-def api_agent():
-    logger.info("Solicitando análise da IA via Web...")
-    conn = get_sqlite_connection()
-    if not conn:
-        return jsonify({"status": "error", "message": "Erro ao conectar ao banco."}), 500
-    
-    try:
-        yesterday = (get_local_now() - timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
-        df = pd.read_sql_query("SELECT * FROM leituras WHERE timestamp_site >= ?", conn, params=(yesterday,))
-        
-        if df.empty:
-            return jsonify({"status": "error", "message": "Sem dados suficientes para análise."})
-
-        parecer = analyze_custom_report_sync(
-            "Análise do Dashboard Web (Últimas 24h)",
-            "Usuário solicitou análise manual via painel de controle.",
-            df.to_csv(index=False)
-        )
-        return jsonify({"status": "success", "parecer": parecer})
-    except Exception as e:
-        logger.error(f"Erro na análise da IA via Web: {e}")
-        return jsonify({"status": "error", "message": str(e)}), 500
-    finally:
-        conn.close()
 
 @app.route('/api/scrape', methods=['POST'])
 @login_required
@@ -884,7 +905,7 @@ def api_settings_db_table(nome_tabela):
     allowlist = [
         'lotes', 'biometria', 'estruturas', 'leituras', 
         'qualidade_agua_limnologia', 'qualidade_agua_consumo', 
-        'clima_historico', 'historico_pareceres_ia'
+        'clima_historico', 'historico_pareceres_ia', 'contatos_whatsapp'
     ]
     if nome_tabela not in allowlist:
         return jsonify({"status": "error", "message": "Tabela não permitida para inspeção."}), 400
@@ -918,11 +939,145 @@ def api_settings_db_table(nome_tabela):
         if pg: pg.close()
         return jsonify({"status": "error", "message": str(e)}), 500
 
+
+# ==============================================================================
+# --- ROTAS DE GESTÃO DINÂMICA DE CONTATOS WHATSAPP (EVOLUTION API) ---
+# ==============================================================================
+
+@app.route('/api/contatos', methods=['GET', 'POST'])
+@login_required
+def api_contatos_whatsapp():
+    """Lista todos os contatos ou cria/atualiza um contato WhatsApp."""
+    if request.method == 'GET':
+        try:
+            contatos = listar_contatos_whatsapp(apenas_ativos=False)
+            return jsonify({"status": "ok", "contatos": contatos})
+        except Exception as e:
+            logger.error(f"Erro ao listar contatos WhatsApp: {e}")
+            return jsonify({"status": "error", "message": str(e)}), 500
+
+    data = request.get_json() or {}
+    try:
+        salvo = salvar_contato_whatsapp(data)
+        return jsonify({"status": "ok", "message": f"Contato '{salvo['nome']}' salvo com sucesso!", "contato": salvo})
+    except ValueError as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+    except Exception as e:
+        logger.error(f"Erro ao salvar contato WhatsApp: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/api/contatos/<int:contato_id>', methods=['DELETE'])
+@login_required
+def api_excluir_contato_whatsapp(contato_id):
+    """Remove dinamicamente um contato WhatsApp."""
+    try:
+        removido = excluir_contato_whatsapp(contato_id)
+        if not removido:
+            return jsonify({"status": "error", "message": "Contato não encontrado."}), 404
+        return jsonify({"status": "ok", "message": "Contato removido com sucesso!"})
+    except Exception as e:
+        logger.error(f"Erro ao excluir contato {contato_id}: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/api/contatos/<int:contato_id>/test', methods=['POST'])
+@login_required
+def api_testar_contato_whatsapp(contato_id):
+    """Dispara mensagem de teste imediata via Evolution API para o contato informado."""
+    contato = obter_contato_whatsapp(contato_id)
+    if not contato:
+        return jsonify({"status": "error", "message": "Contato não encontrado."}), 404
+
+    telefone = (contato.get("telefone") or "").strip()
+    if not telefone:
+        return jsonify({"status": "error", "message": "Preencha e salve o telefone antes de testar o envio."}), 400
+
+    msg = (
+        f"🐟 *Piscicultura Patel - Teste de Notificação*\n\n"
+        f"Olá, *{contato['nome']}* ({contato.get('papel', 'Gestor')})!\n"
+        f"✅ Seu número está configurado corretamente para receber alertas da piscicultura via WhatsApp."
+    )
+    ok = send_whatsapp_message(msg, phone=telefone)
+    if ok:
+        return jsonify({"status": "ok", "message": f"Mensagem de teste enviada para {contato['nome']} ({telefone})!"})
+    return jsonify({"status": "error", "message": "Falha ao enviar via Evolution API. Verifique os logs ou o número."}), 502
+
+
+# ==============================================================================
+# --- SCHEDULER LEVE EMBUTIDO EM BACKGROUND (CONTAINER ÚNICO) ---
+# ==============================================================================
+
+_scheduler_started = False
+_scheduler_lock = threading.Lock()
+
+def _background_scheduler_loop():
+    """Executa coleta Noctua, checagem de alertas/offline, clima e sync em background."""
+    from src.alerts.alert_check import check_alerts
+    from src.alerts.offline_check import check_last_reading as check_offline
+    from src.jobs.hourly_weather_sync import sync_hourly_weather
+
+    logger.info("⚡ [Scheduler Interno] Thread de monitoramento iniciada no container único.")
+    last_scrape = 0
+    last_alert = 0
+    last_weather = 0
+    last_migrate = 0
+
+    while True:
+        now = time.time()
+        try:
+            if now - last_scrape >= 600:  # 10 min
+                scrape_and_save()
+                last_scrape = now
+        except Exception as e:
+            logger.error(f"[Scheduler] Erro na coleta: {e}")
+
+        try:
+            if now - last_weather >= 3600:  # 1 hora
+                sync_hourly_weather()
+                last_weather = now
+        except Exception as e:
+            logger.error(f"[Scheduler] Erro no sync de clima: {e}")
+
+        try:
+            if now - last_alert >= 900:  # 15 min
+                check_alerts()
+                check_offline()
+                last_alert = now
+        except Exception as e:
+            logger.error(f"[Scheduler] Erro na checagem de alertas: {e}")
+
+        try:
+            if now - last_migrate >= 21600:  # 6 horas
+                migrate_data(silent=True)
+                last_migrate = now
+        except Exception as e:
+            logger.error(f"[Scheduler] Erro na migração: {e}")
+
+        time.sleep(15)
+
+
+def start_background_scheduler():
+    """Inicia a thread daemon de coleta e alertas se ENABLE_INTERNAL_SCHEDULER=true."""
+    global _scheduler_started
+    if os.environ.get("ENABLE_INTERNAL_SCHEDULER", "false").lower() not in ("1", "true", "yes"):
+        return
+    with _scheduler_lock:
+        if not _scheduler_started:
+            _scheduler_started = True
+            t = threading.Thread(target=_background_scheduler_loop, daemon=True, name="PisciculturaScheduler")
+            t.start()
+
+
+start_background_scheduler()
+
+
 if __name__ == '__main__':
-    # Inicializa banco de usuários
     init_web_auth_db()
+    ensure_contatos_whatsapp_table()
     
     web_host = os.environ.get("WEB_HOST", "0.0.0.0")
     web_port = int(os.environ.get("WEB_PORT", 5000))
     app.run(host=web_host, port=web_port, debug=False)
+
 

@@ -1,21 +1,25 @@
 services:
-  # 1. Dashboard Web (Flask + Gunicorn)
+  # 1. Container Único Ultra-Leve: Dashboard Web + Coletor Embutido + WhatsApp Evolution API
   web:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: piscicultura_web
     restart: unless-stopped
-    command: ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--threads", "4", "--timeout", "60", "src.web.app:app"]
+    mem_limit: 96m
+    command: ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--threads", "2", "--timeout", "60", "--max-requests", "500", "--max-requests-jitter", "50", "src.web.app:app"]
     env_file:
       - .env
     environment:
       - TZ=America/Sao_Paulo
       - PYTHONUNBUFFERED=1
-      - PG_HOST=${PG_HOST:-192.168.1.7}
+      - PG_HOST=${PG_HOST:-hermes-db}
       - PG_PORT=${PG_PORT:-5432}
+      - ENABLE_INTERNAL_SCHEDULER=${ENABLE_INTERNAL_SCHEDULER:-true}
+      - ENABLE_WHATSAPP=${ENABLE_WHATSAPP:-true}
+      - ENABLE_TELEGRAM=${ENABLE_TELEGRAM:-false}
     ports:
-      - "${WEB_PORT:-5000}:5000"
+      - "127.0.0.1:${WEB_PORT:-5050}:5000"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
@@ -23,17 +27,16 @@ services:
       - ./data:/app/data
       - ./logs:/app/logs
       - ./reports:/app/reports
+    networks:
+      - default
+      - hermes_mesh
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
-    depends_on:
-      postgres:
-        condition: service_started
-        required: false
 
-  # 2. Coletor Autônomo Legado (Desativado: migrado para cron jobs assíncronos)
+  # 2. Coletor Autônomo Legado (Desativado: substituído por scheduler thread interna no web)
   collector:
     profiles:
       - legacy-collector
@@ -45,30 +48,11 @@ services:
     command: ["python3", "-u", "src/jobs/collector_service.py"]
     env_file:
       - .env
-    environment:
-      - TZ=America/Sao_Paulo
-      - PYTHONUNBUFFERED=1
-      - PG_HOST=${PG_HOST:-192.168.1.7}
-      - PG_PORT=${PG_PORT:-5432}
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-      - ./src:/app/src
-      - ./data:/app/data
-      - ./logs:/app/logs
-      - ./reports:/app/reports
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    depends_on:
-      postgres:
-        condition: service_started
-        required: false
 
-  # 3. Bot Telegram Unificado (PeixePatelBot)
+  # 3. Bot Telegram Unificado (Desativado por padrão: foco migrado para WhatsApp Evolution API)
   bot_unificado:
+    profiles:
+      - telegram-bot
     build:
       context: .
       dockerfile: src/bots/Dockerfile
@@ -79,7 +63,7 @@ services:
     environment:
       - TZ=America/Sao_Paulo
       - PYTHONUNBUFFERED=1
-      - PG_HOST=${PG_HOST:-192.168.1.7}
+      - PG_HOST=${PG_HOST:-hermes-db}
       - PG_PORT=${PG_PORT:-5432}
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -89,17 +73,11 @@ services:
       - ./data:/app/data
       - ./reports:/app/reports
       - ./scripts:/app/scripts
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    depends_on:
-      postgres:
-        condition: service_started
-        required: false
+    networks:
+      - default
+      - hermes_mesh
 
-  # 4. PostgreSQL Local (Opcional: Ative com --profile local-db apenas se não houver Postgres externo)
+  # 4. PostgreSQL Local (Opcional: Ative com --profile local-db apenas se não houver hermes-db externo)
   postgres:
     profiles:
       - local-db
@@ -115,3 +93,7 @@ services:
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
 
+networks:
+  hermes_mesh:
+    external: true
+    name: ${DOCKER_MESH_NETWORK:-hermes_mesh_network}

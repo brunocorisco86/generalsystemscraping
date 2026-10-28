@@ -1,0 +1,9 @@
+# Dependências ultra-enxutas para o Container Único (Webapp + Coletor Noctua + WhatsApp Evolution API)
+requests
+python-dotenv
+psycopg2-binary
+Flask
+Flask-Login
+Werkzeug
+gunicorn
+pytz

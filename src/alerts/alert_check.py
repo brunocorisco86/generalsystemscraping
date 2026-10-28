@@ -76,8 +76,7 @@ def check_alerts():
 
             # Dispara o alerta se estiver abaixo do limite
             if oxigenio < LIMITE_OXIGENIO_CRITICO:
-                logger.info(f"O2 baixo em {tanque} ({oxigenio}). Solicitando análise da IA...")
-                # Chama a IA para analisar o histórico recente e validar
+                logger.info(f"O2 baixo em {tanque} ({oxigenio}). Processando alerta...")
                 mensagem_ia = asyncio.run(analyze_alert_data(tanque, oxigenio, temperatura))
                 
                 if mensagem_ia:

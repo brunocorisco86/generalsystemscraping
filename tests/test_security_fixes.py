@@ -1,7 +1,9 @@
 import unittest
 from unittest.mock import patch, MagicMock
 import sys
+import pytest
 
+pytest.importorskip("matplotlib")
 # Now we can import the module to test without polluting sys.modules
 import src.reports.bot_query_temp as bot_query_temp
 import src.reports.bot_query_ox_7d as bot_query_ox_7d

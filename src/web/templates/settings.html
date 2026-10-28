@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Configurações & MDM{% endblock %}
+{% block title %}Configurações, Contatos WhatsApp & MDM{% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4">
     <!-- Header -->
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
         <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-gear-wide-connected text-primary me-2"></i>Configurações & Master Data (MDM)</h2>
-            <p class="text-muted mb-0">Gestão cadastral de produtor, propriedade, estruturas físicas e diagnóstico do banco de dados.</p>
+            <h2 class="fw-bold mb-1"><i class="bi bi-gear-wide-connected text-primary me-2"></i>Configurações, Contatos WhatsApp & MDM</h2>
+            <p class="text-muted mb-0">Gestão dinâmica de destinatários WhatsApp (Evolution API), cadastros MDM e banco de dados.</p>
         </div>
         <div class="mt-3 mt-md-0">
-            <button class="btn btn-outline-secondary" onclick="carregarStatusDB(); carregarDadosMDM();">
+            <button class="btn btn-outline-secondary" onclick="carregarContatosWhatsApp(); carregarStatusDB(); carregarDadosMDM();">
                 <i class="bi bi-arrow-clockwise me-1"></i> Atualizar Painel
             </button>
         </div>
@@ -20,7 +20,12 @@
     <!-- Navegação de Abas -->
     <ul class="nav nav-tabs mb-4" id="settingsTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active fw-semibold px-4" id="mdm-tab" data-bs-toggle="tab" data-bs-target="#mdm-content" type="button" role="tab">
+            <button class="nav-link active fw-semibold px-4" id="wpp-tab" data-bs-toggle="tab" data-bs-target="#wpp-content" type="button" role="tab">
+                <i class="bi bi-whatsapp text-success me-1"></i> Contatos WhatsApp (Alertas)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-semibold px-4" id="mdm-tab" data-bs-toggle="tab" data-bs-target="#mdm-content" type="button" role="tab">
                 <i class="bi bi-person-badge me-1"></i> Cadastros MDM (Produtor & Tanques)
             </button>
         </li>
@@ -33,9 +38,48 @@
 
     <div class="tab-content" id="settingsTabContent">
         <!-- ============================================================== -->
+        <!-- ABA 0: GESTÃO DINÂMICA DE CONTATOS WHATSAPP (EVOLUTION API)    -->
+        <!-- ============================================================== -->
+        <div class="tab-pane fade show active" id="wpp-content" role="tabpanel">
+            <div class="card shadow-sm border-top border-4 border-success">
+                <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <div>
+                        <h5 class="card-title fw-bold mb-0 text-success">
+                            <i class="bi bi-whatsapp me-2"></i>Destinatários de Alertas e Relatórios via WhatsApp
+                        </h5>
+                        <small class="text-muted">Adicione, edite ou remova contatos livremente. Todos os contatos marcados como <strong>Ativo</strong> receberão notificações via Evolution API.</small>
+                    </div>
+                    <button class="btn btn-success fw-semibold" onclick="abrirModalNovoContato()">
+                        <i class="bi bi-person-plus-fill me-1"></i> Novo Contato WhatsApp
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Papel / Parentesco</th>
+                                    <th>Telefone WhatsApp (DDI + DDD + Número)</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Alertas Críticos</th>
+                                    <th class="text-center">Relatórios</th>
+                                    <th class="text-end">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaContatosBody">
+                                <tr><td colspan="7" class="text-center py-4 text-muted">Carregando contatos...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
         <!-- ABA 1: MASTER DATA MANAGEMENT (MDM)                            -->
         <!-- ============================================================== -->
-        <div class="tab-pane fade show active" id="mdm-content" role="tabpanel">
+        <div class="tab-pane fade" id="mdm-content" role="tabpanel">
             <div class="row g-4">
                 <!-- 1.1 Proprietário / Produtor -->
                 <div class="col-lg-6">
@@ -144,7 +188,7 @@
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
                                     <h5 class="fw-bold mb-1">PostgreSQL Transacional (SSOT)</h5>
-                                    <p class="text-muted small mb-0" id="pgHostInfo">Host: 192.168.1.7:5432 (alpine)</p>
+                                    <p class="text-muted small mb-0" id="pgHostInfo">Host: hermes-db:5432</p>
                                 </div>
                                 <span class="badge bg-secondary fs-6" id="pgStatusCardBadge">Verificando...</span>
                             </div>
@@ -196,13 +240,13 @@
                     <div class="d-flex align-items-center gap-2">
                         <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-table me-2"></i>Inspecionador de Registros</h5>
                         <select class="form-select form-select-sm w-auto" id="selectTabelaDB" onchange="carregarDadosTabela()">
+                            <option value="contatos_whatsapp">Tabela: contatos_whatsapp</option>
                             <option value="lotes">Tabela: lotes</option>
                             <option value="biometria">Tabela: biometria</option>
                             <option value="estruturas">Tabela: estruturas</option>
                             <option value="leituras">Tabela: leituras</option>
                             <option value="qualidade_agua_limnologia">Tabela: qualidade_agua_limnologia</option>
                             <option value="clima_historico">Tabela: clima_historico</option>
-                            <option value="historico_pareceres_ia">Tabela: historico_pareceres_ia</option>
                         </select>
                     </div>
                     <button class="btn btn-sm btn-outline-primary" onclick="carregarDadosTabela()">
@@ -222,6 +266,53 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Adicionar / Editar Contato WhatsApp -->
+<div class="modal fade" id="modalContatoWpp" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold" id="modalContatoTitulo"><i class="bi bi-whatsapp me-2"></i>Salvar Contato WhatsApp</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formContatoWpp" onsubmit="salvarContatoWhatsApp(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="wppId" value="">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nome Completo <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="wppNome" placeholder="Ex: Dirceu Patel" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Papel / Relação</label>
+                        <input type="text" class="form-control" id="wppPapel" placeholder="Ex: Sogro / Gestor">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Telefone WhatsApp (DDD + Número) <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control font-monospace" id="wppTelefone" placeholder="Ex: 5544999999999" required>
+                        <small class="text-muted">Informe apenas números (ex: <code>5544999999999</code> ou <code>44999999999</code>).</small>
+                    </div>
+                    <hr>
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="wppAtivo" checked>
+                        <label class="form-check-label fw-bold text-success" for="wppAtivo">Contato Ativo (Habilitar envios)</label>
+                    </div>
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="wppAlertas" checked>
+                        <label class="form-check-label" for="wppAlertas">Receber Alertas Críticos (O2 Baixo / Sensor Offline)</label>
+                    </div>
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="wppRelatorios" checked>
+                        <label class="form-check-label" for="wppRelatorios">Receber Relatórios Diários</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success fw-bold"><i class="bi bi-save me-1"></i> Salvar Contato</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -259,12 +350,155 @@
 </div>
 
 <script>
-function carregarDadosMDM() {
+let listaContatosCache = [];
+
+function carregarContatosWhatsApp() {
+    fetch('/api/contatos')
+        .then(r => r.json())
+        .then(data => {
+            listaContatosCache = data.contatos || [];
+            renderTabelaContatos(listaContatosCache);
+        })
+        .catch(err => console.error("Erro ao carregar contatos WhatsApp:", err));
+}
+
+function renderTabelaContatos(contatos) {
+    const tbody = document.getElementById('tabelaContatosBody');
+    if (!contatos || contatos.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">Nenhum contato cadastrado. Clique em "Novo Contato WhatsApp" para adicionar.</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = contatos.map(c => `
+        <tr>
+            <td class="fw-bold">${c.nome}</td>
+            <td><span class="badge bg-light text-dark border">${c.papel || '--'}</span></td>
+            <td>
+                ${c.telefone ? `<code class="fs-6 text-dark">${c.telefone}</code>` : `<span class="text-danger small fw-semibold"><i class="bi bi-exclamation-circle me-1"></i>Preencha o telefone</span>`}
+            </td>
+            <td class="text-center">
+                ${c.ativo && c.telefone ? '<span class="badge bg-success">🟢 Ativo</span>' : '<span class="badge bg-secondary">⏸️ Inativo</span>'}
+            </td>
+            <td class="text-center">
+                ${c.receber_alertas ? '<i class="bi bi-check-circle-fill text-success fs-5"></i>' : '<i class="bi bi-dash-circle text-muted"></i>'}
+            </td>
+            <td class="text-center">
+                ${c.receber_relatorios ? '<i class="bi bi-check-circle-fill text-primary fs-5"></i>' : '<i class="bi bi-dash-circle text-muted"></i>'}
+            </td>
+            <td class="text-end">
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-primary" onclick="abrirModalEditarContato(${c.id})" title="Editar Contato">
+                        <i class="bi bi-pencil-square"></i> Editar
+                    </button>
+                    <button class="btn btn-outline-success" onclick="testarContatoWhatsApp(${c.id})" title="Enviar WhatsApp de Teste" ${!c.telefone ? 'disabled' : ''}>
+                        <i class="bi bi-whatsapp"></i> Testar
+                    </button>
+                    <button class="btn btn-outline-danger" onclick="excluirContatoWhatsApp(${c.id}, '${c.nome.replace(/'/g, "\\'")}')" title="Excluir Contato">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function abrirModalNovoContato() {
+    document.getElementById('modalContatoTitulo').innerHTML = '<i class="bi bi-person-plus-fill me-2"></i>Novo Contato WhatsApp';
+    document.getElementById('wppId').value = '';
+    document.getElementById('wppNome').value = '';
+    document.getElementById('wppPapel').value = 'Familiar / Gestor';
+    document.getElementById('wppTelefone').value = '';
+    document.getElementById('wppAtivo').checked = true;
+    document.getElementById('wppAlertas').checked = true;
+    document.getElementById('wppRelatorios').checked = true;
+    new bootstrap.Modal(document.getElementById('modalContatoWpp')).show();
+}
+
+function abrirModalEditarContato(id) {
+    const c = listaContatosCache.find(item => item.id === id);
+    if (!c) return;
+    document.getElementById('modalContatoTitulo').innerHTML = `<i class="bi bi-pencil-square me-2"></i>Editar Contato: ${c.nome}`;
+    document.getElementById('wppId').value = c.id;
+    document.getElementById('wppNome').value = c.nome || '';
+    document.getElementById('wppPapel').value = c.papel || '';
+    document.getElementById('wppTelefone').value = c.telefone || '';
+    document.getElementById('wppAtivo').checked = !!c.ativo;
+    document.getElementById('wppAlertas').checked = !!c.receber_alertas;
+    document.getElementById('wppRelatorios').checked = !!c.receber_relatorios;
+    new bootstrap.Modal(document.getElementById('modalContatoWpp')).show();
+}
+
+function salvarContatoWhatsApp(e) {
+    e.preventDefault();
+    const idVal = document.getElementById('wppId').value;
+    const payload = {
+        id: idVal ? parseInt(idVal) : null,
+        nome: document.getElementById('wppNome').value.trim(),
+        papel: document.getElementById('wppPapel').value.trim(),
+        telefone: document.getElementById('wppTelefone').value.trim(),
+        ativo: document.getElementById('wppAtivo').checked,
+        receber_alertas: document.getElementById('wppAlertas').checked,
+        receber_relatorios: document.getElementById('wppRelatorios').checked,
+    };
+
     showLoading();
+    fetch('/api/contatos', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+    })
+    .then(r => r.json())
+    .then(res => {
+        hideLoading();
+        if (res.status === 'ok') {
+            bootstrap.Modal.getInstance(document.getElementById('modalContatoWpp')).hide();
+            carregarContatosWhatsApp();
+        } else {
+            alert("Erro: " + res.message);
+        }
+    })
+    .catch(err => {
+        hideLoading();
+        alert("Erro ao salvar contato: " + err);
+    });
+}
+
+function excluirContatoWhatsApp(id, nome) {
+    if (!confirm(`Deseja realmente remover o contato "${nome}" da lista de WhatsApp?`)) return;
+    showLoading();
+    fetch(`/api/contatos/${id}`, { method: 'DELETE' })
+        .then(r => r.json())
+        .then(res => {
+            hideLoading();
+            if (res.status === 'ok') {
+                carregarContatosWhatsApp();
+            } else {
+                alert("Erro ao remover: " + res.message);
+            }
+        })
+        .catch(err => {
+            hideLoading();
+            alert("Erro ao excluir contato: " + err);
+        });
+}
+
+function testarContatoWhatsApp(id) {
+    showLoading();
+    fetch(`/api/contatos/${id}/test`, { method: 'POST' })
+        .then(r => r.json())
+        .then(res => {
+            hideLoading();
+            alert(res.message);
+        })
+        .catch(err => {
+            hideLoading();
+            alert("Erro ao disparar teste: " + err);
+        });
+}
+
+function carregarDadosMDM() {
     fetch('/api/mdm/dados')
         .then(r => r.json())
         .then(data => {
-            hideLoading();
             if (data.proprietario) {
                 document.getElementById('propNome').value = data.proprietario.nome || '';
                 document.getElementById('propCpf').value = data.proprietario.cpf || '';
@@ -277,10 +511,7 @@ function carregarDadosMDM() {
             }
             renderTabelaEstruturas(data.estruturas || []);
         })
-        .catch(err => {
-            hideLoading();
-            console.error("Erro MDM:", err);
-        });
+        .catch(err => console.error("Erro MDM:", err));
 }
 
 function renderTabelaEstruturas(estruturas) {
@@ -424,9 +655,9 @@ function carregarDadosTabela() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    carregarContatosWhatsApp();
     carregarDadosMDM();
     carregarStatusDB();
-    carregarDadosTabela();
 });
 </script>
 {% endblock %}
