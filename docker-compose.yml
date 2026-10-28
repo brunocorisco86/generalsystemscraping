@@ -21,12 +21,11 @@ services:
     ports:
       - "127.0.0.1:${WEB_PORT:-5050}:5000"
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
       - ./src:/app/src
       - ./data:/app/data
       - ./logs:/app/logs
       - ./reports:/app/reports
+      - ./scripts:/app/scripts
     networks:
       - default
       - hermes_mesh
