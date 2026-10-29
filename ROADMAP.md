@@ -12,7 +12,8 @@ flowchart LR
     M1 --> M2["Milestone 2<br/>Thresholds & Timers<br/>no Dashboard"]
     M2 --> M3["Milestone 3<br/>Controle de Motores<br/>(Protocolo Seguro)"]
     M3 --> M4["Milestone 4<br/>Auditoria &<br/>Conteinerização"]
-    M4 --> M5["Milestone 5<br/>Deploy VPS &<br/>Integração Host"]
+    M4 --> M5["Milestone 5<br/>Deploy VPS, WhatsApp<br/>& UI Hero+Tiles"]
+    M5 --> M6["Milestone 6<br/>Usuários da Família<br/>(Auth no PostgreSQL)"]
 ```
 
 ---
@@ -119,21 +120,43 @@ flowchart LR
 
 ---
 
-## Milestone 5: Deploy e Homologação na VPS
-> **Foco**: Integração com a infraestrutura da VPS sem conflito com portas ou serviços pré-existentes.
+## Milestone 5: Deploy na VPS Hostinger, Integração WhatsApp (Evolution API) & Redesign UI
+> **Foco**: Consolidação em container único ultraleve na VPS Hostinger (`179.197.73.80`), exposição HTTPS sem porta (`/psicultura`), substituição do Telegram pelo WhatsApp e modernização visual completa do Dashboard.
 
-- [ ] **Auditoria da VPS**:
-  - Listar portas ativas na VPS (`ss -tuln`) e identificar portas disponíveis.
-  - Checar existência de PostgreSQL em execução na VPS para compartilhamento de banco de dados.
-- [ ] **Deploy**:
-  - Realizar commit e git push das alterações validadas localmente.
-  - Na VPS, clonar ou puxar as alterações (`git pull`).
-  - Configurar `.env` da VPS apontando para o PostgreSQL já existente e porta web livre (ex: `5050` ou `8080`).
-  - Subir a stack com Docker Compose.
-- [ ] **Validação Final**:
-  - Acessar o dashboard pelo IP/domínio da VPS na porta configurada.
-  - Conferir coleta automática e alertas no Telegram.
-  - Registrar relatório de deploy no diário de bordo em `knowledge/diario/`.
+- [x] **Auditoria e Consolidação de Recursos na VPS**:
+  - Container único `piscicultura_web` operando com `~46 MiB` de RAM (limite rígido de `96m`) e `requirements-web.txt` enxuto (sem Pandas/Matplotlib/LangChain/Aiogram).
+  - Reuso do container PostgreSQL existente `hermes-db` (database `piscicultura_history`) na rede `hermes_mesh_network`.
+- [x] **Exposição HTTPS Sem Porta via Caddy (`https://brunoconter.duckdns.org/psicultura`)**:
+  - Configuração de `handle_path /psicultura/*` no `hermes-caddy` com `X-Forwarded-Prefix: /psicultura` e `ProxyFix` no Flask.
+- [x] **Mensageria via Evolution API (WhatsApp) e Gestão Dinâmica de Contatos**:
+  - Tabela `contatos_whatsapp` no PostgreSQL com seed inicial (**Dirceu Patel** e **Joceli Patel**) e CRUD administrativo em `/settings`.
+  - Botão **"Coletar e Enviar no WhatsApp"** (`POST /api/report/whatsapp`) com cálculo sob demanda de médias (1h/6h) e taxa de variação por hora (`src/jobs/manual_report.py`).
+- [x] **Padronização Visual Completa (Conceito `Hero + Metric Tiles`) e Favicon**:
+  - Novo favicon SVG temático (`src/web/static/favicon.svg`) e redesign completo de todas as seções do `dashboard.html`.
+- [x] **Validação Final**:
+  - Suíte de testes com **64 testes aprovados** (`bash scripts/run_tests.sh`) e diário de bordo registrado em `knowledge/diario/diary_2026_10_28.md`.
 
 **Critério de Aceite / Teste**:
-- Sistema operando 24/7 na VPS com coleta estável, sem conflito de portas e com consumo mínimo de recursos.
+- Sistema operando 24/7 na VPS em `https://brunoconter.duckdns.org/psicultura` com coleta automática Noctua IoT, envio WhatsApp e consumo mínimo de RAM.
+
+---
+
+## Milestone 6: Gestão de Usuários da Família & Credenciais Seguras no PostgreSQL (`hermes-db`)
+> **Foco**: Permitir que cada membro da família possua seu próprio usuário e senha para acessar o painel web, armazenando as credenciais de forma segura e centralizada no PostgreSQL já existente (`piscicultura_history` em `hermes-db`).
+
+- [ ] **Modelagem e Tabela `usuarios_web` no PostgreSQL**:
+  - Criar tabela `usuarios_web` no database `piscicultura_history` (`hermes-db`) com campos: `id`, `username` (`UNIQUE`), `nome_exibicao`, `password_hash`, `papel` (`admin`, `familiar`, `visualizador`), `ativo` (`BOOLEAN`), `created_at` e `last_login`.
+  - Garantir seed inicial automático a partir de `WEB_ADMIN_USER` / `WEB_ADMIN_PASS` caso a tabela esteja vazia.
+- [ ] **Segurança Criptográfica de Senhas**:
+  - Armazenar exclusivamente hashes seguros utilizando `werkzeug.security.generate_password_hash` (`scrypt` / `pbkdf2:sha256` com salt aleatório por usuário) e validação via `check_password_hash`.
+- [ ] **Refatoração do Serviço de Autenticação (`src/services/web_auth.py`)**:
+  - Migrar a leitura/validação de usuários do SQLite local para o PostgreSQL (`get_postgres_connection()`), mantendo fallback resiliente.
+  - Exibir o nome do familiar logado na barra de navegação superior (`base.html`).
+- [ ] **Painel Administrativo de Usuários da Família (`/settings`)**:
+  - Adicionar aba/seção **"Usuários & Acesso da Família"** em `/settings` (e rotas REST `GET/POST /api/usuarios`, `PUT /api/usuarios/<id>/senha`, `DELETE /api/usuarios/<id>`).
+  - Permitir criar contas individuais para os familiares (ex: Dirceu, Joceli, Bruno, etc.), alterar senhas e ativar/desativar acessos em tempo real pela interface web.
+- [ ] **Testes Automatizados**:
+  - Adicionar testes unitários validando criação de usuários familiares, hash de senha (garantindo que a senha em texto puro nunca seja salva), login com credenciais do Postgres e bloqueio de usuários inativos.
+
+**Critério de Aceite / Teste**:
+- Familiares conseguem logar com usuário e senha próprios em `https://brunoconter.duckdns.org/psicultura`, com credenciais persistidas com hash criptográfico no PostgreSQL (`hermes-db`) e gerenciamento completo via `/settings`.
