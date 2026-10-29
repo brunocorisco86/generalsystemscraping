@@ -73,6 +73,52 @@ def _extract_evolution_error(response) -> str:
         return f"HTTP {response.status_code}: {getattr(response, 'text', '')[:200]}"
 
 
+def _send_text_to_number(text: str, numero: str):
+    """Envia texto para um único número (com fallback do 9º dígito). Retorna (ok, erro)."""
+    url = f"{EVOLUTION_API_URL}/message/sendText/{EVOLUTION_INSTANCE}"
+    headers = {"apikey": EVOLUTION_API_KEY, "Content-Type": "application/json"}
+    last_error = ""
+    for candidate in get_brazilian_phone_variants(numero):
+        try:
+            response = requests.post(url, json={"number": candidate, "text": text}, headers=headers, timeout=10)
+            if response.status_code == 400:
+                last_error = _extract_evolution_error(response)
+                continue
+            response.raise_for_status()
+            return True, ""
+        except Exception as e:
+            resp_obj = getattr(e, "response", None)
+            last_error = _extract_evolution_error(resp_obj) if resp_obj is not None else str(e)
+    return False, last_error or "Número inválido."
+
+
+def send_whatsapp_to_active_contacts(text: str) -> list:
+    """
+    Envia o texto para TODOS os contatos ativos (ignora flags de alertas/relatórios).
+    Retorna [{nome, telefone, ok, erro}] por contato.
+    """
+    from src.services.database import listar_contatos_whatsapp
+    contatos = listar_contatos_whatsapp(apenas_ativos=True)
+    resultados = []
+    for c in contatos:
+        nome = c.get("nome", "Contato")
+        tel = (c.get("telefone") or "").strip()
+        norm = normalize_whatsapp_number(tel)
+        if not norm:
+            resultados.append({"nome": nome, "telefone": tel, "ok": False, "erro": "Telefone não preenchido."})
+            continue
+        if not EVOLUTION_API_URL or not EVOLUTION_API_KEY or not EVOLUTION_INSTANCE:
+            resultados.append({"nome": nome, "telefone": tel, "ok": False, "erro": "Evolution API não configurada."})
+            continue
+        ok, erro = _send_text_to_number(text, norm)
+        if ok:
+            logger.info("Relatório manual enviado para %s (%s).", nome, norm)
+        else:
+            logger.error("Falha no relatório manual para %s (%s): %s", nome, norm, erro)
+        resultados.append({"nome": nome, "telefone": tel, "ok": ok, "erro": erro})
+    return resultados
+
+
 def send_whatsapp_message(
     text: str,
     phone: str = None,

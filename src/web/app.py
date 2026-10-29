@@ -26,7 +26,8 @@ from src.services.database import (
     salvar_contato_whatsapp,
     excluir_contato_whatsapp,
 )
-from src.services.notification import send_whatsapp_message
+from src.services.notification import send_whatsapp_message, send_whatsapp_to_active_contacts
+from src.jobs.manual_report import build_manual_report
 from src.services.noctua_client import (
     NoctuaClient,
     KNOWN_ENDPOINTS,
@@ -273,6 +274,45 @@ def api_scrape():
     except Exception as e:
         logger.error(f"Erro no scraping via Web: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
+
+_report_lock = threading.Lock()
+
+@app.route('/api/report/whatsapp', methods=['POST'])
+@login_required
+def api_report_whatsapp():
+    """Coleta agora, monta relatório com médias/tendência e envia a todos os contatos ativos."""
+    if not _report_lock.acquire(blocking=False):
+        return jsonify({"status": "error", "message": "Já existe um envio em andamento."}), 429
+    try:
+        coleta_ok = True
+        try:
+            scrape_and_save()
+        except Exception as e:
+            coleta_ok = False
+            logger.warning(f"Coleta falhou no envio manual: {e}")
+
+        texto = build_manual_report(coleta_ok=coleta_ok)
+        resultados = send_whatsapp_to_active_contacts(texto)
+        enviados = sum(1 for r in resultados if r["ok"])
+
+        if not resultados:
+            msg = "Nenhum contato ativo cadastrado."
+        else:
+            msg = f"Relatório enviado para {enviados} de {len(resultados)} contato(s)."
+        return jsonify({
+            "status": "ok" if enviados else "error",
+            "message": msg,
+            "coleta_ok": coleta_ok,
+            "enviados": enviados,
+            "total": len(resultados),
+            "resultados": resultados,
+            "preview": texto
+        }), (200 if enviados else 502)
+    except Exception as e:
+        logger.error(f"Erro no envio manual de relatório: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+    finally:
+        _report_lock.release()
 
 @app.route('/api/sync', methods=['POST'])
 @login_required

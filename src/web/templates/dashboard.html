@@ -16,6 +16,9 @@
                         <button onclick="runAction('/api/scrape', 'Coleta de dados')" class="btn btn-success text-start d-flex justify-content-between align-items-center">
                             <span>⟳ Forçar Coleta</span>
                         </button>
+                        <button id="btnSendWpp" onclick="sendWhatsappReport()" class="btn btn-success text-start d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-send-fill me-1"></i> Coletar e Enviar no WhatsApp</span>
+                        </button>
                         <button onclick="runAction('/api/sync', 'Sincronização')" class="btn btn-primary text-start d-flex justify-content-between align-items-center">
                             <span>⇄ Sincronizar DB</span>
                         </button>
@@ -281,8 +284,65 @@
 
 </div>
 
+<!-- Modal: Resultado do envio WhatsApp -->
+<div class="modal fade" id="wppResultModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-whatsapp text-success me-1"></i> Envio pelo WhatsApp</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="wppResultMsg" class="fw-semibold mb-2"></p>
+                <ul id="wppResultList" class="list-group mb-3"></ul>
+                <h6 class="text-muted text-uppercase small">Mensagem enviada</h6>
+                <pre id="wppPreview" class="bg-light p-2 rounded small mb-0" style="white-space: pre-wrap;"></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
+    function escapeHtml(s) {
+        return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    async function sendWhatsappReport() {
+        if (!confirm('Coletar agora e enviar o relatório para todos os contatos ativos no WhatsApp?')) return;
+        const btn = document.getElementById('btnSendWpp');
+        const original = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span><span class="spinner-border spinner-border-sm me-2"></span>Coletando e enviando…</span>';
+        let data;
+        try {
+            const resp = await fetch('/api/report/whatsapp', { method: 'POST' });
+            data = await resp.json();
+        } catch (e) {
+            data = { status: 'error', message: 'Erro de comunicação: ' + e, resultados: [], preview: '' };
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = original;
+        }
+
+        document.getElementById('wppResultMsg').textContent =
+            (data.coleta_ok === false ? '⚠️ Coleta falhou (enviada última leitura). ' : '') + (data.message || '');
+        document.getElementById('wppResultList').innerHTML = (data.resultados || []).map(r =>
+            `<li class="list-group-item d-flex justify-content-between align-items-start">
+                <span>${r.ok ? '✅' : '❌'} <strong>${escapeHtml(r.nome)}</strong>
+                ${r.ok ? '' : `<br><small class="text-danger">${escapeHtml(r.erro)}</small>`}</span>
+                <small class="text-muted">${escapeHtml(r.telefone)}</small>
+            </li>`).join('');
+        document.getElementById('wppPreview').textContent = data.preview || '';
+
+        const modalEl = document.getElementById('wppResultModal');
+        modalEl.addEventListener('hidden.bs.modal', () => location.reload(), { once: true });
+        new bootstrap.Modal(modalEl).show();
+    }
+
     async function runAction(endpoint, label) {
         if (!confirm(`Deseja iniciar a ${label}?`)) return;
         

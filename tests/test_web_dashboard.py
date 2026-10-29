@@ -273,4 +273,44 @@ def test_mdm_uid_cascade_proprietario_and_propriedade(auth_client):
         assert any("DELETE FROM propriedades WHERE uid <>" in s for s in executed_rural_sqls)
 
 
+def test_api_report_whatsapp_success(auth_client):
+    res = [{"nome": "Dirceu", "telefone": "1", "ok": True, "erro": ""},
+           {"nome": "Joceli", "telefone": "2", "ok": True, "erro": ""}]
+    with patch("src.web.app.scrape_and_save"), \
+         patch("src.web.app.build_manual_report", return_value="REL"), \
+         patch("src.web.app.send_whatsapp_to_active_contacts", return_value=res) as mock_send:
+        r = auth_client.post('/api/report/whatsapp')
+    assert r.status_code == 200
+    d = r.get_json()
+    assert d["enviados"] == 2 and d["preview"] == "REL"
+    mock_send.assert_called_once_with("REL")
+
+
+def test_api_report_whatsapp_all_failed(auth_client):
+    res = [{"nome": "Dirceu", "telefone": "1", "ok": False, "erro": "exists: false"}]
+    with patch("src.web.app.scrape_and_save", side_effect=Exception("401")), \
+         patch("src.web.app.build_manual_report", return_value="REL"), \
+         patch("src.web.app.send_whatsapp_to_active_contacts", return_value=res):
+        r = auth_client.post('/api/report/whatsapp')
+    assert r.status_code == 502
+    d = r.get_json()
+    assert d["coleta_ok"] is False
+    assert d["resultados"][0]["erro"] == "exists: false"
+
+
+def test_api_report_whatsapp_busy(auth_client):
+    from src.web import app as app_module
+    app_module._report_lock.acquire()
+    try:
+        r = auth_client.post('/api/report/whatsapp')
+        assert r.status_code == 429
+    finally:
+        app_module._report_lock.release()
+
+
+def test_api_report_whatsapp_requires_login(client):
+    r = client.post('/api/report/whatsapp')
+    assert r.status_code in (302, 401)
+
+
 
