@@ -313,4 +313,35 @@ def test_api_report_whatsapp_requires_login(client):
     assert r.status_code in (302, 401)
 
 
+def test_favicon_and_weather_card_markup(auth_client):
+    """Valida se o favicon SVG de piscicultura é servido e se o novo card de clima renderiza sem decimais excessivos."""
+    fav = auth_client.get('/static/favicon.svg')
+    assert fav.status_code == 200
+    assert b'<svg' in fav.data
+
+    mock_weather = {
+        "current": {
+            "temperature_2m": 19.3,
+            "relative_humidity_2m": 85.0,
+            "surface_pressure": 977.6,
+            "cloud_cover": 100.0
+        },
+        "hourly": {
+            "precipitation_probability": [20.0],
+            "rain": [0.0]
+        },
+        "daily": None
+    }
+    with patch("src.web.app.get_cached_weather", return_value=mock_weather):
+        resp = auth_client.get('/', headers={'X-Forwarded-Prefix': '/psicultura'})
+        assert resp.status_code == 200
+        html = resp.data.decode('utf-8')
+        assert '/psicultura/static/favicon.svg' in html
+        assert '19,3°C' in html
+        assert 'Céu Encoberto' in html
+        assert '85%' in html
+        assert '977,6' in html
+
+
+
 

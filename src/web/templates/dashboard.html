@@ -32,44 +32,166 @@
 
         <!-- Clima Local (9 Colunas) -->
         <div class="col-md-9">
-            <div class="card shadow-sm border-top border-warning border-4 h-100">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold mb-3">Clima Local</h5>
+            <div class="card shadow-sm weather-card border-top border-info border-4 h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
                     {% if weather %}
-                    <div class="row text-center h-100 align-items-center">
-                        <div class="col-6 col-md-2 mb-2">
-                            <h2 class="display-6 fw-bold mb-0 text-primary">{{ weather.current.temperature_2m|round(1) }}°C</h2>
-                            <small class="text-muted text-uppercase fw-semibold">Temperatura</small>
-                        </div>
-                        <div class="col-6 col-md-2 mb-2 border-start border-end">
-                            <h3 class="h4 mt-2 mb-0">{{ "%.2f"|format(weather.current.relative_humidity_2m|float) }}%</h3>
-                            <small class="text-muted text-uppercase fw-semibold">Umidade</small>
-                        </div>
-                        <div class="col-6 col-md-3 mb-2">
-                            <h3 class="h4 mt-2 mb-0">{{ "%.2f"|format(weather.current.surface_pressure|float) if weather.current.surface_pressure else '--' }} hPa</h3>
-                            <small class="text-muted text-uppercase fw-semibold">Pressão Atm.</small>
-                        </div>
-                        <div class="col-6 col-md-2 mb-2 border-start border-end">
-                            <h3 class="h4 mt-2 mb-0">
-                                {% set cloud = weather.current.cloud_cover|float %}
-                                {% if cloud < 10 %}☀️
-                                {% elif cloud < 30 %}🌤️
-                                {% elif cloud < 60 %}⛅
-                                {% elif cloud < 85 %}🌥️
-                                {% else %}☁️{% endif %}
-                                {{ cloud|round(0) }}%
-                            </h3>
-                            <small class="text-muted text-uppercase fw-semibold">Nuvens</small>
-                        </div>
-                        <div class="col-6 col-md-3 mb-2">
-                            <h3 class="h4 mt-2 mb-0">
-                                {{ "%.2f"|format(weather.hourly.precipitation_probability[0]|default(0)|float) }}%
-                                <span class="fs-6 text-muted">({{ "%.2f"|format(weather.hourly.rain[0]|default(0)|float) }}mm)</span>
-                            </h3>
-                            <small class="text-muted text-uppercase fw-semibold">Chuva</small>
-                        </div>                    </div>
+                    {% set temp_val = weather.current.temperature_2m|float %}
+                    {% set hum_val = weather.current.relative_humidity_2m|float %}
+                    {% set pres_val = weather.current.surface_pressure|float if weather.current.surface_pressure else 0 %}
+                    {% set cloud = weather.current.cloud_cover|float %}
+                    {% set rain_prob = weather.hourly.precipitation_probability[0]|default(0)|float %}
+                    {% set rain_mm = weather.hourly.rain[0]|default(0)|float %}
+
+                    {% if rain_mm > 0.2 or rain_prob >= 60 %}
+                        {% set hero_cls = "wx-hero-rain" %}
+                        {% set wx_icon = "bi-cloud-rain-heavy-fill" %}
+                        {% set wx_desc = "Chuva / Instável" %}
+                    {% elif cloud >= 85 %}
+                        {% set hero_cls = "wx-hero-cloudy" %}
+                        {% set wx_icon = "bi-clouds-fill" %}
+                        {% set wx_desc = "Céu Encoberto" %}
+                    {% elif cloud >= 40 %}
+                        {% set hero_cls = "wx-hero-cloudy" %}
+                        {% set wx_icon = "bi-cloud-sun-fill" %}
+                        {% set wx_desc = "Parcialmente Nublado" %}
                     {% else %}
-                    <p class="text-muted fst-italic">Dados de clima indisponíveis.</p>
+                        {% set hero_cls = "wx-hero-clear" %}
+                        {% set wx_icon = "bi-sun-fill" %}
+                        {% set wx_desc = "Céu Limpo / Ensolarado" %}
+                    {% endif %}
+
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <h5 class="card-title fw-bold mb-0">Clima Local</h5>
+                            <span class="badge bg-light text-secondary border fw-normal">
+                                <i class="bi bi-geo-alt-fill text-danger me-1"></i>Palotina - PR
+                            </span>
+                        </div>
+                        {% if cloud >= 85 and pres_val > 0 and pres_val < 976 %}
+                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-1">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i>Atenção O₂ (Pressão Baixa + Nublado)
+                        </span>
+                        {% else %}
+                        <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-2 py-1">
+                            <i class="bi bi-check-circle-fill me-1"></i>Condição Atmosférica Estável p/ O₂
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="row g-3 align-items-stretch">
+                        <!-- Bloco Hero: Temperatura e Condição Principal -->
+                        <div class="col-lg-4">
+                            <div class="weather-hero {{ hero_cls }} h-100 d-flex flex-column justify-content-between">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <span class="text-uppercase small fw-semibold opacity-75 d-block">Agora</span>
+                                        <div class="wx-temp-value mt-1">{{ "%.1f"|format(temp_val)|replace(".", ",") }}°C</div>
+                                    </div>
+                                    <i class="bi {{ wx_icon }} wx-main-icon"></i>
+                                </div>
+                                <div class="mt-3 pt-2 border-top border-light border-opacity-25 d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold small">{{ wx_desc }}</span>
+                                    <span class="badge bg-white bg-opacity-25 text-white fw-normal">
+                                        <i class="bi bi-thermometer-half me-1"></i>Ar
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grid 2x2 de Indicadores Meteorológicos -->
+                        <div class="col-lg-8">
+                            <div class="row g-2 h-100">
+                                <!-- Umidade -->
+                                <div class="col-6">
+                                    <div class="weather-metric-tile">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <small class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.7rem;">Umidade Relativa</small>
+                                                <span class="h5 fw-bold mb-0 text-dark">{{ hum_val|round(0)|int }}%</span>
+                                            </div>
+                                            <span class="weather-metric-icon bg-info-subtle text-info-emphasis">
+                                                <i class="bi bi-droplet-half"></i>
+                                            </span>
+                                        </div>
+                                        <div class="wx-progress">
+                                            <div class="bg-info h-100" style="width: {{ hum_val|round(0)|int }}%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pressão Atmosférica -->
+                                <div class="col-6">
+                                    <div class="weather-metric-tile">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <small class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.7rem;">Pressão Atm.</small>
+                                                <span class="h5 fw-bold mb-0 text-dark">
+                                                    {{ "%.1f"|format(pres_val)|replace(".", ",") if pres_val else '--' }} <small class="fs-6 fw-normal text-muted">hPa</small>
+                                                </span>
+                                            </div>
+                                            <span class="weather-metric-icon bg-primary-subtle text-primary-emphasis">
+                                                <i class="bi bi-speedometer2"></i>
+                                            </span>
+                                        </div>
+                                        <div class="mt-1">
+                                            {% if pres_val >= 976 %}
+                                            <small class="text-success fw-semibold" style="font-size: 0.73rem;">● Normal p/ altitude (~978 hPa)</small>
+                                            {% elif pres_val > 0 %}
+                                            <small class="text-warning-emphasis fw-semibold" style="font-size: 0.73rem;">▼ Abaixo da média local</small>
+                                            {% else %}
+                                            <small class="text-muted" style="font-size: 0.73rem;">Sem leitura de barômetro</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Cobertura de Nuvens -->
+                                <div class="col-6">
+                                    <div class="weather-metric-tile">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <small class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.7rem;">Nuvens</small>
+                                                <span class="h5 fw-bold mb-0 text-dark">{{ cloud|round(0)|int }}%</span>
+                                            </div>
+                                            <span class="weather-metric-icon bg-secondary-subtle text-secondary-emphasis">
+                                                <i class="bi bi-clouds"></i>
+                                            </span>
+                                        </div>
+                                        <div class="wx-progress">
+                                            <div class="bg-secondary h-100" style="width: {{ cloud|round(0)|int }}%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Chuva -->
+                                <div class="col-6">
+                                    <div class="weather-metric-tile">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <small class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.7rem;">Chuva (Próx. 1h)</small>
+                                                <span class="h5 fw-bold mb-0 text-dark">{{ rain_prob|round(0)|int }}%</span>
+                                                <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle ms-1 fw-semibold">
+                                                    {{ "%.1f"|format(rain_mm)|replace(".", ",") }} mm
+                                                </span>
+                                            </div>
+                                            <span class="weather-metric-icon bg-primary-subtle text-primary">
+                                                <i class="bi bi-umbrella-fill"></i>
+                                            </span>
+                                        </div>
+                                        <div class="wx-progress">
+                                            <div class="bg-primary h-100" style="width: {{ rain_prob|round(0)|int }}%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="card-title fw-bold mb-0">Clima Local</h5>
+                        <span class="badge bg-secondary-subtle text-secondary">Sincronizando...</span>
+                    </div>
+                    <p class="text-muted fst-italic mb-0 mt-2">Dados de clima indisponíveis no momento.</p>
                     {% endif %}
                 </div>
             </div>

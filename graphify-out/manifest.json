@@ -444,9 +444,9 @@
     "semantic_hash": "888821ea66d155bc7b32b848003e155b"
   },
   "tests/test_web_dashboard.py": {
-    "mtime": 1793232196.365906,
-    "seen": 1793232219.3991935,
-    "ast_hash": "11145bc73c05e8db2dc16295cd66af35",
+    "mtime": 1793232556.4336615,
+    "seen": 1793232729.1203218,
+    "ast_hash": "e8f74e5333fdfffbae29b69ed43c3e38",
     "semantic_hash": ""
   },
   ".agents/AGENTS.md": {
@@ -564,15 +564,15 @@
     "semantic_hash": "621406b84dcbbc2cf0c60fee9f684b46"
   },
   "src/web/templates/base.html": {
-    "mtime": 1793227076.1277437,
-    "seen": 1793227568.6276648,
-    "ast_hash": "59e7e2b042aabe08d34e6b05bd001384",
+    "mtime": 1793232494.6840653,
+    "seen": 1793232729.120372,
+    "ast_hash": "99c53abd725a05c227a34b295054cf85",
     "semantic_hash": ""
   },
   "src/web/templates/dashboard.html": {
-    "mtime": 1793232170.7460532,
-    "seen": 1793232219.3992252,
-    "ast_hash": "e2520ce5b4fb6f93315807cdd1b6f451",
+    "mtime": 1793232540.993763,
+    "seen": 1793232729.1203735,
+    "ast_hash": "a580b7ae1394acf9a4bf157b0feef32c",
     "semantic_hash": ""
   },
   "src/web/templates/login.html": {
@@ -720,9 +720,9 @@
     "semantic_hash": ""
   },
   "knowledge/diario/diary_2026_10_28.md": {
-    "mtime": 1793232216.9597862,
-    "seen": 1793232219.3992174,
-    "ast_hash": "4494ed558661e8cfc78ac6cde28647c9",
+    "mtime": 1793232726.6776094,
+    "seen": 1793232729.1203601,
+    "ast_hash": "b68ecdf0b65d428ca060af5656af3653",
     "semantic_hash": ""
   },
   "requirements-web.txt": {
@@ -741,6 +741,12 @@
     "mtime": 1793232194.7359154,
     "seen": 1793232219.399184,
     "ast_hash": "22f7759a8afaf40aef3e7ed6bcc6f07c",
+    "semantic_hash": ""
+  },
+  "src/web/static/favicon.svg": {
+    "mtime": 1793232369.2948642,
+    "seen": 1793232729.1203797,
+    "ast_hash": "fbac147522c451921c76c2183aefc663",
     "semantic_hash": ""
   }
 }

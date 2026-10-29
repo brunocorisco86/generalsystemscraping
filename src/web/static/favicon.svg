@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Piscicultura Patel">
+  <defs>
+    <linearGradient id="aquaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="55%" stop-color="#0d9488"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="fishGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e0f2fe"/>
+    </linearGradient>
+  </defs>
+  <!-- Fundo circular aquático -->
+  <circle cx="32" cy="32" r="30" fill="url(#aquaGrad)" stroke="#bae6fd" stroke-width="2"/>
+  <!-- Bolhas de Oxigênio (O2) -->
+  <circle cx="15" cy="18" r="2.6" fill="#bae6fd" opacity="0.9"/>
+  <circle cx="20" cy="13" r="1.7" fill="#e0f2fe" opacity="0.85"/>
+  <!-- Peixe estilizado (Tilápia) -->
+  <path d="M13 30 C19 19, 34 18, 44 26 L53 19 L51 30 L53 41 L44 34 C34 42, 19 41, 13 30 Z" fill="url(#fishGrad)"/>
+  <!-- Nadadeira dorsal suave -->
+  <path d="M25 21 C29 15, 36 16, 39 22 C34 20, 29 20, 25 21 Z" fill="#bae6fd"/>
+  <!-- Olho e brânquia -->
+  <circle cx="21.5" cy="28.5" r="2.2" fill="#0f766e"/>
+  <circle cx="21" cy="28" r="0.8" fill="#ffffff"/>
+  <path d="M26.5 25.5 C28 28.5, 28 31.5, 26.5 34.5" stroke="#0284c7" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <!-- Ondas do tanque na base -->
+  <path d="M11 47 C15 44, 19 44, 23 47 C27 50, 31 50, 35 47 C39 44, 43 44, 47 47 C50 49, 52 49, 54 47" stroke="#bae6fd" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+  <path d="M15 53 C19 50.5, 23 50.5, 27 53 C31 55.5, 35 55.5, 39 53 C43 50.5, 47 50.5, 50 53" stroke="#7dd3fc" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.85"/>
+</svg>

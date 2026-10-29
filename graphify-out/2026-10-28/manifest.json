@@ -348,9 +348,9 @@
     "semantic_hash": ""
   },
   "src/services/notification.py": {
-    "mtime": 1793229916.8496575,
-    "seen": 1793230443.7802649,
-    "ast_hash": "da20ec270332946cf0b3d33773591c66",
+    "mtime": 1793232108.4264019,
+    "seen": 1793232219.3991725,
+    "ast_hash": "d0c84ef6c6b38ff077bb0af29d7698de",
     "semantic_hash": ""
   },
   "src/services/weather.py": {
@@ -366,9 +366,9 @@
     "semantic_hash": "a7cc751f4c179d3b8ed6e390caad803b"
   },
   "src/web/app.py": {
-    "mtime": 1793230538.5942085,
-    "seen": 1793230558.9723077,
-    "ast_hash": "91b405f359f13fc34c93a5ceae2a0a64",
+    "mtime": 1793232141.0872207,
+    "seen": 1793232219.3991756,
+    "ast_hash": "8cd6712f1d3846edcb64173639c6a373",
     "semantic_hash": ""
   },
   "tests/__init__.py": {
@@ -444,9 +444,9 @@
     "semantic_hash": "888821ea66d155bc7b32b848003e155b"
   },
   "tests/test_web_dashboard.py": {
-    "mtime": 1793230381.0319982,
-    "seen": 1793230443.7802906,
-    "ast_hash": "41d8fd6bfb729d2e4959f5998c28ba44",
+    "mtime": 1793232196.365906,
+    "seen": 1793232219.3991935,
+    "ast_hash": "11145bc73c05e8db2dc16295cd66af35",
     "semantic_hash": ""
   },
   ".agents/AGENTS.md": {
@@ -570,9 +570,9 @@
     "semantic_hash": ""
   },
   "src/web/templates/dashboard.html": {
-    "mtime": 1793227164.982733,
-    "seen": 1793227568.6276672,
-    "ast_hash": "2c0f617a666fee926f6e484d0b7a2c69",
+    "mtime": 1793232170.7460532,
+    "seen": 1793232219.3992252,
+    "ast_hash": "e2520ce5b4fb6f93315807cdd1b6f451",
     "semantic_hash": ""
   },
   "src/web/templates/login.html": {
@@ -720,15 +720,27 @@
     "semantic_hash": ""
   },
   "knowledge/diario/diary_2026_10_28.md": {
-    "mtime": 1793231169.2972188,
-    "seen": 1793231206.5502384,
-    "ast_hash": "e5fae14b5c006c741e46a7e6ec137b81",
+    "mtime": 1793232216.9597862,
+    "seen": 1793232219.3992174,
+    "ast_hash": "4494ed558661e8cfc78ac6cde28647c9",
     "semantic_hash": ""
   },
   "requirements-web.txt": {
     "mtime": 1793226625.198352,
     "seen": 1793227568.6276574,
     "ast_hash": "a3ac74034f9477417dd3afa784ed5317",
+    "semantic_hash": ""
+  },
+  "src/jobs/manual_report.py": {
+    "mtime": 1793232095.1624742,
+    "seen": 1793232219.399157,
+    "ast_hash": "09723e8e0c6e7779efd48105454215e5",
+    "semantic_hash": ""
+  },
+  "tests/test_manual_report.py": {
+    "mtime": 1793232194.7359154,
+    "seen": 1793232219.399184,
+    "ast_hash": "22f7759a8afaf40aef3e7ed6bcc6f07c",
     "semantic_hash": ""
   }
 }
