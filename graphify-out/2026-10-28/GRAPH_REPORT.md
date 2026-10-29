@@ -1,25 +1,25 @@
 # Graph Report - generalsystemscraping  (2026-10-28)
 
 ## Corpus Check
-- 113 files · ~67,703 words
+- 113 files · ~68,724 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 876 nodes · 1516 edges · 132 communities (51 shown, 73 thin omitted)
+- 879 nodes · 1519 edges · 131 communities (49 shown, 74 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 53 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `810693e6`
+- Built from commit: `52255c52`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- get_postgres_connection
+- get_sqlite_connection
 - main.py
 - test_web_dashboard.py
 - get_weather_forecast
-- agent.py
+- test_feed_prediction_agent.py
 - listar_contatos_whatsapp
 - Tabelas de Monitoramento (Operacional)
 - 14-watchdog-resilience.sh
@@ -121,24 +121,23 @@
 - noctua_diagnose.py
 - Especificações Técnicas e Arquiteturais do Sistema (System Specifications)
 - 🛠️ Ações Executadas
-- route
-- datetime
+- app.py
+- scrape_and_save
 - TestPostgresConcurrency
 - Diário de Bordo - 29/09/2026
 - Monitoramento e Automação para Piscicultura
-- database.py
+- monitor_data.py
 - 5. Regras de Negócio Críticas
 - 6. Infraestrutura, Containerização e Resiliência
 - commission_cron_jobs.sh
-- api_testar_contato_whatsapp
 - get_local_now
-- app.py
+- sync_hourly_weather
+- agent_tools.py
 - manual_report.py
 - 15-auto-configure-macs.py
-- get_sqlite_connection
-- web_auth.py
-- plot_curva.py
-- vigi_report.py
+- get_hourly_report
+- get_estrutura_uid
+- TestAgentFallback
 
 ## God Nodes (most connected - your core abstractions)
 1. `get_sqlite_connection()` - 63 edges
@@ -153,8 +152,6 @@
 10. `check_last_reading()` - 17 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `migrate_sqlite()` --calls--> `get_sqlite_connection()`  [EXTRACTED]
-  scripts/migrate_add_cloud_cover.py → src/services/database.py
 - `test_send_motor_command_unknown_endpoint()` --uses--> `NoctuaClientException`  [INFERRED]
   tests/test_noctua_client.py → src/services/noctua_client.py
 - `test_send_motor_command_readonly_blocked()` --uses--> `NoctuaReadOnlyException`  [INFERRED]
@@ -163,6 +160,8 @@
   tests/test_noctua_client.py → src/services/noctua_client.py
 - `test_update_timer_readonly_blocked()` --uses--> `NoctuaReadOnlyException`  [INFERRED]
   tests/test_noctua_client.py → src/services/noctua_client.py
+- `migrate_sqlite()` --calls--> `get_sqlite_connection()`  [EXTRACTED]
+  scripts/migrate_add_cloud_cover.py → src/services/database.py
 
 ## Import Cycles
 - None detected.
@@ -174,11 +173,11 @@
 - **System Monitoring and Self-Healing watchdog flow** — scripts_check_network_health, scripts_14_watchdog_resilience, src_alerts_alert_check, src_alerts_offline_check [INFERRED 0.85]
 - **Monitoramento de Qualidade da Água** — docs_mer_qualidade_agua_limnologia, docs_mer_qualidade_agua_consumo, docs_tech_stack_stack_aiogram [INFERRED 0.85]
 
-## Communities (132 total, 73 thin omitted)
+## Communities (131 total, 74 thin omitted)
 
-### Community 0 - "get_postgres_connection"
-Cohesion: 0.16
-Nodes (27): migrate_postgres(), migrate_sqlite(), run_production_logic(), analyze_custom_report_sync(), Função síncrona genérica para uso nos scripts dinâmicos da pasta src/reports/.…, generate_evening_report(), Gera um relatório de final de tarde com um gráfico do nível de oxigênio e envia…, generate_nightly_report() (+19 more)
+### Community 0 - "get_sqlite_connection"
+Cohesion: 0.07
+Nodes (78): AgentExecutor, datetime, migrate_postgres(), migrate_sqlite(), check_alerts(), Verifica as últimas leituras no banco de dados e dispara alertas se necessário., check_last_reading(), Verifica o tempo da última leitura dos tanques. Envia alerta se o atraso for… (+70 more)
 
 ### Community 1 - "main.py"
 Cohesion: 0.07
@@ -186,15 +185,15 @@ Nodes (73): asyncio, CallbackQuery, InlineKeyboardMarkup, Message, Pool, criar_l
 
 ### Community 2 - "test_web_dashboard.py"
 Cohesion: 0.06
-Nodes (24): auth_client(), client(), fixture, Garante que a página de lotes carrega para usuário autenticado., Verifica se a página de login carrega corretamente., Garante que a página de configurações carrega para usuário autenticado., Testa endpoint GET /api/lotes com mock do postgres., Testa endpoint GET /api/settings/db/status com mock do postgres. (+16 more)
+Nodes (28): Exception, auth_client(), client(), fixture, Garante que a página de lotes carrega para usuário autenticado., Verifica se a página de login carrega corretamente., Garante que a página de configurações carrega para usuário autenticado., Testa endpoint GET /api/lotes com mock do postgres. (+20 more)
 
 ### Community 3 - "get_weather_forecast"
-Cohesion: 0.16
-Nodes (13): format_morning_report(), main(), Formata o relatório de bom dia com clima detalhado., get_weather_forecast(), log_weather_locally(), Sessão customizada para impor um timeout limite nas requisições HTTP., Salva os dados da previsão em um arquivo JSON local, sobrescrevendo o anterior…, Obtém a previsão do tempo utilizando a API Open-Meteo. Utiliza as coordenadas… (+5 more)
+Cohesion: 0.21
+Nodes (10): get_weather_forecast(), log_weather_locally(), Sessão customizada para impor um timeout limite nas requisições HTTP., Salva os dados da previsão em um arquivo JSON local, sobrescrevendo o anterior…, Obtém a previsão do tempo utilizando a API Open-Meteo. Utiliza as coordenadas…, TimeoutCachedSession, patch, Verifica se o serviço utiliza as coordenadas do .env corretamente. (+2 more)
 
-### Community 4 - "agent.py"
-Cohesion: 0.07
-Nodes (31): AgentExecutor, analyze_alert_data(), analyze_evening_report_sync(), analyze_feed_prediction_sync(), analyze_nightly_report_sync(), ask_agent(), get_agent_executor(), Função para bater papo livremente com o agente via bot do Telegram. (+23 more)
+### Community 4 - "test_feed_prediction_agent.py"
+Cohesion: 0.25
+Nodes (6): format_data_summary_micro(), patch, Versão condensada da lógica que iremos implementar no feed_prediction.py, Valida se o resumo de dados é realmente curto (Micro-contexto)., Testa a nova função do agente (mockada)., TestFeedPredictionAgent
 
 ### Community 5 - "listar_contatos_whatsapp"
 Cohesion: 0.11
@@ -217,8 +216,8 @@ Cohesion: 0.20
 Nodes (9): 1. Correção de Resolução de DNS Local (Pi-hole), 2. Validação e Monitoramento de Rede e IP Estático, 3. Filtragem Dinâmica de Lotes Ativos, 4. Correções e Estabilidade na Suíte de Testes (TDD), 5. Limpeza de Dados Legados no SQLite Local, 🛠️ Detalhes das Alterações, Diário de Bordo — 27 de Junho de 2026, 📋 Resumo do Dia (+1 more)
 
 ### Community 12 - "🛠️ Ações Executadas"
-Cohesion: 0.20
-Nodes (9): 1. Enxugamento Drástico do Container e Dependências (`requirements-web.txt` & `Dockerfile`), 2. Integração Evolution API (WhatsApp) e Gestão Dinâmica de Contatos (`contatos_whatsapp`), 3. Exposição Sem Porta via Caddy Reverse Proxy (`https://brunoconter.duckdns.org/psicultura`), 4. Correção de Persistência MDM (CPF/CADPRO com Migração de UID em Cascata) e Diagnóstico WhatsApp, 5. Testes Automatizados, 6. Botão "Coletar e Enviar no WhatsApp", 🛠️ Ações Executadas, Diário de Bordo - 28/10/2026 (+1 more)
+Cohesion: 0.18
+Nodes (10): 1. Enxugamento Drástico do Container e Dependências (`requirements-web.txt` & `Dockerfile`), 2. Integração Evolution API (WhatsApp) e Gestão Dinâmica de Contatos (`contatos_whatsapp`), 3. Exposição Sem Porta via Caddy Reverse Proxy (`https://brunoconter.duckdns.org/psicultura`), 4. Correção de Persistência MDM (CPF/CADPRO com Migração de UID em Cascata) e Diagnóstico WhatsApp, 5. Testes Automatizados, 6. Botão "Coletar e Enviar no WhatsApp", 7. Redesign do Card "Clima Local" e Favicon Temático de Piscicultura, 🛠️ Ações Executadas (+2 more)
 
 ### Community 15 - "weekly_maintenance.sh"
 Cohesion: 0.40
@@ -229,8 +228,8 @@ Cohesion: 0.22
 Nodes (8): 1. Premissas e Custos (Free Tier), 2. Configuração no Painel da Cloudflare, 3. Configuração do Ambiente (.env), 4. Execução do Backup, 5. Código de Contingência: Restauração em Novo Comissionamento, Agendamento (Cron), O que este script faz:, Tutorial: Backup e Restauração com Cloudflare R2
 
 ### Community 21 - "NoctuaClient"
-Cohesion: 0.06
-Nodes (31): Any, Exception, main(), NoctuaClient, NoctuaClientException, NoctuaReadOnlyException, Exceção base para erros de comunicação ou regra de negócio com Noctua IoT., Disparada quando uma operação de escrita é tentada sob NOCTUA_READ_ONLY=true. (+23 more)
+Cohesion: 0.07
+Nodes (27): Any, main(), NoctuaClient, NoctuaClientException, NoctuaReadOnlyException, Exceção base para erros de comunicação ou regra de negócio com Noctua IoT., Disparada quando uma operação de escrita é tentada sob NOCTUA_READ_ONLY=true., Cliente HTTP síncrono para o AWS AppSync do Noctua IoT. (+19 more)
 
 ### Community 26 - "Stack Tecnológica - Projeto Piscicultura"
 Cohesion: 0.25
@@ -312,13 +311,13 @@ Nodes (8): 1.1 Objetivos Principais, 1. Visão Geral e Escopo, 2. Arquitetura de
 Cohesion: 0.22
 Nodes (8): 1. Auditoria e Varredura da Base de Código (Graphify & Análise Estática), 2. Validação da Suíte de Testes (TDD / CI), 3. Redação e Formalização das Especificações Técnicas (`docs/specs.md`), 4. Atualização de Referências e Documentação Cruzada, 🛠️ Ações Executadas, Diário de Bordo - 28/09/2026, 🎯 Objetivo da Sessão, 📌 Próximos Passos
 
-### Community 114 - "route"
-Cohesion: 0.08
-Nodes (37): login_required, route, api_contatos_whatsapp(), api_endpoints_list(), api_excluir_contato_whatsapp(), api_fechar_lote(), api_get_endpoint(), api_get_lotes() (+29 more)
+### Community 114 - "app.py"
+Cohesion: 0.05
+Nodes (65): login_required, route, obter_contato_whatsapp(), Busca um contato WhatsApp específico pelo ID., get_user_by_id(), init_web_auth_db(), Inicializa a tabela de usuários web no SQLite., Valida as credenciais do usuário. (+57 more)
 
-### Community 115 - "datetime"
-Cohesion: 0.15
-Nodes (19): datetime, check_alerts(), Verifica as últimas leituras no banco de dados e dispara alertas se necessário., check_last_reading(), Verifica o tempo da última leitura dos tanques. Envia alerta se o atraso for…, migrate_data(), Migra dados do SQLite para o PostgreSQL., run_collector_loop() (+11 more)
+### Community 115 - "scrape_and_save"
+Cohesion: 0.21
+Nodes (10): migrate_data(), Migra dados do SQLite para o PostgreSQL., run_collector_loop(), Função principal de tomada de dados. Utiliza preferencialmente a API GraphQL…, scrape_and_save(), _background_scheduler_loop(), Executa coleta Noctua, checagem de alertas/offline, clima e sync em background., Inicia a thread daemon de coleta e alertas se ENABLE_INTERNAL_SCHEDULER=true. (+2 more)
 
 ### Community 116 - "TestPostgresConcurrency"
 Cohesion: 0.15
@@ -332,9 +331,9 @@ Nodes (19): 1. Front-End: Layout Base & Navegação, 2. Front-End: Interface de 
 Cohesion: 0.33
 Nodes (6): 🧪 Ambiente de Testes (Desenvolvimento), 📂 Estrutura do Projeto, Monitoramento e Automação para Piscicultura, 🧠 Predição de Arraçoamento com IA, 🚀 Quick Start (Setup), 🛠 Tech Stack
 
-### Community 119 - "database.py"
+### Community 119 - "monitor_data.py"
 Cohesion: 0.18
-Nodes (13): collect_via_api(), ensure_leituras_table(), Garante que a tabela de leituras exista com o schema correto., Realiza a coleta das leituras dos tanques diretamente via AWS AppSync GraphQL…, generate_sha256(), get_default_estrutura_info(), get_estrutura_uid(), Retorna as informações da estrutura configurada no .env. (+5 more)
+Nodes (11): collect_via_api(), ensure_leituras_table(), Garante que a tabela de leituras exista com o schema correto., Realiza a coleta das leituras dos tanques diretamente via AWS AppSync GraphQL…, get_default_estrutura_info(), Retorna as informações da estrutura configurada no .env., clean_db(), fixture (+3 more)
 
 ### Community 120 - "5. Regras de Negócio Críticas"
 Cohesion: 0.50
@@ -344,17 +343,17 @@ Nodes (4): 5.1 Regra de Isolamento de Lotes Ativos (Urgente/Crítico), 5.2 Regra
 Cohesion: 0.50
 Nodes (4): 6.1 Especificação dos Containers Docker (`docker-compose.yml`), 6.2 Resiliência de Borda e Watchdog (`scripts/14-watchdog-resilience.sh`), 6.3 Política de Backup Remoto, 6. Infraestrutura, Containerização e Resiliência
 
-### Community 123 - "api_testar_contato_whatsapp"
-Cohesion: 0.50
-Nodes (4): obter_contato_whatsapp(), Busca um contato WhatsApp específico pelo ID., api_testar_contato_whatsapp(), Dispara mensagem de teste imediata via Evolution API para o contato informado.
+### Community 123 - "get_local_now"
+Cohesion: 0.31
+Nodes (8): get_local_now(), Retorna datetime ingênuo representando o horário local de Brasília…, Simula o cálculo do dashboard para leituras recentes vs antigas., Valida se offline_check usa get_local_now sem gerar falsos positivos para…, Valida se get_local_now retorna datetime ingênuo e coerente., test_dashboard_offline_calculation(), test_get_local_now_returns_datetime(), test_offline_check_timezone_resilience()
 
-### Community 124 - "get_local_now"
-Cohesion: 0.12
-Nodes (20): get_hourly_report(), Gera o relatório estatístico das últimas leituras para cada tanque., fetch_openmeteo_json(), Obtém o clima atual e salva na tabela clima_historico e no cache JSON., Busca previsão do tempo da Open-Meteo via HTTP JSON puro (0 MB de overhead de…, sync_hourly_weather(), get_local_now(), Retorna datetime ingênuo representando o horário local de Brasília… (+12 more)
+### Community 124 - "sync_hourly_weather"
+Cohesion: 0.23
+Nodes (10): fetch_openmeteo_json(), Obtém o clima atual e salva na tabela clima_historico e no cache JSON., Busca previsão do tempo da Open-Meteo via HTTP JSON puro (0 MB de overhead de…, sync_hourly_weather(), Verifica se a tabela clima_historico foi criada no SQLite., Verifica se o job de sincronização salva dados no banco., Verifica se o relatório horário contém a linha de clima., test_clima_historico_table_exists() (+2 more)
 
-### Community 125 - "app.py"
-Cohesion: 0.15
-Nodes (11): api_criar_lote(), api_mdm_dados(), dashboard(), get_cached_weather(), Inicia a thread daemon de coleta e alertas se ENABLE_INTERNAL_SCHEDULER=true., Cria um novo lote (ativo ou histórico) no PostgreSQL., Renderiza a interface de Configurações, MDM e CRUD de Banco de Dados., Lê a previsão do tempo a partir do cache JSON local (logs/latest_weather.json)… (+3 more)
+### Community 125 - "agent_tools.py"
+Cohesion: 0.36
+Nodes (7): execute_python_report(), query_postgres(), Aciona o script de migração de dados do SQLite (onde os dados brutos chegam)…, Executa uma consulta SELECT de leitura no banco de dados PostgreSQL e retorna…, Executa um script Python da pasta src/reports/ e retorna o resultado no…, run_migration(), tool()
 
 ### Community 126 - "manual_report.py"
 Cohesion: 0.16
@@ -364,41 +363,33 @@ Nodes (18): br(), build_manual_report(), _estruturas_ativas(), fmt_taxa(), Relat
 Cohesion: 0.67
 Nodes (3): main(), Atualiza as variáveis STRUCT_MACS, STRUCT_NAME e STRUCT_PLUSCODE no arquivo…, update_env_file()
 
-### Community 128 - "get_sqlite_connection"
-Cohesion: 0.18
-Nodes (14): generate_prediction(), get_historical_value(), ensure_contatos_whatsapp_table(), excluir_contato_whatsapp(), get_sqlite_connection(), Garante a criação da tabela contatos_whatsapp no PostgreSQL (primário) e no…, Cria ou atualiza um contato WhatsApp no PostgreSQL e SQLite., Remove um contato WhatsApp pelo ID. (+6 more)
-
-### Community 129 - "web_auth.py"
-Cohesion: 0.15
-Nodes (13): get_user_by_id(), init_web_auth_db(), Inicializa a tabela de usuários web no SQLite., Valida as credenciais do usuário., Retorna dados do usuário pelo ID., validate_user(), load_user(), login() (+5 more)
-
-### Community 130 - "plot_curva.py"
-Cohesion: 0.43
-Nodes (6): ajustar_gompertz(), ajustar_reta(), gerar_curva(), metricas_reta(), modelo_gompertz(), Ajuste linear simples: y = a*x + b Retorna coeficientes a, b.
-
-### Community 131 - "vigi_report.py"
+### Community 128 - "get_hourly_report"
 Cohesion: 0.50
-Nodes (4): get_emoji_number(), get_vigi_report(), Converte números em um texto para seus correspondentes em emoji., Gera um relatório ultra-sucinto para monitoramento noturno.
+Nodes (4): get_hourly_report(), Gera o relatório estatístico das últimas leituras para cada tanque., Garante que get_hourly_report exclui dados de tanques sem lote ativo no…, test_hourly_report_filters_inactive_batches()
+
+### Community 129 - "get_estrutura_uid"
+Cohesion: 0.50
+Nodes (4): generate_sha256(), get_estrutura_uid(), Gera um hash SHA256 a partir de uma string., Gera o UID para uma estrutura baseado no nome e pluscode.
 
 ## Knowledge Gaps
-- **236 isolated node(s):** `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD`, `02-setup-venv.sh script`, `03-install-python-deps.sh script` (+231 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 486 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **73 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **237 isolated node(s):** `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD`, `02-setup-venv.sh script`, `03-install-python-deps.sh script` (+232 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 488 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **74 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `NoctuaClient` connect `NoctuaClient` to `route`, `app.py`, `database.py`?**
-  _High betweenness centrality (0.036) - this node is a cross-community bridge._
-- **Why does `get_sqlite_connection()` connect `get_sqlite_connection` to `get_postgres_connection`, `web_auth.py`, `vigi_report.py`, `listar_contatos_whatsapp`, `route`, `datetime`, `database.py`, `get_local_now`, `app.py`, `manual_report.py`?**
+- **Why does `NoctuaClient` connect `NoctuaClient` to `app.py`, `monitor_data.py`?**
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+- **Why does `get_sqlite_connection()` connect `get_sqlite_connection` to `get_hourly_report`, `listar_contatos_whatsapp`, `app.py`, `scrape_and_save`, `monitor_data.py`, `sync_hourly_weather`, `manual_report.py`?**
   _High betweenness centrality (0.032) - this node is a cross-community bridge._
-- **Why does `get_postgres_connection()` connect `get_postgres_connection` to `get_sqlite_connection`, `plot_curva.py`, `vigi_report.py`, `agent.py`, `listar_contatos_whatsapp`, `route`, `datetime`, `database.py`, `get_local_now`, `app.py`, `manual_report.py`?**
+- **Why does `get_postgres_connection()` connect `get_sqlite_connection` to `get_hourly_report`, `listar_contatos_whatsapp`, `app.py`, `scrape_and_save`, `agent_tools.py`, `manual_report.py`?**
   _High betweenness centrality (0.028) - this node is a cross-community bridge._
 - **What connects `aliases.sh script`, `11-backup-db.sh script`, `PGPASSWORD` to the rest of the system?**
-  _236 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _237 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `get_sqlite_connection` be split into smaller, more focused modules?**
+  _Cohesion score 0.06872263468494194 - nodes in this community are weakly interconnected._
 - **Should `main.py` be split into smaller, more focused modules?**
   _Cohesion score 0.06664388243335612 - nodes in this community are weakly interconnected._
 - **Should `test_web_dashboard.py` be split into smaller, more focused modules?**
-  _Cohesion score 0.0625 - nodes in this community are weakly interconnected._
-- **Should `agent.py` be split into smaller, more focused modules?**
-  _Cohesion score 0.0728744939271255 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05555555555555555 - nodes in this community are weakly interconnected._

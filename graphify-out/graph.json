@@ -74,19 +74,6 @@
   },
   "nodes": [
     {
-      "id": "src_web_app_user",
-      "label": "User",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "user",
-      "source_file": "src/web/app.py",
-      "source_location": "L117"
-    },
-    {
       "id": "tests_test_postgres_concurrency_testpostgresconcurrency",
       "label": "TestPostgresConcurrency",
       "_callable": true,
@@ -98,6 +85,19 @@
       "norm_label": "testpostgresconcurrency",
       "source_file": "tests/test_postgres_concurrency.py",
       "source_location": "L81"
+    },
+    {
+      "id": "tests_test_agent_fallback_testagentfallback",
+      "label": "TestAgentFallback",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 125,
+      "community_name": "agent_tools.py",
+      "file_type": "code",
+      "norm_label": "testagentfallback",
+      "source_file": "tests/test_agent_fallback.py",
+      "source_location": "L8"
     },
     {
       "id": "tests_test_manual_report_nocloseconn",
@@ -113,17 +113,43 @@
       "source_location": "L30"
     },
     {
-      "id": "tests_test_agent_fallback_testagentfallback",
-      "label": "TestAgentFallback",
+      "id": "src_services_noctua_client_noctuaclientexception",
+      "label": "NoctuaClientException",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 130,
-      "community_name": "TestAgentFallback",
+      "community_name": "test_noctua_client.py",
       "file_type": "code",
-      "norm_label": "testagentfallback",
-      "source_file": "tests/test_agent_fallback.py",
-      "source_location": "L8"
+      "norm_label": "noctuaclientexception",
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L169"
+    },
+    {
+      "id": "src_services_noctua_client_noctuareadonlyexception",
+      "label": "NoctuaReadOnlyException",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "noctuareadonlyexception",
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L174"
+    },
+    {
+      "id": "src_web_app_user",
+      "label": "User",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 132,
+      "community_name": "User",
+      "file_type": "code",
+      "norm_label": "user",
+      "source_file": "src/web/app.py",
+      "source_location": "L117"
     },
     {
       "id": "src_services_noctua_client_noctuaclient",
@@ -137,32 +163,6 @@
       "norm_label": "noctuaclient",
       "source_file": "src/services/noctua_client.py",
       "source_location": "L179"
-    },
-    {
-      "id": "src_services_noctua_client_noctuaclientexception",
-      "label": "NoctuaClientException",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "noctuaclientexception",
-      "source_file": "src/services/noctua_client.py",
-      "source_location": "L169"
-    },
-    {
-      "id": "src_services_noctua_client_noctuareadonlyexception",
-      "label": "NoctuaReadOnlyException",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "noctuareadonlyexception",
-      "source_file": "src/services/noctua_client.py",
-      "source_location": "L174"
     },
     {
       "id": "src_services_weather_timeoutcachedsession",
@@ -238,18 +238,6 @@
       "norm_label": "check_alerts()",
       "source_file": "src/alerts/alert_check.py",
       "source_location": "L21"
-    },
-    {
-      "id": "src_alerts_offline_check_check_last_reading",
-      "label": "check_last_reading()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "check_last_reading()",
-      "source_file": "src/alerts/offline_check.py",
-      "source_location": "L19"
     },
     {
       "id": "src_analysis_feed_prediction_run_production_logic",
@@ -754,18 +742,6 @@
       "norm_label": "test_alert_check_filters_inactive_batches()",
       "source_file": "tests/test_alert_check_filter.py",
       "source_location": "L8"
-    },
-    {
-      "id": "tests_test_offline_check_filter_test_offline_check_filters_inactive_batches",
-      "label": "test_offline_check_filters_inactive_batches()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "test_offline_check_filters_inactive_batches()",
-      "source_file": "tests/test_offline_check_filter.py",
-      "source_location": "L6"
     },
     {
       "id": "src_bots_db_criar_lote_completo",
@@ -1452,54 +1428,6 @@
       "source_location": "L55"
     },
     {
-      "id": "src_services_database_obter_contato_whatsapp",
-      "label": "obter_contato_whatsapp()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "obter_contato_whatsapp()",
-      "source_file": "src/services/database.py",
-      "source_location": "L332"
-    },
-    {
-      "id": "src_services_web_auth_get_user_by_id",
-      "label": "get_user_by_id()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "get_user_by_id()",
-      "source_file": "src/services/web_auth.py",
-      "source_location": "L64"
-    },
-    {
-      "id": "src_services_web_auth_init_web_auth_db",
-      "label": "init_web_auth_db()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "init_web_auth_db()",
-      "source_file": "src/services/web_auth.py",
-      "source_location": "L9"
-    },
-    {
-      "id": "src_services_web_auth_validate_user",
-      "label": "validate_user()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "validate_user()",
-      "source_file": "src/services/web_auth.py",
-      "source_location": "L44"
-    },
-    {
       "id": "src_web_app_api_contatos_whatsapp",
       "label": "api_contatos_whatsapp()",
       "_callable": true,
@@ -1558,18 +1486,6 @@
       "norm_label": "api_fechar_lote()",
       "source_file": "src/web/app.py",
       "source_location": "L617"
-    },
-    {
-      "id": "src_web_app_api_get_endpoint",
-      "label": "api_get_endpoint()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "api_get_endpoint()",
-      "source_file": "src/web/app.py",
-      "source_location": "L341"
     },
     {
       "id": "src_web_app_api_get_lotes",
@@ -1668,18 +1584,6 @@
       "source_location": "L269"
     },
     {
-      "id": "src_web_app_api_send_motor_command",
-      "label": "api_send_motor_command()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "api_send_motor_command()",
-      "source_file": "src/web/app.py",
-      "source_location": "L408"
-    },
-    {
       "id": "src_web_app_api_settings_db_status",
       "label": "api_settings_db_status()",
       "_callable": true,
@@ -1714,18 +1618,6 @@
       "norm_label": "api_sync()",
       "source_file": "src/web/app.py",
       "source_location": "L319"
-    },
-    {
-      "id": "src_web_app_api_testar_contato_whatsapp",
-      "label": "api_testar_contato_whatsapp()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "api_testar_contato_whatsapp()",
-      "source_file": "src/web/app.py",
-      "source_location": "L1121"
     },
     {
       "id": "src_web_app_api_update_thresholds",
@@ -1776,18 +1668,6 @@
       "source_location": "L72"
     },
     {
-      "id": "src_web_app_load_user",
-      "label": "load_user()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "load_user()",
-      "source_file": "src/web/app.py",
-      "source_location": "L123"
-    },
-    {
       "id": "src_web_app_login",
       "label": "login()",
       "_callable": true,
@@ -1836,36 +1716,12 @@
       "source_location": "L715"
     },
     {
-      "id": "src_web_app_user_init",
-      "label": ".__init__()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": ".__init__()",
-      "source_file": "src/web/app.py",
-      "source_location": "L118"
-    },
-    {
-      "id": "tests_test_web_dashboard_test_web_auth_service",
-      "label": "test_web_auth_service()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "test_web_auth_service()",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L24"
-    },
-    {
       "id": "src_database_postgres_migrate_data_migrate_data",
       "label": "migrate_data()",
       "_callable": true,
       "_origin": "ast",
       "community": 115,
-      "community_name": "scrape_and_save",
+      "community_name": "collector_service.py",
       "file_type": "code",
       "norm_label": "migrate_data()",
       "source_file": "src/database/postgres/migrate_data.py",
@@ -1877,7 +1733,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 115,
-      "community_name": "scrape_and_save",
+      "community_name": "collector_service.py",
       "file_type": "code",
       "norm_label": "handle_shutdown()",
       "source_file": "src/jobs/collector_service.py",
@@ -1889,23 +1745,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 115,
-      "community_name": "scrape_and_save",
+      "community_name": "collector_service.py",
       "file_type": "code",
       "norm_label": "run_collector_loop()",
       "source_file": "src/jobs/collector_service.py",
       "source_location": "L36"
-    },
-    {
-      "id": "src_scrape_monitor_data_scrape_and_save",
-      "label": "scrape_and_save()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 115,
-      "community_name": "scrape_and_save",
-      "file_type": "code",
-      "norm_label": "scrape_and_save()",
-      "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L136"
     },
     {
       "id": "src_web_app_background_scheduler_loop",
@@ -1913,7 +1757,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 115,
-      "community_name": "scrape_and_save",
+      "community_name": "collector_service.py",
       "file_type": "code",
       "norm_label": "_background_scheduler_loop()",
       "source_file": "src/web/app.py",
@@ -1925,23 +1769,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 115,
-      "community_name": "scrape_and_save",
+      "community_name": "collector_service.py",
       "file_type": "code",
       "norm_label": "start_background_scheduler()",
       "source_file": "src/web/app.py",
       "source_location": "L1204"
-    },
-    {
-      "id": "tests_test_monitor_data_test_scrape_and_save_suspended",
-      "label": "test_scrape_and_save_suspended()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 115,
-      "community_name": "scrape_and_save",
-      "file_type": "code",
-      "norm_label": "test_scrape_and_save_suspended()",
-      "source_file": "tests/test_monitor_data.py",
-      "source_location": "L100"
     },
     {
       "id": "tests_test_postgres_concurrency_pg_pool",
@@ -2040,6 +1872,18 @@
       "source_location": "L25"
     },
     {
+      "id": "src_scrape_monitor_data_scrape_and_save",
+      "label": "scrape_and_save()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 119,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "scrape_and_save()",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L136"
+    },
+    {
       "id": "src_services_database_get_default_estrutura_info",
       "label": "get_default_estrutura_info()",
       "_callable": true,
@@ -2088,6 +1932,30 @@
       "source_location": "L27"
     },
     {
+      "id": "tests_test_monitor_data_test_scrape_and_save_suspended",
+      "label": "test_scrape_and_save_suspended()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 119,
+      "community_name": "monitor_data.py",
+      "file_type": "code",
+      "norm_label": "test_scrape_and_save_suspended()",
+      "source_file": "tests/test_monitor_data.py",
+      "source_location": "L100"
+    },
+    {
+      "id": "src_alerts_offline_check_check_last_reading",
+      "label": "check_last_reading()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 123,
+      "community_name": "get_local_now",
+      "file_type": "code",
+      "norm_label": "check_last_reading()",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L19"
+    },
+    {
       "id": "src_services_database_get_local_now",
       "label": "get_local_now()",
       "_callable": true,
@@ -2098,6 +1966,18 @@
       "norm_label": "get_local_now()",
       "source_file": "src/services/database.py",
       "source_location": "L27"
+    },
+    {
+      "id": "tests_test_offline_check_filter_test_offline_check_filters_inactive_batches",
+      "label": "test_offline_check_filters_inactive_batches()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 123,
+      "community_name": "get_local_now",
+      "file_type": "code",
+      "norm_label": "test_offline_check_filters_inactive_batches()",
+      "source_file": "tests/test_offline_check_filter.py",
+      "source_location": "L6"
     },
     {
       "id": "tests_test_timezone_offline_test_dashboard_offline_calculation",
@@ -2242,6 +2122,30 @@
       "norm_label": "tool()",
       "source_file": "src/bots/agent_tools.py",
       "source_location": "L8"
+    },
+    {
+      "id": "tests_test_agent_fallback_testagentfallback_test_get_agent_executor_fallback_logic",
+      "label": ".test_get_agent_executor_fallback_logic()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 125,
+      "community_name": "agent_tools.py",
+      "file_type": "code",
+      "norm_label": ".test_get_agent_executor_fallback_logic()",
+      "source_file": "tests/test_agent_fallback.py",
+      "source_location": "L9"
+    },
+    {
+      "id": "tests_test_agent_fallback_testagentfallback_test_unique_models_logic",
+      "label": ".test_unique_models_logic()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 125,
+      "community_name": "agent_tools.py",
+      "file_type": "code",
+      "norm_label": ".test_unique_models_logic()",
+      "source_file": "tests/test_agent_fallback.py",
+      "source_location": "L36"
     },
     {
       "id": "src_jobs_manual_report_br",
@@ -2496,36 +2400,300 @@
       "source_location": "L79"
     },
     {
-      "id": "tests_test_agent_fallback_testagentfallback_test_get_agent_executor_fallback_logic",
-      "label": ".test_get_agent_executor_fallback_logic()",
+      "id": "src_services_noctua_client_noctuaclient_send_motor_command",
+      "label": ".send_motor_command()",
       "_callable": true,
       "_origin": "ast",
       "community": 130,
-      "community_name": "TestAgentFallback",
+      "community_name": "test_noctua_client.py",
       "file_type": "code",
-      "norm_label": ".test_get_agent_executor_fallback_logic()",
-      "source_file": "tests/test_agent_fallback.py",
+      "norm_label": ".send_motor_command()",
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L459"
+    },
+    {
+      "id": "src_web_app_api_send_motor_command",
+      "label": "api_send_motor_command()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "api_send_motor_command()",
+      "source_file": "src/web/app.py",
+      "source_location": "L408"
+    },
+    {
+      "id": "tests_test_noctua_client_client_readonly",
+      "label": "client_readonly()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "client_readonly()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L19"
+    },
+    {
+      "id": "tests_test_noctua_client_client_writable",
+      "label": "client_writable()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "client_writable()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L29"
+    },
+    {
+      "id": "tests_test_noctua_client_test_get_endpoint_config",
+      "label": "test_get_endpoint_config()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_get_endpoint_config()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L114"
+    },
+    {
+      "id": "tests_test_noctua_client_test_get_latest_readings_by_tanque",
+      "label": "test_get_latest_readings_by_tanque()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_get_latest_readings_by_tanque()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L69"
+    },
+    {
+      "id": "tests_test_noctua_client_test_send_motor_command_readonly_blocked",
+      "label": "test_send_motor_command_readonly_blocked()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_send_motor_command_readonly_blocked()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L218"
+    },
+    {
+      "id": "tests_test_noctua_client_test_send_motor_command_success",
+      "label": "test_send_motor_command_success()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_send_motor_command_success()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L234"
+    },
+    {
+      "id": "tests_test_noctua_client_test_send_motor_command_unknown_endpoint",
+      "label": "test_send_motor_command_unknown_endpoint()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_send_motor_command_unknown_endpoint()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L226"
+    },
+    {
+      "id": "tests_test_noctua_client_test_test_connection_failure",
+      "label": "test_test_connection_failure()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_test_connection_failure()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L57"
+    },
+    {
+      "id": "tests_test_noctua_client_test_test_connection_success",
+      "label": "test_test_connection_success()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_test_connection_success()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L38"
+    },
+    {
+      "id": "tests_test_noctua_client_test_update_thresholds_invalid_values",
+      "label": "test_update_thresholds_invalid_values()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_update_thresholds_invalid_values()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L147"
+    },
+    {
+      "id": "tests_test_noctua_client_test_update_thresholds_readonly_blocked",
+      "label": "test_update_thresholds_readonly_blocked()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_update_thresholds_readonly_blocked()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L139"
+    },
+    {
+      "id": "tests_test_noctua_client_test_update_thresholds_success",
+      "label": "test_update_thresholds_success()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_update_thresholds_success()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L161"
+    },
+    {
+      "id": "tests_test_noctua_client_test_update_timer_readonly_blocked",
+      "label": "test_update_timer_readonly_blocked()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_update_timer_readonly_blocked()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L188"
+    },
+    {
+      "id": "tests_test_noctua_client_test_update_timer_success",
+      "label": "test_update_timer_success()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_update_timer_success()",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L196"
+    },
+    {
+      "id": "src_services_web_auth_get_user_by_id",
+      "label": "get_user_by_id()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 131,
+      "community_name": "web_auth.py",
+      "file_type": "code",
+      "norm_label": "get_user_by_id()",
+      "source_file": "src/services/web_auth.py",
+      "source_location": "L64"
+    },
+    {
+      "id": "src_services_web_auth_init_web_auth_db",
+      "label": "init_web_auth_db()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 131,
+      "community_name": "web_auth.py",
+      "file_type": "code",
+      "norm_label": "init_web_auth_db()",
+      "source_file": "src/services/web_auth.py",
       "source_location": "L9"
     },
     {
-      "id": "tests_test_agent_fallback_testagentfallback_test_unique_models_logic",
-      "label": ".test_unique_models_logic()",
+      "id": "src_services_web_auth_validate_user",
+      "label": "validate_user()",
       "_callable": true,
       "_origin": "ast",
-      "community": 130,
-      "community_name": "TestAgentFallback",
+      "community": 131,
+      "community_name": "web_auth.py",
       "file_type": "code",
-      "norm_label": ".test_unique_models_logic()",
-      "source_file": "tests/test_agent_fallback.py",
-      "source_location": "L36"
+      "norm_label": "validate_user()",
+      "source_file": "src/services/web_auth.py",
+      "source_location": "L44"
+    },
+    {
+      "id": "tests_test_web_dashboard_test_web_auth_service",
+      "label": "test_web_auth_service()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 131,
+      "community_name": "web_auth.py",
+      "file_type": "code",
+      "norm_label": "test_web_auth_service()",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L24"
+    },
+    {
+      "id": "src_web_app_load_user",
+      "label": "load_user()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 132,
+      "community_name": "User",
+      "file_type": "code",
+      "norm_label": "load_user()",
+      "source_file": "src/web/app.py",
+      "source_location": "L123"
+    },
+    {
+      "id": "src_web_app_user_init",
+      "label": ".__init__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 132,
+      "community_name": "User",
+      "file_type": "code",
+      "norm_label": ".__init__()",
+      "source_file": "src/web/app.py",
+      "source_location": "L118"
+    },
+    {
+      "id": "src_services_database_obter_contato_whatsapp",
+      "label": "obter_contato_whatsapp()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 133,
+      "community_name": "api_testar_contato_whatsapp",
+      "file_type": "code",
+      "norm_label": "obter_contato_whatsapp()",
+      "source_file": "src/services/database.py",
+      "source_location": "L332"
+    },
+    {
+      "id": "src_web_app_api_testar_contato_whatsapp",
+      "label": "api_testar_contato_whatsapp()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 133,
+      "community_name": "api_testar_contato_whatsapp",
+      "file_type": "code",
+      "norm_label": "api_testar_contato_whatsapp()",
+      "source_file": "src/web/app.py",
+      "source_location": "L1121"
     },
     {
       "id": "tests_test_web_dashboard_auth_client",
       "label": "auth_client()",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
+      "community": 134,
+      "community_name": "auth_client",
       "file_type": "code",
       "norm_label": "auth_client()",
       "source_file": "tests/test_web_dashboard.py",
@@ -2536,12 +2704,144 @@
       "label": "client()",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
+      "community": 134,
+      "community_name": "auth_client",
       "file_type": "code",
       "norm_label": "client()",
       "source_file": "tests/test_web_dashboard.py",
       "source_location": "L7"
+    },
+    {
+      "id": "tests_test_web_dashboard_test_api_report_whatsapp_all_failed",
+      "label": "test_api_report_whatsapp_all_failed()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 135,
+      "community_name": "Exception",
+      "file_type": "code",
+      "norm_label": "test_api_report_whatsapp_all_failed()",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L289"
+    },
+    {
+      "id": "src_web_app_api_get_endpoint",
+      "label": "api_get_endpoint()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 136,
+      "community_name": "api_get_endpoint",
+      "file_type": "code",
+      "norm_label": "api_get_endpoint()",
+      "source_file": "src/web/app.py",
+      "source_location": "L341"
+    },
+    {
+      "id": "tests_test_web_dashboard_test_lotes_page_loads",
+      "label": "test_lotes_page_loads()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 137,
+      "community_name": "test_lotes_page_loads",
+      "file_type": "code",
+      "norm_label": "test_lotes_page_loads()",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L133"
+    },
+    {
+      "id": "tests_test_web_dashboard_test_login_page_loads",
+      "label": "test_login_page_loads()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 138,
+      "community_name": "test_login_page_loads",
+      "file_type": "code",
+      "norm_label": "test_login_page_loads()",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L13"
+    },
+    {
+      "id": "tests_test_web_dashboard_test_settings_page_loads",
+      "label": "test_settings_page_loads()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 139,
+      "community_name": "test_settings_page_loads",
+      "file_type": "code",
+      "norm_label": "test_settings_page_loads()",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L140"
+    },
+    {
+      "id": "tests_test_web_dashboard_test_api_settings_db_status_route",
+      "label": "test_api_settings_db_status_route()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 140,
+      "community_name": "test_api_settings_db_status_route",
+      "file_type": "code",
+      "norm_label": "test_api_settings_db_status_route()",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L173"
+    },
+    {
+      "id": "tests_test_web_dashboard_test_subpath_reverse_proxy_support",
+      "label": "test_subpath_reverse_proxy_support()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 141,
+      "community_name": "test_subpath_reverse_proxy_support",
+      "file_type": "code",
+      "norm_label": "test_subpath_reverse_proxy_support()",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L190"
+    },
+    {
+      "id": "tests_test_web_dashboard_test_dashboard_redirect_without_login",
+      "label": "test_dashboard_redirect_without_login()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 142,
+      "community_name": "test_dashboard_redirect_without_login",
+      "file_type": "code",
+      "norm_label": "test_dashboard_redirect_without_login()",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L19"
+    },
+    {
+      "id": "tests_test_web_dashboard_test_mdm_uid_cascade_proprietario_and_propriedade",
+      "label": "test_mdm_uid_cascade_proprietario_and_propriedade()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 143,
+      "community_name": "test_mdm_uid_cascade_proprietario_and_propriedade",
+      "file_type": "code",
+      "norm_label": "test_mdm_uid_cascade_proprietario_and_propriedade()",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L240"
+    },
+    {
+      "id": "tests_test_web_dashboard_test_favicon_and_weather_card_markup",
+      "label": "test_favicon_and_weather_card_markup()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 144,
+      "community_name": "test_favicon_and_weather_card_markup",
+      "file_type": "code",
+      "norm_label": "test_favicon_and_weather_card_markup()",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L316"
+    },
+    {
+      "id": "tests_test_web_dashboard_test_api_endpoints_protected",
+      "label": "test_api_endpoints_protected()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 145,
+      "community_name": "test_api_endpoints_protected",
+      "file_type": "code",
+      "norm_label": "test_api_endpoints_protected()",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L37"
     },
     {
       "id": "tests_test_web_dashboard_test_api_endpoints_list",
@@ -2554,18 +2854,6 @@
       "norm_label": "test_api_endpoints_list()",
       "source_file": "tests/test_web_dashboard.py",
       "source_location": "L70"
-    },
-    {
-      "id": "tests_test_web_dashboard_test_api_endpoints_protected",
-      "label": "test_api_endpoints_protected()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_api_endpoints_protected()",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L37"
     },
     {
       "id": "tests_test_web_dashboard_test_api_get_endpoint",
@@ -2590,18 +2878,6 @@
       "norm_label": "test_api_get_lotes_route()",
       "source_file": "tests/test_web_dashboard.py",
       "source_location": "L147"
-    },
-    {
-      "id": "tests_test_web_dashboard_test_api_report_whatsapp_all_failed",
-      "label": "test_api_report_whatsapp_all_failed()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_api_report_whatsapp_all_failed()",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L289"
     },
     {
       "id": "tests_test_web_dashboard_test_api_report_whatsapp_busy",
@@ -2652,18 +2928,6 @@
       "source_location": "L120"
     },
     {
-      "id": "tests_test_web_dashboard_test_api_settings_db_status_route",
-      "label": "test_api_settings_db_status_route()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_api_settings_db_status_route()",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L173"
-    },
-    {
       "id": "tests_test_web_dashboard_test_api_update_thresholds",
       "label": "test_api_update_thresholds()",
       "_callable": true,
@@ -2698,90 +2962,6 @@
       "norm_label": "test_crud_contatos_whatsapp_dynamic()",
       "source_file": "tests/test_web_dashboard.py",
       "source_location": "L201"
-    },
-    {
-      "id": "tests_test_web_dashboard_test_dashboard_redirect_without_login",
-      "label": "test_dashboard_redirect_without_login()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_dashboard_redirect_without_login()",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L19"
-    },
-    {
-      "id": "tests_test_web_dashboard_test_favicon_and_weather_card_markup",
-      "label": "test_favicon_and_weather_card_markup()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_favicon_and_weather_card_markup()",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L316"
-    },
-    {
-      "id": "tests_test_web_dashboard_test_login_page_loads",
-      "label": "test_login_page_loads()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_login_page_loads()",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L13"
-    },
-    {
-      "id": "tests_test_web_dashboard_test_lotes_page_loads",
-      "label": "test_lotes_page_loads()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_lotes_page_loads()",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L133"
-    },
-    {
-      "id": "tests_test_web_dashboard_test_mdm_uid_cascade_proprietario_and_propriedade",
-      "label": "test_mdm_uid_cascade_proprietario_and_propriedade()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_mdm_uid_cascade_proprietario_and_propriedade()",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L240"
-    },
-    {
-      "id": "tests_test_web_dashboard_test_settings_page_loads",
-      "label": "test_settings_page_loads()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_settings_page_loads()",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L140"
-    },
-    {
-      "id": "tests_test_web_dashboard_test_subpath_reverse_proxy_support",
-      "label": "test_subpath_reverse_proxy_support()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_subpath_reverse_proxy_support()",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L190"
     },
     {
       "id": "src_services_noctua_client_main",
@@ -2904,18 +3084,6 @@
       "source_location": "L182"
     },
     {
-      "id": "src_services_noctua_client_noctuaclient_send_motor_command",
-      "label": ".send_motor_command()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": ".send_motor_command()",
-      "source_file": "src/services/noctua_client.py",
-      "source_location": "L459"
-    },
-    {
       "id": "src_services_noctua_client_noctuaclient_test_connection",
       "label": ".test_connection()",
       "_callable": true,
@@ -2950,174 +3118,6 @@
       "norm_label": ".update_endpoint_timer()",
       "source_file": "src/services/noctua_client.py",
       "source_location": "L427"
-    },
-    {
-      "id": "tests_test_noctua_client_client_readonly",
-      "label": "client_readonly()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "client_readonly()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L19"
-    },
-    {
-      "id": "tests_test_noctua_client_client_writable",
-      "label": "client_writable()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "client_writable()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L29"
-    },
-    {
-      "id": "tests_test_noctua_client_test_get_endpoint_config",
-      "label": "test_get_endpoint_config()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_get_endpoint_config()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L114"
-    },
-    {
-      "id": "tests_test_noctua_client_test_get_latest_readings_by_tanque",
-      "label": "test_get_latest_readings_by_tanque()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_get_latest_readings_by_tanque()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L69"
-    },
-    {
-      "id": "tests_test_noctua_client_test_send_motor_command_readonly_blocked",
-      "label": "test_send_motor_command_readonly_blocked()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_send_motor_command_readonly_blocked()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L218"
-    },
-    {
-      "id": "tests_test_noctua_client_test_send_motor_command_success",
-      "label": "test_send_motor_command_success()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_send_motor_command_success()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L234"
-    },
-    {
-      "id": "tests_test_noctua_client_test_send_motor_command_unknown_endpoint",
-      "label": "test_send_motor_command_unknown_endpoint()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_send_motor_command_unknown_endpoint()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L226"
-    },
-    {
-      "id": "tests_test_noctua_client_test_test_connection_failure",
-      "label": "test_test_connection_failure()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_test_connection_failure()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L57"
-    },
-    {
-      "id": "tests_test_noctua_client_test_test_connection_success",
-      "label": "test_test_connection_success()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_test_connection_success()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L38"
-    },
-    {
-      "id": "tests_test_noctua_client_test_update_thresholds_invalid_values",
-      "label": "test_update_thresholds_invalid_values()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_update_thresholds_invalid_values()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L147"
-    },
-    {
-      "id": "tests_test_noctua_client_test_update_thresholds_readonly_blocked",
-      "label": "test_update_thresholds_readonly_blocked()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_update_thresholds_readonly_blocked()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L139"
-    },
-    {
-      "id": "tests_test_noctua_client_test_update_thresholds_success",
-      "label": "test_update_thresholds_success()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_update_thresholds_success()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L161"
-    },
-    {
-      "id": "tests_test_noctua_client_test_update_timer_readonly_blocked",
-      "label": "test_update_timer_readonly_blocked()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_update_timer_readonly_blocked()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L188"
-    },
-    {
-      "id": "tests_test_noctua_client_test_update_timer_success",
-      "label": "test_update_timer_success()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_update_timer_success()",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L196"
     },
     {
       "id": "tests_test_env_test_environment_is_isolated",
@@ -3779,17 +3779,6 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_test_offline_check_filter",
-      "label": "test_offline_check_filter.py",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "code",
-      "norm_label": "test_offline_check_filter.py",
-      "source_file": "tests/test_offline_check_filter.py",
-      "source_location": "L1"
-    },
-    {
       "id": "tests_test_security_fixes",
       "label": "test_security_fixes.py",
       "_origin": "ast",
@@ -3810,17 +3799,6 @@
       "norm_label": "verifica as ultimas leituras no banco de dados e dispara alertas se necessario.",
       "source_file": "src/alerts/alert_check.py",
       "source_location": "L22"
-    },
-    {
-      "id": "src_alerts_offline_check_rationale_20",
-      "label": "Verifica o tempo da \u00faltima leitura dos tanques. Envia alerta se o atraso for\u2026",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "verifica o tempo da ultima leitura dos tanques. envia alerta se o atraso for...",
-      "source_file": "src/alerts/offline_check.py",
-      "source_location": "L20"
     },
     {
       "id": "src_analysis_plot_curva_rationale_78",
@@ -4107,17 +4085,6 @@
       "norm_label": "garante que check_alerts nao gera alertas de oxigenio para tanques sem lote...",
       "source_file": "tests/test_alert_check_filter.py",
       "source_location": "L9"
-    },
-    {
-      "id": "tests_test_offline_check_filter_rationale_7",
-      "label": "Garante que check_last_reading n\u00e3o gera alertas offline para tanques sem lote\u2026",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "get_sqlite_connection",
-      "file_type": "rationale",
-      "norm_label": "garante que check_last_reading nao gera alertas offline para tanques sem lote...",
-      "source_file": "tests/test_offline_check_filter.py",
-      "source_location": "L7"
     },
     {
       "id": "asyncio",
@@ -5541,17 +5508,6 @@
       "source_location": ""
     },
     {
-      "id": "src_services_web_auth",
-      "label": "web_auth.py",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "web_auth.py",
-      "source_file": "src/services/web_auth.py",
-      "source_location": "L1"
-    },
-    {
       "id": "src_web_app",
       "label": "app.py",
       "_origin": "ast",
@@ -5561,72 +5517,6 @@
       "norm_label": "app.py",
       "source_file": "src/web/app.py",
       "source_location": "L1"
-    },
-    {
-      "id": "user_loader",
-      "label": "user_loader",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "user_loader",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "usermixin",
-      "label": "UserMixin",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "usermixin",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_services_database_rationale_333",
-      "label": "Busca um contato WhatsApp espec\u00edfico pelo ID.",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "rationale",
-      "norm_label": "busca um contato whatsapp especifico pelo id.",
-      "source_file": "src/services/database.py",
-      "source_location": "L333"
-    },
-    {
-      "id": "src_services_web_auth_rationale_10",
-      "label": "Inicializa a tabela de usu\u00e1rios web no SQLite.",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "rationale",
-      "norm_label": "inicializa a tabela de usuarios web no sqlite.",
-      "source_file": "src/services/web_auth.py",
-      "source_location": "L10"
-    },
-    {
-      "id": "src_services_web_auth_rationale_45",
-      "label": "Valida as credenciais do usu\u00e1rio.",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "rationale",
-      "norm_label": "valida as credenciais do usuario.",
-      "source_file": "src/services/web_auth.py",
-      "source_location": "L45"
-    },
-    {
-      "id": "src_services_web_auth_rationale_65",
-      "label": "Retorna dados do usu\u00e1rio pelo ID.",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "rationale",
-      "norm_label": "retorna dados do usuario pelo id.",
-      "source_file": "src/services/web_auth.py",
-      "source_location": "L65"
     },
     {
       "id": "src_web_app_rationale_1008",
@@ -5673,17 +5563,6 @@
       "source_location": "L1108"
     },
     {
-      "id": "src_web_app_rationale_1122",
-      "label": "Dispara mensagem de teste imediata via Evolution API para o contato informado.",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "rationale",
-      "norm_label": "dispara mensagem de teste imediata via evolution api para o contato informado.",
-      "source_file": "src/web/app.py",
-      "source_location": "L1122"
-    },
-    {
       "id": "src_web_app_rationale_283",
       "label": "Coleta agora, monta relat\u00f3rio com m\u00e9dias/tend\u00eancia e envia a todos os contatos\u2026",
       "_origin": "ast",
@@ -5706,17 +5585,6 @@
       "source_location": "L331"
     },
     {
-      "id": "src_web_app_rationale_342",
-      "label": "Consulta os dados atuais de configura\u00e7\u00e3o de um endpoint (thresholds, timers,\u2026",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "rationale",
-      "norm_label": "consulta os dados atuais de configuracao de um endpoint (thresholds, timers,...",
-      "source_file": "src/web/app.py",
-      "source_location": "L342"
-    },
-    {
       "id": "src_web_app_rationale_356",
       "label": "Atualiza criticalO2, criticalO2Max e autoOn de um endpoint.",
       "_origin": "ast",
@@ -5737,17 +5605,6 @@
       "norm_label": "atualiza a programacao horaria (timer) de um endpoint.",
       "source_file": "src/web/app.py",
       "source_location": "L387"
-    },
-    {
-      "id": "src_web_app_rationale_409",
-      "label": "Envia comando de motor para o endpoint respeitando travas de seguran\u00e7a.",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "rationale",
-      "norm_label": "envia comando de motor para o endpoint respeitando travas de seguranca.",
-      "source_file": "src/web/app.py",
-      "source_location": "L409"
     },
     {
       "id": "src_web_app_rationale_436",
@@ -5871,22 +5728,11 @@
       "source_location": "L940"
     },
     {
-      "id": "tests_test_web_dashboard_rationale_25",
-      "label": "Testa o servi\u00e7o de autentica\u00e7\u00e3o web.",
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "app.py",
-      "file_type": "rationale",
-      "norm_label": "testa o servico de autenticacao web.",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L25"
-    },
-    {
       "id": "src_jobs_collector_service",
       "label": "collector_service.py",
       "_origin": "ast",
       "community": 115,
-      "community_name": "scrape_and_save",
+      "community_name": "collector_service.py",
       "file_type": "code",
       "norm_label": "collector_service.py",
       "source_file": "src/jobs/collector_service.py",
@@ -5897,29 +5743,18 @@
       "label": "Migra dados do SQLite para o PostgreSQL.",
       "_origin": "ast",
       "community": 115,
-      "community_name": "scrape_and_save",
+      "community_name": "collector_service.py",
       "file_type": "rationale",
       "norm_label": "migra dados do sqlite para o postgresql.",
       "source_file": "src/database/postgres/migrate_data.py",
       "source_location": "L19"
     },
     {
-      "id": "src_scrape_monitor_data_rationale_137",
-      "label": "Fun\u00e7\u00e3o principal de tomada de dados. Utiliza preferencialmente a API GraphQL\u2026",
-      "_origin": "ast",
-      "community": 115,
-      "community_name": "scrape_and_save",
-      "file_type": "rationale",
-      "norm_label": "funcao principal de tomada de dados. utiliza preferencialmente a api graphql...",
-      "source_file": "src/scrape/monitor_data.py",
-      "source_location": "L137"
-    },
-    {
       "id": "src_web_app_rationale_1159",
       "label": "Executa coleta Noctua, checagem de alertas/offline, clima e sync em background.",
       "_origin": "ast",
       "community": 115,
-      "community_name": "scrape_and_save",
+      "community_name": "collector_service.py",
       "file_type": "rationale",
       "norm_label": "executa coleta noctua, checagem de alertas/offline, clima e sync em background.",
       "source_file": "src/web/app.py",
@@ -5930,7 +5765,7 @@
       "label": "Inicia a thread daemon de coleta e alertas se ENABLE_INTERNAL_SCHEDULER=true.",
       "_origin": "ast",
       "community": 115,
-      "community_name": "scrape_and_save",
+      "community_name": "collector_service.py",
       "file_type": "rationale",
       "norm_label": "inicia a thread daemon de coleta e alertas se enable_internal_scheduler=true.",
       "source_file": "src/web/app.py",
@@ -6375,6 +6210,17 @@
       "source_location": ""
     },
     {
+      "id": "src_scrape_monitor_data_rationale_137",
+      "label": "Fun\u00e7\u00e3o principal de tomada de dados. Utiliza preferencialmente a API GraphQL\u2026",
+      "_origin": "ast",
+      "community": 119,
+      "community_name": "monitor_data.py",
+      "file_type": "rationale",
+      "norm_label": "funcao principal de tomada de dados. utiliza preferencialmente a api graphql...",
+      "source_file": "src/scrape/monitor_data.py",
+      "source_location": "L137"
+    },
+    {
       "id": "src_scrape_monitor_data_rationale_26",
       "label": "Garante que a tabela de leituras exista com o schema correto.",
       "_origin": "ast",
@@ -6513,6 +6359,18 @@
       "norm_label": "7. redesign do card \"clima local\" e favicon tematico de piscicultura",
       "source_file": "knowledge/diario/diary_2026_10_28.md",
       "source_location": "L39"
+    },
+    {
+      "id": "knowledge_diario_diary_2026_10_28_8_padroniza\u00e7\u00e3o_visual_completa_do_dashboard_hero_metric_tiles",
+      "label": "8. Padroniza\u00e7\u00e3o Visual Completa do Dashboard (Hero + Metric Tiles)",
+      "_origin": "ast",
+      "community": 12,
+      "community_name": "\ud83d\udee0\ufe0f A\u00e7\u00f5es Executadas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "8. padronizacao visual completa do dashboard (hero + metric tiles)",
+      "source_file": "knowledge/diario/diary_2026_10_28.md",
+      "source_location": "L43"
     },
     {
       "id": "knowledge_diario_diary_2026_10_28_a\u00e7\u00f5es_executadas",
@@ -6677,6 +6535,17 @@
       "source_location": "L1"
     },
     {
+      "id": "tests_test_offline_check_filter",
+      "label": "test_offline_check_filter.py",
+      "_origin": "ast",
+      "community": 123,
+      "community_name": "get_local_now",
+      "file_type": "code",
+      "norm_label": "test_offline_check_filter.py",
+      "source_file": "tests/test_offline_check_filter.py",
+      "source_location": "L1"
+    },
+    {
       "id": "tests_test_timezone_offline",
       "label": "test_timezone_offline.py",
       "_origin": "ast",
@@ -6688,6 +6557,17 @@
       "source_location": "L1"
     },
     {
+      "id": "src_alerts_offline_check_rationale_20",
+      "label": "Verifica o tempo da \u00faltima leitura dos tanques. Envia alerta se o atraso for\u2026",
+      "_origin": "ast",
+      "community": 123,
+      "community_name": "get_local_now",
+      "file_type": "rationale",
+      "norm_label": "verifica o tempo da ultima leitura dos tanques. envia alerta se o atraso for...",
+      "source_file": "src/alerts/offline_check.py",
+      "source_location": "L20"
+    },
+    {
       "id": "src_services_database_rationale_28",
       "label": "Retorna datetime ing\u00eanuo representando o hor\u00e1rio local de Bras\u00edlia\u2026",
       "_origin": "ast",
@@ -6697,6 +6577,17 @@
       "norm_label": "retorna datetime ingenuo representando o horario local de brasilia...",
       "source_file": "src/services/database.py",
       "source_location": "L28"
+    },
+    {
+      "id": "tests_test_offline_check_filter_rationale_7",
+      "label": "Garante que check_last_reading n\u00e3o gera alertas offline para tanques sem lote\u2026",
+      "_origin": "ast",
+      "community": 123,
+      "community_name": "get_local_now",
+      "file_type": "rationale",
+      "norm_label": "garante que check_last_reading nao gera alertas offline para tanques sem lote...",
+      "source_file": "tests/test_offline_check_filter.py",
+      "source_location": "L7"
     },
     {
       "id": "tests_test_timezone_offline_rationale_13",
@@ -6817,6 +6708,17 @@
       "file_type": "code",
       "norm_label": "agent_tools.py",
       "source_file": "src/bots/agent_tools.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_agent_fallback",
+      "label": "test_agent_fallback.py",
+      "_origin": "ast",
+      "community": 125,
+      "community_name": "agent_tools.py",
+      "file_type": "code",
+      "norm_label": "test_agent_fallback.py",
+      "source_file": "tests/test_agent_fallback.py",
       "source_location": "L1"
     },
     {
@@ -7037,15 +6939,334 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_test_agent_fallback",
-      "label": "test_agent_fallback.py",
+      "id": "src_services_noctua_client",
+      "label": "noctua_client.py",
       "_origin": "ast",
       "community": 130,
-      "community_name": "TestAgentFallback",
+      "community_name": "test_noctua_client.py",
       "file_type": "code",
-      "norm_label": "test_agent_fallback.py",
-      "source_file": "tests/test_agent_fallback.py",
+      "norm_label": "noctua_client.py",
+      "source_file": "src/services/noctua_client.py",
       "source_location": "L1"
+    },
+    {
+      "id": "tests_test_noctua_client",
+      "label": "test_noctua_client.py",
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "test_noctua_client.py",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_noctua_client_py_fixture",
+      "label": "fixture",
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "code",
+      "norm_label": "fixture",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "src_services_noctua_client_rationale_170",
+      "label": "Exce\u00e7\u00e3o base para erros de comunica\u00e7\u00e3o ou regra de neg\u00f3cio com Noctua IoT.",
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "rationale",
+      "norm_label": "excecao base para erros de comunicacao ou regra de negocio com noctua iot.",
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L170"
+    },
+    {
+      "id": "src_services_noctua_client_rationale_175",
+      "label": "Disparada quando uma opera\u00e7\u00e3o de escrita \u00e9 tentada sob NOCTUA_READ_ONLY=true.",
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "rationale",
+      "norm_label": "disparada quando uma operacao de escrita e tentada sob noctua_read_only=true.",
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L175"
+    },
+    {
+      "id": "src_services_noctua_client_rationale_466",
+      "label": "Envia mensagem de comando para o gateway/endpoint do tanque. Bloqueado\u2026",
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "rationale",
+      "norm_label": "envia mensagem de comando para o gateway/endpoint do tanque. bloqueado...",
+      "source_file": "src/services/noctua_client.py",
+      "source_location": "L466"
+    },
+    {
+      "id": "src_web_app_rationale_409",
+      "label": "Envia comando de motor para o endpoint respeitando travas de seguran\u00e7a.",
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "rationale",
+      "norm_label": "envia comando de motor para o endpoint respeitando travas de seguranca.",
+      "source_file": "src/web/app.py",
+      "source_location": "L409"
+    },
+    {
+      "id": "tests_test_noctua_client_rationale_1",
+      "label": "Testes unit\u00e1rios para o cliente Noctua IoT GraphQL (AWS AppSync). Valida\u2026",
+      "_origin": "ast",
+      "community": 130,
+      "community_name": "test_noctua_client.py",
+      "file_type": "rationale",
+      "norm_label": "testes unitarios para o cliente noctua iot graphql (aws appsync). valida...",
+      "source_file": "tests/test_noctua_client.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_services_web_auth",
+      "label": "web_auth.py",
+      "_origin": "ast",
+      "community": 131,
+      "community_name": "web_auth.py",
+      "file_type": "code",
+      "norm_label": "web_auth.py",
+      "source_file": "src/services/web_auth.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_services_web_auth_rationale_10",
+      "label": "Inicializa a tabela de usu\u00e1rios web no SQLite.",
+      "_origin": "ast",
+      "community": 131,
+      "community_name": "web_auth.py",
+      "file_type": "rationale",
+      "norm_label": "inicializa a tabela de usuarios web no sqlite.",
+      "source_file": "src/services/web_auth.py",
+      "source_location": "L10"
+    },
+    {
+      "id": "src_services_web_auth_rationale_45",
+      "label": "Valida as credenciais do usu\u00e1rio.",
+      "_origin": "ast",
+      "community": 131,
+      "community_name": "web_auth.py",
+      "file_type": "rationale",
+      "norm_label": "valida as credenciais do usuario.",
+      "source_file": "src/services/web_auth.py",
+      "source_location": "L45"
+    },
+    {
+      "id": "src_services_web_auth_rationale_65",
+      "label": "Retorna dados do usu\u00e1rio pelo ID.",
+      "_origin": "ast",
+      "community": 131,
+      "community_name": "web_auth.py",
+      "file_type": "rationale",
+      "norm_label": "retorna dados do usuario pelo id.",
+      "source_file": "src/services/web_auth.py",
+      "source_location": "L65"
+    },
+    {
+      "id": "tests_test_web_dashboard_rationale_25",
+      "label": "Testa o servi\u00e7o de autentica\u00e7\u00e3o web.",
+      "_origin": "ast",
+      "community": 131,
+      "community_name": "web_auth.py",
+      "file_type": "rationale",
+      "norm_label": "testa o servico de autenticacao web.",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L25"
+    },
+    {
+      "id": "user_loader",
+      "label": "user_loader",
+      "_origin": "ast",
+      "community": 132,
+      "community_name": "User",
+      "file_type": "code",
+      "norm_label": "user_loader",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "usermixin",
+      "label": "UserMixin",
+      "_origin": "ast",
+      "community": 132,
+      "community_name": "User",
+      "file_type": "code",
+      "norm_label": "usermixin",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "src_services_database_rationale_333",
+      "label": "Busca um contato WhatsApp espec\u00edfico pelo ID.",
+      "_origin": "ast",
+      "community": 133,
+      "community_name": "api_testar_contato_whatsapp",
+      "file_type": "rationale",
+      "norm_label": "busca um contato whatsapp especifico pelo id.",
+      "source_file": "src/services/database.py",
+      "source_location": "L333"
+    },
+    {
+      "id": "src_web_app_rationale_1122",
+      "label": "Dispara mensagem de teste imediata via Evolution API para o contato informado.",
+      "_origin": "ast",
+      "community": 133,
+      "community_name": "api_testar_contato_whatsapp",
+      "file_type": "rationale",
+      "norm_label": "dispara mensagem de teste imediata via evolution api para o contato informado.",
+      "source_file": "src/web/app.py",
+      "source_location": "L1122"
+    },
+    {
+      "id": "tests_test_web_dashboard_py_fixture",
+      "label": "fixture",
+      "_origin": "ast",
+      "community": 134,
+      "community_name": "auth_client",
+      "file_type": "code",
+      "norm_label": "fixture",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_test_web_dashboard_rationale_60",
+      "label": "Cria um cliente logado para testar rotas protegidas.",
+      "_origin": "ast",
+      "community": 134,
+      "community_name": "auth_client",
+      "file_type": "rationale",
+      "norm_label": "cria um cliente logado para testar rotas protegidas.",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L60"
+    },
+    {
+      "id": "exception",
+      "label": "Exception",
+      "_origin": "ast",
+      "community": 135,
+      "community_name": "Exception",
+      "file_type": "code",
+      "norm_label": "exception",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "src_web_app_rationale_342",
+      "label": "Consulta os dados atuais de configura\u00e7\u00e3o de um endpoint (thresholds, timers,\u2026",
+      "_origin": "ast",
+      "community": 136,
+      "community_name": "api_get_endpoint",
+      "file_type": "rationale",
+      "norm_label": "consulta os dados atuais de configuracao de um endpoint (thresholds, timers,...",
+      "source_file": "src/web/app.py",
+      "source_location": "L342"
+    },
+    {
+      "id": "tests_test_web_dashboard_rationale_134",
+      "label": "Garante que a p\u00e1gina de lotes carrega para usu\u00e1rio autenticado.",
+      "_origin": "ast",
+      "community": 137,
+      "community_name": "test_lotes_page_loads",
+      "file_type": "rationale",
+      "norm_label": "garante que a pagina de lotes carrega para usuario autenticado.",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L134"
+    },
+    {
+      "id": "tests_test_web_dashboard_rationale_14",
+      "label": "Verifica se a p\u00e1gina de login carrega corretamente.",
+      "_origin": "ast",
+      "community": 138,
+      "community_name": "test_login_page_loads",
+      "file_type": "rationale",
+      "norm_label": "verifica se a pagina de login carrega corretamente.",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L14"
+    },
+    {
+      "id": "tests_test_web_dashboard_rationale_141",
+      "label": "Garante que a p\u00e1gina de configura\u00e7\u00f5es carrega para usu\u00e1rio autenticado.",
+      "_origin": "ast",
+      "community": 139,
+      "community_name": "test_settings_page_loads",
+      "file_type": "rationale",
+      "norm_label": "garante que a pagina de configuracoes carrega para usuario autenticado.",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L141"
+    },
+    {
+      "id": "tests_test_web_dashboard_rationale_174",
+      "label": "Testa endpoint GET /api/settings/db/status com mock do postgres.",
+      "_origin": "ast",
+      "community": 140,
+      "community_name": "test_api_settings_db_status_route",
+      "file_type": "rationale",
+      "norm_label": "testa endpoint get /api/settings/db/status com mock do postgres.",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L174"
+    },
+    {
+      "id": "tests_test_web_dashboard_rationale_191",
+      "label": "Valida se o ProxyFix respeita o header X-Forwarded-Prefix: /psicultura do Caddy.",
+      "_origin": "ast",
+      "community": 141,
+      "community_name": "test_subpath_reverse_proxy_support",
+      "file_type": "rationale",
+      "norm_label": "valida se o proxyfix respeita o header x-forwarded-prefix: /psicultura do caddy.",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L191"
+    },
+    {
+      "id": "tests_test_web_dashboard_rationale_20",
+      "label": "Verifica se o dashboard redireciona para login se n\u00e3o autenticado.",
+      "_origin": "ast",
+      "community": 142,
+      "community_name": "test_dashboard_redirect_without_login",
+      "file_type": "rationale",
+      "norm_label": "verifica se o dashboard redireciona para login se nao autenticado.",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L20"
+    },
+    {
+      "id": "tests_test_web_dashboard_rationale_241",
+      "label": "Valida que alterar CPF ou CADPRO migra o UID nas tabelas filhas e remove\u2026",
+      "_origin": "ast",
+      "community": 143,
+      "community_name": "test_mdm_uid_cascade_proprietario_and_propriedade",
+      "file_type": "rationale",
+      "norm_label": "valida que alterar cpf ou cadpro migra o uid nas tabelas filhas e remove...",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L241"
+    },
+    {
+      "id": "tests_test_web_dashboard_rationale_317",
+      "label": "Valida se o favicon SVG de piscicultura \u00e9 servido e se o novo card de clima\u2026",
+      "_origin": "ast",
+      "community": 144,
+      "community_name": "test_favicon_and_weather_card_markup",
+      "file_type": "rationale",
+      "norm_label": "valida se o favicon svg de piscicultura e servido e se o novo card de clima...",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L317"
+    },
+    {
+      "id": "tests_test_web_dashboard_rationale_38",
+      "label": "Verifica se os endpoints de API est\u00e3o protegidos sem autentica\u00e7\u00e3o.",
+      "_origin": "ast",
+      "community": 145,
+      "community_name": "test_api_endpoints_protected",
+      "file_type": "rationale",
+      "norm_label": "verifica se os endpoints de api estao protegidos sem autenticacao.",
+      "source_file": "tests/test_web_dashboard.py",
+      "source_location": "L38"
     },
     {
       "id": "scripts_weekly_maintenance",
@@ -7267,17 +7488,6 @@
       "source_location": "L1"
     },
     {
-      "id": "exception",
-      "label": "Exception",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "exception",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "tests_test_web_dashboard",
       "label": "test_web_dashboard.py",
       "_origin": "ast",
@@ -7287,50 +7497,6 @@
       "norm_label": "test_web_dashboard.py",
       "source_file": "tests/test_web_dashboard.py",
       "source_location": "L1"
-    },
-    {
-      "id": "tests_test_web_dashboard_py_fixture",
-      "label": "fixture",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "code",
-      "norm_label": "fixture",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "tests_test_web_dashboard_rationale_134",
-      "label": "Garante que a p\u00e1gina de lotes carrega para usu\u00e1rio autenticado.",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "garante que a pagina de lotes carrega para usuario autenticado.",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L134"
-    },
-    {
-      "id": "tests_test_web_dashboard_rationale_14",
-      "label": "Verifica se a p\u00e1gina de login carrega corretamente.",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "verifica se a pagina de login carrega corretamente.",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L14"
-    },
-    {
-      "id": "tests_test_web_dashboard_rationale_141",
-      "label": "Garante que a p\u00e1gina de configura\u00e7\u00f5es carrega para usu\u00e1rio autenticado.",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "garante que a pagina de configuracoes carrega para usuario autenticado.",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L141"
     },
     {
       "id": "tests_test_web_dashboard_rationale_148",
@@ -7344,39 +7510,6 @@
       "source_location": "L148"
     },
     {
-      "id": "tests_test_web_dashboard_rationale_174",
-      "label": "Testa endpoint GET /api/settings/db/status com mock do postgres.",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "testa endpoint get /api/settings/db/status com mock do postgres.",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L174"
-    },
-    {
-      "id": "tests_test_web_dashboard_rationale_191",
-      "label": "Valida se o ProxyFix respeita o header X-Forwarded-Prefix: /psicultura do Caddy.",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "valida se o proxyfix respeita o header x-forwarded-prefix: /psicultura do caddy.",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L191"
-    },
-    {
-      "id": "tests_test_web_dashboard_rationale_20",
-      "label": "Verifica se o dashboard redireciona para login se n\u00e3o autenticado.",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "verifica se o dashboard redireciona para login se nao autenticado.",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L20"
-    },
-    {
       "id": "tests_test_web_dashboard_rationale_202",
       "label": "Testa listagem do seed (Dirceu/Joceli), adi\u00e7\u00e3o, edi\u00e7\u00e3o, teste WhatsApp e\u2026",
       "_origin": "ast",
@@ -7386,50 +7519,6 @@
       "norm_label": "testa listagem do seed (dirceu/joceli), adicao, edicao, teste whatsapp e...",
       "source_file": "tests/test_web_dashboard.py",
       "source_location": "L202"
-    },
-    {
-      "id": "tests_test_web_dashboard_rationale_241",
-      "label": "Valida que alterar CPF ou CADPRO migra o UID nas tabelas filhas e remove\u2026",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "valida que alterar cpf ou cadpro migra o uid nas tabelas filhas e remove...",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L241"
-    },
-    {
-      "id": "tests_test_web_dashboard_rationale_317",
-      "label": "Valida se o favicon SVG de piscicultura \u00e9 servido e se o novo card de clima\u2026",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "valida se o favicon svg de piscicultura e servido e se o novo card de clima...",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L317"
-    },
-    {
-      "id": "tests_test_web_dashboard_rationale_38",
-      "label": "Verifica se os endpoints de API est\u00e3o protegidos sem autentica\u00e7\u00e3o.",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "verifica se os endpoints de api estao protegidos sem autenticacao.",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L38"
-    },
-    {
-      "id": "tests_test_web_dashboard_rationale_60",
-      "label": "Cria um cliente logado para testar rotas protegidas.",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "test_web_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "cria um cliente logado para testar rotas protegidas.",
-      "source_file": "tests/test_web_dashboard.py",
-      "source_location": "L60"
     },
     {
       "id": "scripts_01_system_deps",
@@ -7486,61 +7575,6 @@
       "norm_label": "any",
       "source_file": "",
       "source_location": ""
-    },
-    {
-      "id": "src_services_noctua_client",
-      "label": "noctua_client.py",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "noctua_client.py",
-      "source_file": "src/services/noctua_client.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_noctua_client",
-      "label": "test_noctua_client.py",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "test_noctua_client.py",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_noctua_client_py_fixture",
-      "label": "fixture",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "code",
-      "norm_label": "fixture",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_services_noctua_client_rationale_170",
-      "label": "Exce\u00e7\u00e3o base para erros de comunica\u00e7\u00e3o ou regra de neg\u00f3cio com Noctua IoT.",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "rationale",
-      "norm_label": "excecao base para erros de comunicacao ou regra de negocio com noctua iot.",
-      "source_file": "src/services/noctua_client.py",
-      "source_location": "L170"
-    },
-    {
-      "id": "src_services_noctua_client_rationale_175",
-      "label": "Disparada quando uma opera\u00e7\u00e3o de escrita \u00e9 tentada sob NOCTUA_READ_ONLY=true.",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "rationale",
-      "norm_label": "disparada quando uma operacao de escrita e tentada sob noctua_read_only=true.",
-      "source_file": "src/services/noctua_client.py",
-      "source_location": "L175"
     },
     {
       "id": "src_services_noctua_client_rationale_180",
@@ -7653,17 +7687,6 @@
       "source_location": "L428"
     },
     {
-      "id": "src_services_noctua_client_rationale_466",
-      "label": "Envia mensagem de comando para o gateway/endpoint do tanque. Bloqueado\u2026",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "rationale",
-      "norm_label": "envia mensagem de comando para o gateway/endpoint do tanque. bloqueado...",
-      "source_file": "src/services/noctua_client.py",
-      "source_location": "L466"
-    },
-    {
       "id": "src_services_noctua_client_rationale_495",
       "label": "Consulta o status de entrega do comando (SENT, DELIVERED, GATEWAY_OFFLINE,\u2026",
       "_origin": "ast",
@@ -7673,17 +7696,6 @@
       "norm_label": "consulta o status de entrega do comando (sent, delivered, gateway_offline,...",
       "source_file": "src/services/noctua_client.py",
       "source_location": "L495"
-    },
-    {
-      "id": "tests_test_noctua_client_rationale_1",
-      "label": "Testes unit\u00e1rios para o cliente Noctua IoT GraphQL (AWS AppSync). Valida\u2026",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "NoctuaClient",
-      "file_type": "rationale",
-      "norm_label": "testes unitarios para o cliente noctua iot graphql (aws appsync). valida...",
-      "source_file": "tests/test_noctua_client.py",
-      "source_location": "L1"
     },
     {
       "id": "tests_test_env",
@@ -21874,6 +21886,17 @@
       "weight": 1.0
     },
     {
+      "source": "knowledge_diario_diary_2026_10_28_a\u00e7\u00f5es_executadas",
+      "target": "knowledge_diario_diary_2026_10_28_8_padroniza\u00e7\u00e3o_visual_completa_do_dashboard_hero_metric_tiles",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "knowledge/diario/diary_2026_10_28.md",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
       "source": "knowledge_diario_diary_2026_10_28_di\u00e1rio_de_bordo_28_10_2026",
       "target": "knowledge_diario_diary_2026_10_28_objetivo_da_sess\u00e3o",
       "relation": "contains",
@@ -28236,5 +28259,5 @@
       "source_file": "docs/MER.md"
     }
   ],
-  "built_at_commit": "52255c52fe61cd65e24ebd48255bd1f9c6d4a503"
+  "built_at_commit": "1806a719caf247c190e97952a0d3e2c96546e5f3"
 }

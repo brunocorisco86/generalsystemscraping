@@ -564,15 +564,15 @@
     "semantic_hash": "621406b84dcbbc2cf0c60fee9f684b46"
   },
   "src/web/templates/base.html": {
-    "mtime": 1793232494.6840653,
-    "seen": 1793232729.120372,
-    "ast_hash": "99c53abd725a05c227a34b295054cf85",
+    "mtime": 1793233044.0906599,
+    "seen": 1793233299.591338,
+    "ast_hash": "9c0c5b74009be3e4fbeef7548b1eb9f7",
     "semantic_hash": ""
   },
   "src/web/templates/dashboard.html": {
-    "mtime": 1793232540.993763,
-    "seen": 1793232729.1203735,
-    "ast_hash": "a580b7ae1394acf9a4bf157b0feef32c",
+    "mtime": 1793233174.5433936,
+    "seen": 1793233299.591339,
+    "ast_hash": "eed57a060574d5234df8b63e600327e5",
     "semantic_hash": ""
   },
   "src/web/templates/login.html": {
@@ -720,9 +720,9 @@
     "semantic_hash": ""
   },
   "knowledge/diario/diary_2026_10_28.md": {
-    "mtime": 1793232726.6776094,
-    "seen": 1793232729.1203601,
-    "ast_hash": "b68ecdf0b65d428ca060af5656af3653",
+    "mtime": 1793233297.017918,
+    "seen": 1793233299.5913272,
+    "ast_hash": "b9f7152eb20081261b66863939f86401",
     "semantic_hash": ""
   },
   "requirements-web.txt": {
